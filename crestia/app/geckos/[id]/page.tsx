@@ -155,7 +155,16 @@ export default async function GeckoDetailPage(props: PageProps) {
                     <ParentCard parent={gecko.dam} role="Dam" color="text-pink-400" />
                 </div>
             </div>
-        </div>
+
+
+            {/* Legal Disclaimer */}
+            <div className="mt-16 pt-8 border-t border-zinc-900 text-center">
+                <p className="text-[10px] text-zinc-600 max-w-2xl mx-auto leading-relaxed">
+                    Disclaimer: The information above is based on user-submitted data. 'DB Matched' indicates a link exists within the Crestia database, not a guarantee of biological parentage.
+                    Crestia verifies connection integrity but does not physically verify the authenticity of stated lineages.
+                </p>
+            </div>
+        </div >
     );
 }
 

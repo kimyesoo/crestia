@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, UploadCloud, Loader2 } from "lucide-react";
+import { CalendarIcon, UploadCloud, Loader2, AlertTriangle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -28,9 +28,12 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import { createGecko } from "../actions";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -39,8 +42,12 @@ const formSchema = z.object({
     birth_date: z.date().optional(),
     sire_id: z.string().optional(),
     dam_id: z.string().optional(),
-    description: z.string().optional(),
-    image: z.any().optional(), // File handling manually
+    sire_name: z.string().optional(),
+    dam_name: z.string().optional(),
+    description: z.string().optional().or(z.literal('')),
+    is_for_sale: z.boolean().default(false),
+    image: z.any().optional(),
+    proof_image: z.any().optional(),
 });
 
 interface AddGeckoFormProps {
@@ -51,22 +58,38 @@ interface AddGeckoFormProps {
 export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
+    const [proofPreview, setProofPreview] = useState<string | null>(null);
+
+    // Modes for parent entry
+    const [sireMode, setSireMode] = useState<"system" | "manual">("system");
+    const [damMode, setDamMode] = useState<"system" | "manual">("system");
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             name: "",
             morph: "",
             gender: "Unknown",
+            is_for_sale: false,
+            sire_id: "",
+            dam_id: "",
+            sire_name: "",
+            dam_name: "",
+            description: "",
         },
     });
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: "image" | "proof_image") => {
         const file = e.target.files?.[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            setPreview(url);
-            form.setValue("image", file);
+            if (fieldName === "image") {
+                setPreview(url);
+                form.setValue("image", file);
+            } else {
+                setProofPreview(url);
+                form.setValue("proof_image", file);
+            }
         }
     };
 
@@ -79,10 +102,26 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
         if (values.birth_date) {
             formData.append("birth_date", format(values.birth_date, "yyyy-MM-dd"));
         }
-        if (values.sire_id && values.sire_id !== "none") formData.append("sire_id", values.sire_id);
-        if (values.dam_id && values.dam_id !== "none") formData.append("dam_id", values.dam_id);
+
+        // Handle Sire
+        if (sireMode === "system" && values.sire_id && values.sire_id !== "none") {
+            formData.append("sire_id", values.sire_id);
+        } else if (sireMode === "manual" && values.sire_name) {
+            formData.append("sire_name", values.sire_name);
+        }
+
+        // Handle Dam
+        if (damMode === "system" && values.dam_id && values.dam_id !== "none") {
+            formData.append("dam_id", values.dam_id);
+        } else if (damMode === "manual" && values.dam_name) {
+            formData.append("dam_name", values.dam_name);
+        }
+
         if (values.description) formData.append("description", values.description);
+        formData.append("is_for_sale", String(values.is_for_sale));
+
         if (values.image) formData.append("image", values.image);
+        if (values.proof_image) formData.append("proof_image", values.proof_image);
 
         const result = await createGecko(formData);
 
@@ -91,7 +130,6 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
             setIsLoading(false);
         } else {
             toast.success("Gecko Registered", { description: "Your legacy is growing." });
-            // Redirect handled in server action
         }
     }
 
@@ -102,22 +140,22 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                     {/* Left Column: Image & Basic Info */}
                     <div className="space-y-6">
                         {/* Image Upload Area */}
-                        <div className="aspect-square relative rounded-xl border-2 border-dashed border-input hover:border-gold-500/50 transition-colors flex flex-col items-center justify-center overflow-hidden bg-card/30 group cursor-pointer">
+                        <div className="aspect-square relative rounded-xl border-2 border-dashed border-zinc-800 bg-zinc-900/50 hover:border-gold-500/50 transition-colors flex flex-col items-center justify-center overflow-hidden cursor-pointer group">
                             <input
                                 type="file"
                                 accept="image/*"
                                 className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                                onChange={handleImageChange}
+                                onChange={(e) => handleImageChange(e, "image")}
                             />
                             {preview ? (
                                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                             ) : (
                                 <div className="text-center p-4 space-y-2 group-hover:text-gold-400 transition-colors">
-                                    <div className="p-4 bg-secondary/50 rounded-full inline-block">
-                                        <UploadCloud className="h-8 w-8 text-muted-foreground group-hover:text-gold-400" />
+                                    <div className="p-4 bg-black rounded-full inline-block border border-zinc-800">
+                                        <UploadCloud className="h-8 w-8 text-zinc-500 group-hover:text-gold-400" />
                                     </div>
-                                    <div className="text-sm font-medium">Click to upload photo</div>
-                                    <div className="text-xs text-muted-foreground">JPG, PNG up to 5MB</div>
+                                    <div className="text-sm font-medium text-zinc-300">Main Photo</div>
+                                    <div className="text-xs text-zinc-500">JPG, PNG up to 5MB</div>
                                 </div>
                             )}
                         </div>
@@ -127,9 +165,9 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel className="text-zinc-400">Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Gecko Name" {...field} className="bg-secondary/30" />
+                                        <Input placeholder="Gecko Name" {...field} className="bg-zinc-900 border-zinc-800 focus:border-gold-500/50 text-white placeholder:text-zinc-600" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -141,9 +179,9 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                             name="morph"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Morph</FormLabel>
+                                    <FormLabel className="text-zinc-400">Morph</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g. Lilly White" {...field} className="bg-secondary/30" />
+                                        <Input placeholder="e.g. Lilly White" {...field} className="bg-zinc-900 border-zinc-800 focus:border-gold-500/50 text-white placeholder:text-zinc-600" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -151,24 +189,24 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                         />
                     </div>
 
-                    {/* Right Column: Details */}
+                    {/* Right Column: Details & Lineage */}
                     <div className="space-y-6">
                         <FormField
                             control={form.control}
                             name="gender"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Gender</FormLabel>
+                                    <FormLabel className="text-zinc-400">Gender</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="bg-secondary/30">
+                                            <SelectTrigger className="bg-zinc-900 border-zinc-800 focus:border-gold-500/50 text-white">
                                                 <SelectValue placeholder="Select gender" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="Male">Male</SelectItem>
-                                            <SelectItem value="Female">Female</SelectItem>
-                                            <SelectItem value="Unknown">Unknown</SelectItem>
+                                        <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                            <SelectItem value="Male" className="focus:bg-zinc-800 focus:text-gold-500">Male</SelectItem>
+                                            <SelectItem value="Female" className="focus:bg-zinc-800 focus:text-gold-500">Female</SelectItem>
+                                            <SelectItem value="Unknown" className="focus:bg-zinc-800 focus:text-gold-500">Unknown</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -181,15 +219,15 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                             name="birth_date"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Hatch Date</FormLabel>
+                                    <FormLabel className="text-zinc-400">Hatch Date</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-full pl-3 text-left font-normal bg-secondary/30 border-input",
-                                                        !field.value && "text-muted-foreground"
+                                                        "w-full pl-3 text-left font-normal bg-zinc-900 border-zinc-800 text-white hover:bg-zinc-800 hover:text-gold-500",
+                                                        !field.value && "text-zinc-500"
                                                     )}
                                                 >
                                                     {field.value ? (
@@ -201,7 +239,7 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
+                                        <PopoverContent className="w-auto p-0 bg-zinc-900 border-zinc-800 text-white" align="start">
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
@@ -210,6 +248,7 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                                                     date > new Date() || date < new Date("1900-01-01")
                                                 }
                                                 initialFocus
+                                                className="bg-zinc-900"
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -218,66 +257,200 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                             )}
                         />
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="sire_id"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Sire (Father)</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger className="bg-secondary/30">
-                                                    <SelectValue placeholder="Select Sire" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="none">None / Unknown</SelectItem>
-                                                {sires.map((s) => (
-                                                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                        {/* LINEAGE SECTION */}
+                        <div className="space-y-4 pt-4 border-t border-zinc-800">
+                            <div className="flex items-center justify-between pb-2">
+                                <h3 className="text-lg font-serif font-bold text-white">Lineage Info</h3>
+                            </div>
 
-                            <FormField
-                                control={form.control}
-                                name="dam_id"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Dam (Mother)</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger className="bg-secondary/30">
-                                                    <SelectValue placeholder="Select Dam" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="none">None / Unknown</SelectItem>
-                                                {dams.map((d) => (
-                                                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
+                            {/* Sire Selection */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <FormLabel className="text-zinc-400">Sire (Father)</FormLabel>
+                                    <div className="flex bg-zinc-900 rounded-md p-0.5 border border-zinc-800">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSireMode("system")}
+                                            className={cn("px-2 py-0.5 text-xs rounded-sm transition-colors", sireMode === "system" ? "bg-zinc-800 text-white" : "text-zinc-500")}
+                                        >
+                                            System
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSireMode("manual")}
+                                            className={cn("px-2 py-0.5 text-xs rounded-sm transition-colors", sireMode === "manual" ? "bg-zinc-800 text-white" : "text-zinc-500")}
+                                        >
+                                            Manual
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {sireMode === "system" ? (
+                                    <FormField
+                                        control={form.control}
+                                        name="sire_id"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-zinc-900 border-zinc-800 text-white">
+                                                            <SelectValue placeholder="Select Registered Sire" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                                        <SelectItem value="none">None</SelectItem>
+                                                        {sires.map((s) => (
+                                                            <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )}
+                                    />
+                                ) : (
+                                    <FormField
+                                        control={form.control}
+                                        name="sire_name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Input placeholder="Enter Sire Name" {...field} className="bg-zinc-900 border-zinc-800 border-dashed text-white" />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
                                 )}
-                            />
+                            </div>
+
+                            {/* Dam Selection */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <FormLabel className="text-zinc-400">Dam (Mother)</FormLabel>
+                                    <div className="flex bg-zinc-900 rounded-md p-0.5 border border-zinc-800">
+                                        <button
+                                            type="button"
+                                            onClick={() => setDamMode("system")}
+                                            className={cn("px-2 py-0.5 text-xs rounded-sm transition-colors", damMode === "system" ? "bg-zinc-800 text-white" : "text-zinc-500")}
+                                        >
+                                            System
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setDamMode("manual")}
+                                            className={cn("px-2 py-0.5 text-xs rounded-sm transition-colors", damMode === "manual" ? "bg-zinc-800 text-white" : "text-zinc-500")}
+                                        >
+                                            Manual
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {damMode === "system" ? (
+                                    <FormField
+                                        control={form.control}
+                                        name="dam_id"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-zinc-900 border-zinc-800 text-white">
+                                                            <SelectValue placeholder="Select Registered Dam" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                                        <SelectItem value="none">None</SelectItem>
+                                                        {dams.map((d) => (
+                                                            <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )}
+                                    />
+                                ) : (
+                                    <FormField
+                                        control={form.control}
+                                        name="dam_name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Input placeholder="Enter Dam Name" {...field} className="bg-zinc-900 border-zinc-800 border-dashed text-white" />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Warning for Manual Entry */}
+                            {(sireMode === "manual" || damMode === "manual") && (
+                                <Alert className="bg-gold-500/10 border-gold-500/30">
+                                    <AlertTriangle className="h-4 w-4 text-gold-500" />
+                                    <AlertTitle className="text-gold-500 text-xs font-bold uppercase tracking-wide">Data Connection Note</AlertTitle>
+                                    <AlertDescription className="text-xs text-zinc-400 mt-1">
+                                        Manually entered parents are <strong>User Declared</strong>. Providing reference material helps build trust in your data.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
+                            {/* Reference Material Upload */}
+                            <div className="pt-2">
+                                <FormLabel className="text-zinc-400 block mb-2">Reference Material (Optional)</FormLabel>
+                                <div className="flex items-center gap-4">
+                                    <div className="h-16 w-16 relative rounded-md border border-dashed border-zinc-700 bg-zinc-900 flex items-center justify-center overflow-hidden shrink-0">
+                                        {proofPreview ? (
+                                            <img src={proofPreview} alt="Proof" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <UploadCloud className="h-4 w-4 text-zinc-600" />
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            onChange={(e) => handleImageChange(e, "proof_image")}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-zinc-500">
+                                        Upload hatching card or parent photos.<br />
+                                        <span className="text-zinc-600">This serves as supporting reference for your declared lineage.</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="is_for_sale"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel className="text-base text-zinc-200">
+                                            Available for Sale
+                                        </FormLabel>
+                                        <FormDescription className="text-zinc-500">
+                                            List this gecko in the public market.
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                            className="data-[state=checked]:bg-gold-500"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
                         <FormField
                             control={form.control}
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel className="text-zinc-400">Description</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Notes about lineage, traits, etc."
-                                            className="resize-none bg-secondary/30 min-h-[100px]"
+                                            className="resize-none bg-zinc-900 border-zinc-800 min-h-[100px] text-white focus:border-gold-500/50"
                                             {...field}
                                         />
                                     </FormControl>
@@ -286,9 +459,18 @@ export function AddGeckoForm({ sires, dams }: AddGeckoFormProps) {
                             )}
                         />
 
-                        <Button type="submit" disabled={isLoading} className="w-full bg-gold-500 text-black hover:bg-gold-400 font-bold">
-                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Register Gecko
+                        <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full bg-gradient-to-r from-gold-400 to-gold-600 text-black hover:from-gold-300 hover:to-gold-500 font-bold border-0 shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all duration-500"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Registering...
+                                </>
+                            ) : (
+                                "Register Gecko"
+                            )}
                         </Button>
                     </div>
                 </div>
