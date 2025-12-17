@@ -61,6 +61,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
         try {
             const canvas = await html2canvas(ref.current, {
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: null,
                 scale: 3,
                 logging: false,
@@ -109,7 +110,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                         <div className="w-[45%] h-full relative border-r border-gold-500/20">
                             {gecko.image_url ? (
                                 <img
-                                    src={gecko.image_url}
+                                    src={`/api/proxy-image?url=${encodeURIComponent(gecko.image_url)}`}
                                     alt={gecko.name}
                                     className="w-full h-full object-cover"
                                     crossOrigin="anonymous"

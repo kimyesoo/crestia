@@ -102,7 +102,7 @@ export default async function ShopPage() {
                                 </Link>
 
                                 {/* Quick Actions Bar - Floating below card or attached */}
-                                <div className="mt-2 grid grid-cols-3 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                <div className="mt-2 grid grid-cols-3 gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                                     <ActionButton href={`/geckos/${gecko.id}/card`} icon={<CreditCard className="w-4 h-4" />} label="ID Card" />
                                     <ActionButton href={`/lineage?id=${gecko.id}`} icon={<GitMerge className="w-4 h-4" />} label="Lineage" />
                                     <ActionButton href={`/dashboard/edit/${gecko.id}`} icon={<Edit className="w-4 h-4" />} label="Edit" />
@@ -135,10 +135,11 @@ export default async function ShopPage() {
 
 function ActionButton({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
     return (
-        <Link href={href}>
-            <Button variant="outline" size="sm" className="w-full bg-zinc-900 border-zinc-800 hover:bg-gold-500 hover:text-black hover:border-gold-500 text-zinc-400 transition-colors h-9">
-                {icon}
-            </Button>
+        <Link
+            href={href}
+            className="w-full h-9 inline-flex items-center justify-center bg-zinc-900 border border-zinc-800 hover:bg-gold-500 hover:text-black hover:border-gold-500 text-zinc-400 transition-colors rounded-md px-3 text-sm font-medium"
+        >
+            {icon}
         </Link>
     );
 }

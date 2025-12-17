@@ -10,6 +10,7 @@ interface LineagePageProps {
 }
 
 export default async function LineagePage({ searchParams }: LineagePageProps) {
+    const params = await searchParams;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -18,7 +19,7 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
         // redirect("/login"); 
     }
 
-    const id = typeof searchParams.id === "string" ? searchParams.id : null;
+    const id = typeof params.id === "string" ? params.id : null;
     let geckoData: PedigreeNode | null = null;
 
     // Search Action (Client side usually, but for simple MVP query params work)
@@ -61,7 +62,7 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
 
             // Construct the Pedigree Tree with fallback for Manual Entries
             const buildNode = (gecko: any, manualName?: string | null): PedigreeNode | null => {
-                // If real gecko data exists, use it and mark verified
+                // Priority 1: System Linked Gecko (Verified)
                 if (gecko && gecko.id) {
                     return {
                         id: gecko.id,
@@ -78,12 +79,12 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
                     };
                 }
 
-                // If no real data but manual name exists
+                // Priority 2: Manual Name Entry (Unverified)
                 if (manualName) {
                     return {
                         id: "", // No link
                         name: manualName,
-                        morph: "Unverified Manual Entry",
+                        morph: "User Declared",
                         gender: "Unknown",
                         is_verified: false,
                         sire: null,
@@ -103,6 +104,7 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
                 image_url: data.image_url,
                 is_verified: true,
                 // Pass manual names from Root to 1st Generation construction
+                // IMPORTANT: Pass 'system node' first, then 'manual name' as fallback inside the function
                 sire: buildNode(data.sire, data.sire_name),
                 dam: buildNode(data.dam, data.dam_name),
             };

@@ -133,16 +133,18 @@ export default async function DashboardPage() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button asChild size="icon" variant="ghost" className="h-8 w-8 text-zinc-400 hover:text-gold-500 hover:bg-zinc-800">
-                                        <Link href={`/geckos/${gecko.id}/card`}>
-                                            <CreditCard className="w-4 h-4" />
-                                        </Link>
-                                    </Button>
-                                    <Button asChild size="icon" variant="ghost" className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-800">
-                                        <Link href={`/dashboard/edit/${gecko.id}`}>
-                                            <Edit className="w-4 h-4" />
-                                        </Link>
-                                    </Button>
+                                    <Link
+                                        href={`/geckos/${gecko.id}/card`}
+                                        className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-gold-500 hover:bg-zinc-800 transition-colors"
+                                    >
+                                        <CreditCard className="w-4 h-4" />
+                                    </Link>
+                                    <Link
+                                        href={`/dashboard/edit/${gecko.id}`}
+                                        className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                    </Link>
                                 </div>
                             </div>
                         ))}
