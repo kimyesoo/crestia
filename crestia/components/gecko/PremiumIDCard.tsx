@@ -86,11 +86,12 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
     };
 
     return (
-        <div className="flex flex-col items-center gap-8 perspective-2000">
+        <div className="flex flex-col items-center gap-8 perspective-2000 w-full flex-center">
 
             {/* 3D Card Container */}
+            {/* FIX: Explicit height and aspect ratio to prevent collapse during rotation */}
             <div
-                className="relative w-full max-w-4xl aspect-[1.586/1] cursor-pointer group"
+                className="relative w-full max-w-[600px] aspect-[1.58/1] h-[300px] md:h-[450px] cursor-pointer group mx-auto"
                 onClick={handleFlip}
                 style={{ perspective: "2000px" }}
             >
@@ -103,14 +104,14 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                     {/* FRONT SIDE */}
                     <div
                         ref={frontRef}
-                        className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-[1px] border-gold-500/50 shadow-2xl bg-[#0a0a0a] flex"
+                        className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-[1px] border-gold-500/50 shadow-2xl bg-[#0a0a0a] flex w-full h-full"
                         style={{ backfaceVisibility: "hidden" }}
                     >
                         {/* LEFT: Image (Cover) */}
-                        <div className="w-[45%] h-full relative border-r border-gold-500/20">
+                        <div className="w-[45%] h-full relative border-r border-gold-500/20 bg-zinc-900">
                             {gecko.image_url ? (
                                 <img
-                                    src={`/api/proxy-image?url=${encodeURIComponent(gecko.image_url)}`}
+                                    src={gecko.image_url.startsWith("http") && !gecko.image_url.includes("proxy-image") ? `/api/proxy-image?url=${encodeURIComponent(gecko.image_url)}` : gecko.image_url}
                                     alt={gecko.name}
                                     className="w-full h-full object-cover"
                                     crossOrigin="anonymous"
@@ -122,7 +123,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                         </div>
 
                         {/* RIGHT: Details */}
-                        <div className="flex-1 relative p-8 md:p-12 flex flex-col justify-between">
+                        <div className="flex-1 relative p-4 md:p-8 flex flex-col justify-between">
                             {/* Leather Texture BG */}
                             <div className="absolute inset-0 opacity-30 pointer-events-none"
                                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")` }}
@@ -132,44 +133,44 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none mix-blend-overlay" />
 
                             {/* Top Content */}
-                            <div className="relative z-10">
+                            <div className="relative z-10 scale-90 md:scale-100 origin-top-left">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex items-center gap-2">
-                                        <div className="h-8 w-8 rounded-full border border-gold-500/50 flex items-center justify-center">
-                                            <span className="text-gold-500 font-serif font-bold text-lg">C</span>
+                                        <div className="h-6 w-6 md:h-8 md:w-8 rounded-full border border-gold-500/50 flex items-center justify-center">
+                                            <span className="text-gold-500 font-serif font-bold text-sm md:text-lg">C</span>
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-gold-500 text-[10px] tracking-[0.3em] font-bold uppercase leading-none">Crestia</span>
-                                            <span className="text-[8px] text-zinc-500 tracking-widest uppercase">Certified</span>
+                                            <span className="text-gold-500 text-[8px] md:text-[10px] tracking-[0.3em] font-bold uppercase leading-none">Crestia</span>
+                                            <span className="text-[6px] md:text-[8px] text-zinc-500 tracking-widest uppercase">Certified</span>
                                         </div>
                                     </div>
-                                    <span className="text-zinc-600 font-mono text-xs tracking-widest opacity-50">{gecko.id.split('-')[0].toUpperCase()}</span>
+                                    <span className="text-zinc-600 font-mono text-[10px] md:text-xs tracking-widest opacity-50">{gecko.id.split('-')[0].toUpperCase()}</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-7xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 tracking-tight leading-none mt-4 drop-shadow-2xl">
+                                <h1 className="text-3xl md:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 tracking-tight leading-none mt-2 md:mt-4 drop-shadow-2xl truncate">
                                     {gecko.name}
                                 </h1>
                             </div>
 
                             {/* Bottom Content */}
-                            <div className="relative z-10 space-y-6">
-                                <div className="space-y-1">
-                                    <p className="text-gold-500/80 text-xs uppercase tracking-[0.2em]">Morphology</p>
-                                    <p className="text-2xl font-light text-zinc-300 font-serif">{gecko.morph}</p>
+                            <div className="relative z-10 space-y-2 md:space-y-6 scale-90 md:scale-100 origin-bottom-left">
+                                <div className="space-y-0.5 md:space-y-1">
+                                    <p className="text-gold-500/80 text-[8px] md:text-xs uppercase tracking-[0.2em]">Morphology</p>
+                                    <p className="text-lg md:text-2xl font-light text-zinc-300 font-serif truncate">{gecko.morph}</p>
                                 </div>
 
-                                <div className="flex justify-between items-end border-t border-gold-500/20 pt-6">
+                                <div className="flex justify-between items-end border-t border-gold-500/20 pt-2 md:pt-6">
                                     <div>
-                                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Sex</p>
-                                        <p className="text-lg text-white font-medium">{gecko.gender}</p>
+                                        <p className="text-[8px] md:text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Sex</p>
+                                        <p className="text-sm md:text-lg text-white font-medium">{gecko.gender}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Hatch Date</p>
-                                        <p className="text-lg text-white font-medium">{gecko.birth_date || "Unknown"}</p>
+                                        <p className="text-[8px] md:text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Hatch Date</p>
+                                        <p className="text-sm md:text-lg text-white font-medium">{gecko.birth_date || "Unknown"}</p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Breeder</p>
-                                        <p className="text-lg text-gold-400 font-serif italic">{shopName}</p>
+                                        <p className="text-[8px] md:text-[10px] text-zinc-600 uppercase tracking-widest mb-1">Breeder</p>
+                                        <p className="text-sm md:text-lg text-gold-400 font-serif italic">{shopName}</p>
                                     </div>
                                 </div>
                             </div>
@@ -179,7 +180,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                     {/* BACK SIDE */}
                     <div
                         ref={backRef}
-                        className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-[1px] border-gold-500/30 shadow-2xl bg-[#080808] p-12 flex flex-col justify-between"
+                        className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-[1px] border-gold-500/30 shadow-2xl bg-[#080808] p-8 md:p-12 flex flex-col justify-between w-full h-full"
                         style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                     >
                         {/* Leather Texture BG */}
@@ -189,32 +190,32 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
 
                         <div className="relative z-10 flex justify-between items-start">
                             <div>
-                                <h2 className="text-3xl font-serif text-white mb-2">Pedigree Record</h2>
-                                <p className="text-zinc-500 text-sm">Official System Matched Lineage</p>
+                                <h2 className="text-2xl md:text-3xl font-serif text-white mb-2">Pedigree Record</h2>
+                                <p className="text-zinc-500 text-xs md:text-sm">Official System Matched Lineage</p>
                             </div>
-                            <QRCodeSVG value={`https://crestia.app/geckos/${gecko.id}`} size={80} level="M" bgColor="transparent" fgColor="#D4AF37" />
+                            <QRCodeSVG value={`https://crestia.app/geckos/${gecko.id}`} size={60} level="M" bgColor="transparent" fgColor="#D4AF37" className="md:w-[80px] md:h-[80px]" />
                         </div>
 
                         {/* Detailed Lineage Grid */}
-                        <div className="relative z-10 grid grid-cols-2 gap-8 border-t border-b border-zinc-800 py-8 my-4">
+                        <div className="relative z-10 grid grid-cols-2 gap-8 border-t border-b border-zinc-800 py-4 md:py-8 my-2 md:my-4">
                             <div className="space-y-2">
-                                <p className="text-xs text-blue-400 uppercase tracking-widest font-bold">Sire (Father)</p>
-                                <p className="text-2xl text-white font-serif">{lineage.sire || "Unknown"}</p>
-                                <p className="text-[10px] text-zinc-500 font-mono">{lineage.sire_id ? `ID: ${lineage.sire_id.slice(0, 8)}...` : "User Declared"}</p>
+                                <p className="text-[10px] md:text-xs text-blue-400 uppercase tracking-widest font-bold">Sire (Father)</p>
+                                <p className="text-xl md:text-2xl text-white font-serif">{lineage.sire || "Unknown"}</p>
+                                <p className="text-[8px] md:text-[10px] text-zinc-500 font-mono">{lineage.sire_id ? `ID: ${lineage.sire_id.slice(0, 8)}...` : "User Declared"}</p>
                             </div>
                             <div className="space-y-2 text-right">
-                                <p className="text-xs text-pink-400 uppercase tracking-widest font-bold">Dam (Mother)</p>
-                                <p className="text-2xl text-white font-serif">{lineage.dam || "Unknown"}</p>
-                                <p className="text-[10px] text-zinc-500 font-mono">{lineage.dam_id ? `ID: ${lineage.dam_id.slice(0, 8)}...` : "User Declared"}</p>
+                                <p className="text-[10px] md:text-xs text-pink-400 uppercase tracking-widest font-bold">Dam (Mother)</p>
+                                <p className="text-xl md:text-2xl text-white font-serif">{lineage.dam || "Unknown"}</p>
+                                <p className="text-[8px] md:text-[10px] text-zinc-500 font-mono">{lineage.dam_id ? `ID: ${lineage.dam_id.slice(0, 8)}...` : "User Declared"}</p>
                             </div>
                         </div>
 
-                        <div className="relative z-10 text-center space-y-4">
-                            <p className="text-[10px] text-zinc-600 max-w-lg mx-auto leading-relaxed">
+                        <div className="relative z-10 text-center space-y-2 md:space-y-4">
+                            <p className="text-[8px] md:text-[10px] text-zinc-600 max-w-lg mx-auto leading-relaxed">
                                 Disclaimer: The information above is based on user-submitted data. 'System Matched' indicates a link exists within the Crestia database, not a guarantee of biological parentage.
                                 Crestia verifies connection integrity but does not physically verify the authenticity of stated lineages.
                             </p>
-                            <div className="text-gold-500/50 text-[10px] uppercase tracking-[0.5em] font-bold">
+                            <div className="text-gold-500/50 text-[8px] md:text-[10px] uppercase tracking-[0.5em] font-bold">
                                 Crestia Luxury Repository
                             </div>
                         </div>
@@ -233,7 +234,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                     onClick={(e) => { e.stopPropagation(); handleDownload("front"); }}
                     disabled={isDownloading}
                     variant="outline"
-                    className="border-zinc-800 text-gold-500 hover:bg-zinc-900 hover:text-gold-400 min-w-[140px]"
+                    className="border-zinc-800 text-gold-500 hover:bg-zinc-900 hover:text-gold-400 min-w-[120px] md:min-w-[140px]"
                 >
                     {isDownloading ? (
                         <>
@@ -251,7 +252,7 @@ export function PremiumIDCard({ gecko, lineage, shopName = "CRESTIA" }: PremiumI
                     onClick={(e) => { e.stopPropagation(); handleDownload("back"); }}
                     disabled={isDownloading}
                     variant="outline"
-                    className="border-zinc-800 text-zinc-400 hover:bg-zinc-900 hover:text-white min-w-[140px]"
+                    className="border-zinc-800 text-zinc-400 hover:bg-zinc-900 hover:text-white min-w-[120px] md:min-w-[140px]"
                 >
                     {isDownloading ? (
                         <>

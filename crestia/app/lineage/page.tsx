@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { redirect } from "next/navigation";
 
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
 interface LineagePageProps {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: SearchParams;
 }
 
-export default async function LineagePage({ searchParams }: LineagePageProps) {
-    const params = await searchParams;
+export default async function LineagePage(props: LineagePageProps) {
+    const params = await props.searchParams;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -33,22 +35,21 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
 
     if (id) {
         // 3-Generation Fetch
-        // We use explicit foreign key aliases if defined, or assume relation names.
+        // We Use explicit foreign key aliases if defined, or assume relation names.
         // Based on schema: sire_id -> geckos, dam_id -> geckos.
-        // Supabase syntax: relation_name:column_name ( or just relation name if obvious )
-        // Let's try explicit embedding with aliases.
-
+        // We also fetch sire_name/dam_name at each level to support "User Declared" manual entries.
+        
         const { data, error } = await supabase
             .from("geckos")
             .select(`
                 id, name, morph, gender, image_url, sire_name, dam_name,
                 sire:geckos!sire_id ( 
-                    id, name, morph, gender, image_url,
+                    id, name, morph, gender, image_url, sire_name, dam_name,
                     sire:geckos!sire_id ( id, name, morph, gender, image_url ),
                     dam:geckos!dam_id ( id, name, morph, gender, image_url )
                 ),
                 dam:geckos!dam_id ( 
-                    id, name, morph, gender, image_url,
+                    id, name, morph, gender, image_url, sire_name, dam_name,
                     sire:geckos!sire_id ( id, name, morph, gender, image_url ),
                     dam:geckos!dam_id ( id, name, morph, gender, image_url )
                 )
@@ -71,11 +72,9 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
                         gender: gecko.gender,
                         image_url: gecko.image_url,
                         is_verified: true,
-                        // We do recursive check, but grand-parents manual check is tricky without deeper recursion or flat fetch.
-                        // For MVP, we stick to system data for grandparents unless we recurse manually.
-                        // System Grandparents:
-                        sire: gecko.sire ? buildNode(gecko.sire) : null,
-                        dam: gecko.dam ? buildNode(gecko.dam) : null,
+                        // Pass manual names to recursive calls
+                        sire: buildNode(gecko.sire, gecko.sire_name),
+                        dam: buildNode(gecko.dam, gecko.dam_name),
                     };
                 }
 
@@ -104,7 +103,6 @@ export default async function LineagePage({ searchParams }: LineagePageProps) {
                 image_url: data.image_url,
                 is_verified: true,
                 // Pass manual names from Root to 1st Generation construction
-                // IMPORTANT: Pass 'system node' first, then 'manual name' as fallback inside the function
                 sire: buildNode(data.sire, data.sire_name),
                 dam: buildNode(data.dam, data.dam_name),
             };

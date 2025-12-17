@@ -14,9 +14,8 @@ export interface PedigreeNode {
     image_url?: string | null;
     sire?: PedigreeNode | null;
     dam?: PedigreeNode | null;
-    // New fields for reliability
-    is_verified?: boolean; // True if ID linked
-    manual_name?: string | null; // Display name if unlinked
+    is_verified?: boolean;
+    manual_name?: string | null;
 }
 
 interface PedigreeChartProps {
@@ -30,63 +29,51 @@ export function PedigreeChart({ gecko }: PedigreeChartProps) {
         router.push(`/lineage?id=${id}`);
     };
 
-    const renderNode = (node: PedigreeNode | null | undefined, label: string, isRoot: boolean = false) => {
-        // Handle Missing Node
-        if (!node && !gecko.manual_name) { // Simple check, real logic depends on parent passing
-            // Wait, the recursion structure means 'node' here IS the parent/grandparent.
-            // If node is null, it really meant no data.
+    // Single Card Component
+    const NodeCard = ({ node, label, isRoot = false }: { node?: PedigreeNode | null, label: string, isRoot?: boolean }) => {
+
+        // Missing / Placeholder
+        if (!node && !gecko.manual_name) {
             return (
-                <div className="flex flex-col items-center justify-center p-4 border border-dashed border-zinc-800 rounded-lg bg-zinc-900/30 opacity-50 h-[120px] w-full">
-                    <span className="text-xs text-zinc-600 uppercase tracking-widest mb-1">{label}</span>
-                    <span className="text-zinc-700 font-serif italic text-sm">Unknown</span>
+                <div className="flex flex-col items-center justify-center p-2 rounded-lg border border-dashed border-zinc-800 bg-zinc-900/30 opacity-50 w-full h-[90px] md:h-[110px]">
+                    <span className="text-[9px] text-zinc-600 uppercase tracking-widest mb-1">{label}</span>
+                    <span className="text-zinc-700 font-serif italic text-[10px]">Unknown</span>
                 </div>
             );
         }
 
-        // If node exists, it could be a real system node OR a manual entry wrapper we create in page.tsx
-        // Let's assume page.tsx constructs a proper PedigreeNode object even for manual entries.
-        // Manual entry: id might be empty or specific flag used.
-
         const isVerified = node?.is_verified ?? false;
         const displayName = node?.name || node?.manual_name || "Unknown";
         const displayMorph = node?.morph || (node?.manual_name ? "Manual Entry" : "");
-
-        const isManual = !isVerified && !isRoot; // Root is always "verified" conceptually as it's the subject
+        const isInteractive = !!node?.id && !isRoot;
 
         return (
             <Card
-                onClick={() => node?.id && !isRoot && handleNodeClick(node.id)}
+                onClick={() => isInteractive && handleNodeClick(node!.id)}
                 className={cn(
-                    "relative overflow-hidden transition-all duration-300 group w-full",
-                    // Interactive only if system node
-                    node?.id && !isRoot ? "cursor-pointer hover:shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:border-gold-500/50" : "cursor-default opacity-90",
-                    // Styles based on status
-                    isRoot ? "border-gold-500 bg-black scale-105 z-10 shadow-xl" :
-                        isVerified ? "border-zinc-700 bg-zinc-900 hover:border-gold-500/30" :
-                            "border-dashed border-zinc-800 bg-zinc-900/50" // Unverified Style
+                    "relative overflow-hidden transition-all duration-300 group w-full h-[90px] md:h-[110px] flex flex-col justify-between p-2 md:p-3 shadow-lg",
+                    isInteractive ? "cursor-pointer hover:shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:border-gold-500/50" : "cursor-default",
+                    isRoot ? "border-gold-500 bg-black z-10 md:scale-110" :
+                        isVerified ? "border-zinc-700 bg-zinc-900" :
+                            "border-dashed border-zinc-700 bg-zinc-900/50"
                 )}
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/80 z-10" />
-
-                {/* Background Image */}
                 {node?.image_url && (
-                    <img
-                        src={node.image_url}
-                        alt={displayName}
-                        className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity"
-                    />
+                    <div className="absolute inset-0 z-0">
+                        <img src={node.image_url} alt={displayName} className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                    </div>
                 )}
 
-                <div className="relative z-20 p-4 flex flex-col h-[120px] justify-between">
+                <div className="relative z-10 flex flex-col h-full justify-between">
                     <div>
-                        <div className="flex justify-between items-start">
-                            <span className="text-[10px] uppercase tracking-widest text-gold-500/80 font-bold flex items-center gap-1">
+                        <div className="flex justify-between items-start mb-0.5">
+                            <span className="text-[8px] uppercase tracking-wider text-gold-500/80 font-bold flex items-center gap-1">
                                 {label}
-                                {isVerified && <span className="bg-gold-500/20 text-gold-500 px-1 rounded-[2px] text-[8px] font-mono">System Matched</span>}
                             </span>
                             {node?.gender && (
                                 <Badge variant="outline" className={cn(
-                                    "text-[10px] px-1.5 py-0 border-zinc-700 bg-black/50",
+                                    "text-[7px] px-1 py-0 h-3 border-zinc-700 bg-black/50 backdrop-blur-sm",
                                     node.gender === 'Male' ? "text-blue-400" : node.gender === 'Female' ? "text-pink-400" : "text-zinc-400"
                                 )}>
                                     {node.gender.charAt(0)}
@@ -94,79 +81,115 @@ export function PedigreeChart({ gecko }: PedigreeChartProps) {
                             )}
                         </div>
                         <h3 className={cn(
-                            "font-serif font-bold text-white mt-1 leading-tight truncate pr-2",
-                            isRoot ? "text-xl" : "text-lg",
+                            "font-serif font-bold text-white leading-tight truncate pr-1",
+                            isRoot ? "text-sm md:text-lg" : "text-xs md:text-sm",
                             !isVerified && "text-zinc-400 italic"
                         )}>
                             {displayName}
                         </h3>
                     </div>
-
-                    <div className="flex justify-between items-end">
-                        <p className="text-xs text-zinc-400 font-mono truncate max-w-[100px]">
-                            {displayMorph}
-                        </p>
-                        {!isVerified && !isRoot && (
-                            <span className="text-[9px] text-zinc-600 uppercase border border-zinc-800 px-1 rounded">User Declared</span>
-                        )}
-                    </div>
+                    <p className="text-[8px] md:text-[9px] text-zinc-400 font-mono truncate max-w-[90%] opacity-80">
+                        {displayMorph}
+                    </p>
                 </div>
             </Card>
         );
     };
 
+    // Connector Lines (Inverted Merge Style: └──┬──┘)
+    const ConnectorBlock = () => (
+        <div className="flex flex-col items-center w-full h-6 md:h-8 -mt-2 md:-mt-3 mb-1 z-0 relative">
+            {/* Vertical arms coming down from parents (implicit via bottom-border) */}
+            {/* The U-shape bracket */}
+            <div className="w-1/2 border-b border-l border-r border-gold-500/50 h-[60%] rounded-bl-xl rounded-br-xl" />
+            {/* Vertical Line down to Child */}
+            <div className="w-px bg-gold-500/50 h-[40%]" />
+        </div>
+    );
+
+    // Recursive Group for Parents
+    const ParentGroup = ({
+        node,
+        label,
+        sireLabel,
+        damLabel,
+        sireNode,
+        damNode
+    }: {
+        node?: PedigreeNode | null,
+        label: string,
+        sireLabel: string,
+        damLabel: string,
+        sireNode?: PedigreeNode | null,
+        damNode?: PedigreeNode | null,
+    }) => {
+        return (
+            <div className="flex flex-col items-center w-full">
+                {/* Top: Grandparents */}
+                <div className="flex justify-center gap-2 md:gap-4 w-full mb-0 z-10 relative">
+                    <div className="w-1/2 min-w-0">
+                        <NodeCard node={sireNode} label={sireLabel} />
+                    </div>
+                    <div className="w-1/2 min-w-0">
+                        <NodeCard node={damNode} label={damLabel} />
+                    </div>
+                </div>
+
+                {/* Middle: Connector */}
+                <ConnectorBlock />
+
+                {/* Bottom: Parent */}
+                <div className="w-full md:w-[80%] px-1 md:px-0 z-10 relative">
+                    <NodeCard node={node} label={label} />
+                </div>
+            </div>
+        );
+    };
+
     return (
-        <div className="w-full overflow-x-auto pb-8">
-            <div className="min-w-[800px] flex items-center justify-between gap-8 p-4 relative">
+        <div className="w-full max-w-5xl mx-auto py-8">
+            <div className="flex flex-col items-center">
 
-                {/* Connector Lines (SVG) */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
-                    {/* Root to Parents */}
-                    <path d="M 280 200 C 350 200, 350 100, 420 100" fill="none" stroke="#D4AF37" strokeWidth="1" opacity="0.4" />
-                    <path d="M 280 200 C 350 200, 350 300, 420 300" fill="none" stroke="#D4AF37" strokeWidth="1" opacity="0.4" />
-
-                    {/* Sire to Grandparents */}
-                    <path d="M 620 100 C 670 100, 670 50, 720 50" fill="none" stroke="#3f3f46" strokeWidth="1" opacity="0.4" />
-                    <path d="M 620 100 C 670 100, 670 150, 720 150" fill="none" stroke="#3f3f46" strokeWidth="1" opacity="0.4" />
-
-                    {/* Dam to Grandparents */}
-                    <path d="M 620 300 C 670 300, 670 250, 720 250" fill="none" stroke="#3f3f46" strokeWidth="1" opacity="0.4" />
-                    <path d="M 620 300 C 670 300, 670 350, 720 350" fill="none" stroke="#3f3f46" strokeWidth="1" opacity="0.4" />
-                </svg>
-
-                {/* Generation 1: Self */}
-                <div className="w-[250px] z-10 flex flex-col justify-center h-[400px]">
-                    {renderNode(gecko, "Self", true)}
-                </div>
-
-                {/* Generation 2: Parents */}
-                <div className="w-[200px] z-10 flex flex-col justify-between h-[400px] py-10">
-                    <div className="relative">
-                        {renderNode(gecko.sire, "Sire")}
+                {/* Generation 1 & 2 Nested */}
+                <div className="flex justify-center gap-4 md:gap-12 w-full z-10 relative">
+                    {/* Sire Side */}
+                    <div className="w-1/2">
+                        <ParentGroup
+                            node={gecko.sire}
+                            label="Sire"
+                            sireNode={gecko.sire?.sire}
+                            sireLabel="Pat. Grandsire"
+                            damNode={gecko.sire?.dam}
+                            damLabel="Pat. Granddam"
+                        />
                     </div>
-                    <div className="relative">
-                        {renderNode(gecko.dam, "Dam")}
+
+                    {/* Dam Side */}
+                    <div className="w-1/2">
+                        <ParentGroup
+                            node={gecko.dam}
+                            label="Dam"
+                            sireNode={gecko.dam?.sire}
+                            sireLabel="Mat. Grandsire"
+                            damNode={gecko.dam?.dam}
+                            damLabel="Mat. Granddam"
+                        />
                     </div>
                 </div>
 
-                {/* Generation 3: Grandparents */}
-                <div className="w-[200px] z-10 flex flex-col justify-between h-[400px]">
-                    {/* Sire's Parents */}
-                    <div className="flex flex-col gap-2">
-                        {renderNode(gecko.sire?.sire, "Paternal Grandsire")}
-                        {renderNode(gecko.sire?.dam, "Paternal Granddam")}
-                    </div>
+                {/* Main Connector (Parents -> Self) */}
+                <div className="flex flex-col items-center w-full h-8 md:h-12 -mt-2 md:-mt-3 mb-1 z-0 relative">
+                    {/* Merge bracket */}
+                    <div className="w-[50%] border-b border-l border-r border-gold-500/50 h-[60%] rounded-bl-2xl rounded-br-2xl" />
+                    <div className="w-px bg-gold-500/50 h-[40%]" />
+                </div>
 
-                    {/* Dam's Parents */}
-                    <div className="flex flex-col gap-2">
-                        {renderNode(gecko.dam?.sire, "Maternal Grandsire")}
-                        {renderNode(gecko.dam?.dam, "Maternal Granddam")}
-                    </div>
+                {/* Self */}
+                <div className="w-1/2 md:w-1/3 max-w-[250px] z-20 relative">
+                    <NodeCard node={gecko} label="Self" isRoot={true} />
                 </div>
 
             </div>
         </div>
     );
 }
-
-import { BadgeCheck } from "lucide-react";
