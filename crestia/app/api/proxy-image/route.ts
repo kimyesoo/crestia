@@ -1,36 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-export const dynamic = "force-dynamic";
-
-export async function GET(request: NextRequest) {
-    const searchParams = request.nextUrl.searchParams;
-    const url = searchParams.get("url");
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const url = searchParams.get('url');
 
     if (!url) {
-        return new NextResponse("Missing 'url' parameter", { status: 400 });
+        return new NextResponse('Missing URL parameter', { status: 400 });
     }
 
     try {
         const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
 
-        if (!response.ok) {
-            return new NextResponse(`Failed to fetch external image. Status: ${response.status}`, { status: response.status });
-        }
+        const blob = await response.blob();
+        const headers = new Headers();
 
-        const contentType = response.headers.get("Content-Type") || "image/jpeg";
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        // ★ 핵심: CORS 및 Content-Type 설정
+        headers.set('Access-Control-Allow-Origin', '*');
+        headers.set('Content-Type', response.headers.get('Content-Type') || 'image/png');
+        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
 
-        return new NextResponse(buffer, {
-            headers: {
-                "Content-Type": contentType,
-                "Access-Control-Allow-Origin": "*",
-                "Cache-Control": "public, max-age=31536000, immutable",
-            },
-        });
-
+        return new NextResponse(blob, { status: 200, headers });
     } catch (error) {
-        console.error("Image Proxy Error:", error);
-        return new NextResponse("Internal Server Error", { status: 500 });
+        console.error('Proxy Error:', error);
+        // 에러 발생 시 500 리턴
+        return new NextResponse(JSON.stringify({ error: 'Failed to fetch image' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

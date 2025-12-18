@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { PedigreeChart, PedigreeNode } from "./PedigreeChart";
 
+import { HorizontalPedigreeChart } from "./HorizontalPedigreeChart";
+
 interface LineageTreeProps {
     geckoId: string;
+    variant?: "vertical" | "horizontal";
 }
 
-export function LineageTree({ geckoId }: LineageTreeProps) {
+export function LineageTree({ geckoId, variant = "vertical" }: LineageTreeProps) {
     const [gecko, setGecko] = useState<PedigreeNode | null>(null);
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
@@ -91,7 +94,11 @@ export function LineageTree({ geckoId }: LineageTreeProps) {
     if (loading) return <div className="text-zinc-500 text-xs animate-pulse">Loading Lineage...</div>;
     if (!gecko) return <div className="text-zinc-500 text-xs">No Lineage Found</div>;
 
-    // Scale down the chart to fit the card back
+    if (variant === "horizontal") {
+        return <HorizontalPedigreeChart gecko={gecko} />;
+    }
+
+    // Scale down the chart to fit the card back (Legacy Vertical Behavior)
     return (
         <div className="w-[180%] h-[180%] transform origin-top-left scale-[0.55] -ml-[0%] -mt-[5%] pointer-events-none">
             <PedigreeChart gecko={gecko} />
