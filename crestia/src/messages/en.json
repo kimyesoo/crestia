@@ -1,7 +1,20 @@
 {
+    "Navigation": {
+        "home": "HOME",
+        "auctions": "AUCTIONS",
+        "lineage": "LINEAGE",
+        "dashboard": "DASHBOARD",
+        "shop": "SHOP",
+        "login": "LOGIN",
+        "profileSettings": "Profile Settings",
+        "sellerDashboard": "Seller Dashboard",
+        "myShop": "My Shop",
+        "logout": "Log out"
+    },
     "Hero": {
         "title": "CRESTIA",
         "subtitle": "THE MYSTIC LINEAGE",
+        "description": "Preserving the eternal legacy of elite geckos.",
         "button": "ENTER THE ARCHIVE"
     },
     "About": {
@@ -18,16 +31,7 @@
         "cardLabel": "Crested Gecko",
         "specimen": "Specimen"
     },
-    "Nav": {
-        "home": "HOME",
-        "auctions": "AUCTIONS",
-        "lineage": "LINEAGE",
-        "dashboard": "DASHBOARD",
-        "shop": "SHOP",
-        "login": "LOGIN",
-        "profileSettings": "Profile Settings",
-        "sellerDashboard": "Seller Dashboard",
-        "myShop": "My Shop",
-        "logout": "Log out"
+    "Footer": {
+        "copyright": "© 2025 Crestia. All rights reserved."
     }
 }

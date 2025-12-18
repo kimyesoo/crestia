@@ -1,13 +1,90 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* Figtree Font */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* Tippy Tooltips */
+.tippy-box[data-animation='fade'][data-state='hidden'] {
+  opacity: 0;
+}
+
+[data-tippy-root] {
+  max-width: calc(100vw - 10px);
+}
+
+.tippy-box {
+  position: relative;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: 0;
+  transition-property: transform, visibility, opacity;
+}
+
+.tippy-box[data-placement^='top']>.tippy-arrow {
+  bottom: 0;
+}
+
+.tippy-box[data-placement^='top']>.tippy-arrow:before {
+  border-top-color: #333;
+  left: 0;
+}
+
+.tippy-box[data-placement^='bottom']>.tippy-arrow {
+  top: 0;
+}
+
+.tippy-box[data-placement^='bottom']>.tippy-arrow:before {
+  border-bottom-color: #333;
+  left: 0;
+}
+
+.tippy-box[data-placement^='left']>.tippy-arrow {
+  right: 0;
+}
+
+.tippy-box[data-placement^='left']>.tippy-arrow:before {
+  border-left-color: #333;
+  top: 0;
+}
+
+.tippy-box[data-placement^='right']>.tippy-arrow {
+  left: 0;
+}
+
+.tippy-box[data-placement^='right']>.tippy-arrow:before {
+  border-right-color: #333;
+  top: 0;
+}
+
+.tippy-content {
+  position: relative;
+  padding: 5px 9px;
+  z-index: 1;
+}
+
+.tippy-arrow {
+  width: 16px;
+  height: 16px;
+  color: #333;
+}
+
+.tippy-arrow:before {
+  content: '';
+  position: absolute;
+  border-color: transparent;
+  border-style: solid;
+}
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-lato);
-  --font-serif: var(--font-playfair);
+  --font-sans: "Figtree", sans-serif;
+  --font-serif: var(--font-playfair), serif;
 
   --color-gold-400: #D4AF37;
   --color-gold-500: #C5A028;
@@ -132,6 +209,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Figtree', sans-serif;
   }
 
   /* Optional: Apply serif to headings for luxury feel */

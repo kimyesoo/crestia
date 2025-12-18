@@ -31,7 +31,7 @@ export default async function AuctionPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-gold-500 font-sans p-8">
+        <div className="min-h-screen bg-black text-gold-500 font-sans p-8 pt-40">
             <div className="container mx-auto max-w-7xl">
                 {/* Header */}
                 <header className="mb-12 text-center border-b border-zinc-800 pb-8 relative">

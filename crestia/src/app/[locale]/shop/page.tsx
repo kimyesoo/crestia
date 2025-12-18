@@ -33,7 +33,7 @@ export default async function ShopPage() {
         .order("created_at", { ascending: false });
 
     return (
-        <div className="min-h-screen bg-black text-gold-500 font-sans p-4 md:p-8">
+        <div className="min-h-screen bg-black text-gold-500 font-sans p-4 md:p-8 pt-40">
             <div className="container mx-auto max-w-7xl">
                 {/* Header */}
                 <header className="mb-12 text-center md:text-left border-b border-zinc-800 pb-8 flex flex-col md:flex-row justify-between items-end gap-6">

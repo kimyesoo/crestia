@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     const isVerified = profile?.is_verified || false;
 
     return (
-        <div className="min-h-screen bg-black text-gold-500 p-4 md:p-8 font-sans">
+        <div className="text-gold-500 font-sans">
             <div className="max-w-6xl mx-auto space-y-12">
 
                 {/* Header with Profile Summary */}

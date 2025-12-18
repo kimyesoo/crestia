@@ -21,44 +21,20 @@ interface AuctionCardProps {
     };
 }
 
+import { useLocale } from "next-intl";
+
 export function AuctionCard({ auction }: AuctionCardProps) {
+    const locale = useLocale();
     const [timeLeft, setTimeLeft] = useState("");
     const [isEnded, setIsEnded] = useState(false);
-
-    useEffect(() => {
-        const calculateTimeLeft = () => {
-            const end = new Date(auction.end_at);
-            const now = new Date();
-            const diff = differenceInSeconds(end, now);
-
-            if (diff <= 0) {
-                setTimeLeft("Auction Ended");
-                setIsEnded(true);
-                return;
-            }
-
-            const days = Math.floor(diff / (3600 * 24));
-            const hours = Math.floor((diff % (3600 * 24)) / 3600);
-            const minutes = Math.floor((diff % 3600) / 60);
-            const seconds = diff % 60;
-
-            if (days > 0) {
-                setTimeLeft(`${days}d ${hours}h left`);
-            } else {
-                setTimeLeft(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
-            }
-        };
-
-        calculateTimeLeft();
-        const timer = setInterval(calculateTimeLeft, 1000);
-
-        return () => clearInterval(timer);
-    }, [auction.end_at]);
+    // ...
+    // ... (keep useEffect)
+    // ...
 
     if (!auction.gecko) return null;
 
     return (
-        <Link href={`/auction/${auction.id}`} className="group block h-full">
+        <Link href={`/${locale}/auctions/${auction.id}`} className="group block h-full">
             <Card className="h-full bg-zinc-900 border-zinc-800 overflow-hidden group-hover:border-gold-500/50 transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(212,175,55,0.1)] relative flex flex-col">
 
                 {/* Image Area */}

@@ -106,11 +106,11 @@ export default async function LineagePage(props: LineagePageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-black text-gold-500 font-sans p-4 md:p-8">
+        <div className="min-h-screen bg-black text-gold-500 font-sans p-4 md:p-8 pt-40">
             <div className="container mx-auto max-w-6xl">
 
                 {/* Header & Search */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 mt-10">
                     <div>
                         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">
                             Lineage Explorer

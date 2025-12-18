@@ -1,8 +1,21 @@
 {
+    "Navigation": {
+        "home": "HOME",
+        "auctions": "AUCTIONS",
+        "lineage": "LINEAGE",
+        "dashboard": "DASHBOARD",
+        "shop": "SHOP",
+        "login": "LOGIN",
+        "profileSettings": "Profile Settings",
+        "sellerDashboard": "Seller Dashboard",
+        "myShop": "My Shop",
+        "logout": "Log Out"
+    },
     "Hero": {
         "title": "CRESTIA",
-        "subtitle": "신비로운 혈통",
-        "button": "아카이브 입장"
+        "subtitle": "The Mystic Lineage",
+        "description": "엘리트 게코들의 영원한 유산을 기록하다",
+        "button": "아카이브 입장하기"
     },
     "About": {
         "identityTitle": "불변의 정체성",
@@ -18,16 +31,7 @@
         "cardLabel": "크레스티드 게코",
         "specimen": "표본"
     },
-    "Nav": {
-        "home": "홈",
-        "auctions": "경매",
-        "lineage": "혈통",
-        "dashboard": "대시보드",
-        "shop": "상점",
-        "login": "로그인",
-        "profileSettings": "프로필 설정",
-        "sellerDashboard": "판매자 대시보드",
-        "myShop": "내 상점",
-        "logout": "로그아웃"
+    "Footer": {
+        "copyright": "© 2025 Crestia. All rights reserved."
     }
 }

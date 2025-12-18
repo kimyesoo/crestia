@@ -48,8 +48,8 @@ export async function placeBid(auctionId: string, bidAmount: number) {
     }
 
     // 4. Revalidate
-    revalidatePath(`/auction/${auctionId}`);
-    revalidatePath("/auction");
+    revalidatePath(`/auctions/${auctionId}`);
+    revalidatePath("/auctions");
 
     return { success: true };
 }

@@ -38,7 +38,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-black/95 p-4 relative overflow-hidden">
+        <div className="flex min-h-screen items-center justify-center bg-black/95 p-4 pt-28 relative overflow-hidden">
             {/* Background Ambience */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold-500/10 via-black to-black opacity-50 pointer-events-none" />
 
