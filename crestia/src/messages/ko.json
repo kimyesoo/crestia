@@ -1,0 +1,33 @@
+{
+    "Hero": {
+        "title": "CRESTIA",
+        "subtitle": "신비로운 혈통",
+        "button": "아카이브 입장"
+    },
+    "About": {
+        "identityTitle": "불변의 정체성",
+        "identityDesc": "모든 게코는 고유의 디지털 증명서를 부여받아, 생물학적 블록체인 위에 그 유산을 영원히 보존합니다.",
+        "pedigreeTitle": "가계도 추적",
+        "pedigreeDesc": "세대를 잇는 혈통을 시각화합니다. 부모 개체를 연결하여 당신의 컬렉션에 담긴 유전적 역사를 밝혀보세요.",
+        "marketTitle": "프리미엄 마켓플레이스",
+        "marketDesc": "엘리트 브리더들이 자신의 걸작을 세상에 선보이는 큐레이션된 안식처입니다."
+    },
+    "Showcase": {
+        "title": "엄선된 표본",
+        "subtitle": "\"자연이 예술을 만나는 곳\"",
+        "cardLabel": "크레스티드 게코",
+        "specimen": "표본"
+    },
+    "Nav": {
+        "home": "홈",
+        "auctions": "경매",
+        "lineage": "혈통",
+        "dashboard": "대시보드",
+        "shop": "상점",
+        "login": "로그인",
+        "profileSettings": "프로필 설정",
+        "sellerDashboard": "판매자 대시보드",
+        "myShop": "내 상점",
+        "logout": "로그아웃"
+    }
+}

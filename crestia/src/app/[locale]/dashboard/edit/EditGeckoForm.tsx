@@ -29,7 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { updateGecko } from "@/app/dashboard/actions";
+import { updateGecko } from "@/app/[locale]/dashboard/actions";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -50,21 +50,24 @@ const formSchema = z.object({
 });
 
 interface EditGeckoFormProps {
-    gecko: any; // Using any for simplicity with Supabase return type, ideally defined interface
-    sires: { id: string; name: string }[];
-    dams: { id: string; name: string }[];
+    gecko: any; // Using any for simplicity with Supabase return type
+    potentialParents: { id: string; name: string; gender: string }[];
 }
 
-export function EditGeckoForm({ gecko, sires, dams }: EditGeckoFormProps) {
+export function EditGeckoForm({ gecko, potentialParents }: EditGeckoFormProps) {
     const [isLoading, setIsLoading] = useState(false);
 
-    // Initial previews from existing data
+    // Initial previews
     const [preview, setPreview] = useState<string | null>(gecko.image_url || null);
     const [proofPreview, setProofPreview] = useState<string | null>(gecko.proof_image_url || null);
 
-    // Modes for parent entry - detect if initial data has ID or Name only
+    // Modes for linege entry
     const [sireMode, setSireMode] = useState<"system" | "manual">(gecko.sire_id ? "system" : "manual");
     const [damMode, setDamMode] = useState<"system" | "manual">(gecko.dam_id ? "system" : "manual");
+
+    // Filter Parents
+    const sires = potentialParents.filter(p => p.gender === 'Male');
+    const dams = potentialParents.filter(p => p.gender === 'Female');
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema) as any,
@@ -99,7 +102,7 @@ export function EditGeckoForm({ gecko, sires, dams }: EditGeckoFormProps) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true);
         const formData = new FormData();
-        formData.append("id", gecko.id); // Add ID for update
+        formData.append("id", gecko.id);
         formData.append("name", values.name);
         formData.append("morph", values.morph);
         formData.append("gender", values.gender);
@@ -110,15 +113,21 @@ export function EditGeckoForm({ gecko, sires, dams }: EditGeckoFormProps) {
         // Handle Sire
         if (sireMode === "system" && values.sire_id && values.sire_id !== "none") {
             formData.append("sire_id", values.sire_id);
+            // Clear manual name if switching to system
+            formData.delete("sire_name");
         } else if (sireMode === "manual" && values.sire_name) {
             formData.append("sire_name", values.sire_name);
+            // Clear ID if switching to manual
+            formData.delete("sire_id");
         }
 
         // Handle Dam
         if (damMode === "system" && values.dam_id && values.dam_id !== "none") {
             formData.append("dam_id", values.dam_id);
+            formData.delete("dam_name");
         } else if (damMode === "manual" && values.dam_name) {
             formData.append("dam_name", values.dam_name);
+            formData.delete("dam_id");
         }
 
         if (values.description) formData.append("description", values.description);
@@ -134,7 +143,6 @@ export function EditGeckoForm({ gecko, sires, dams }: EditGeckoFormProps) {
             setIsLoading(false);
         } else {
             toast.success("Gecko Updated", { description: "Changes saved successfully." });
-            // Redirect happens in server action
         }
     }
 

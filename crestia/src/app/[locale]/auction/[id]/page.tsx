@@ -9,10 +9,11 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 interface AuctionDetailPageProps {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function AuctionDetailPage({ params }: AuctionDetailPageProps) {
+    const { id } = await params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -31,7 +32,7 @@ export default async function AuctionDetailPage({ params }: AuctionDetailPagePro
                 image_url
             )
         `)
-        .eq("id", params.id)
+        .eq("id", id)
         .single();
 
     if (error || !auction) {

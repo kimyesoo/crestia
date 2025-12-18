@@ -1,0 +1,33 @@
+{
+    "Hero": {
+        "title": "CRESTIA",
+        "subtitle": "THE MYSTIC LINEAGE",
+        "button": "ENTER THE ARCHIVE"
+    },
+    "About": {
+        "identityTitle": "Immutable Identity",
+        "identityDesc": "Every gecko is assigned a unique digital certificate, preserving its legacy forever on the blockchain of biology.",
+        "pedigreeTitle": "Pedigree Tracing",
+        "pedigreeDesc": "Visualize generations of lineage. Connect sires and dams to unveil the genetic history of your collection.",
+        "marketTitle": "Premium Marketplace",
+        "marketDesc": "A curated sanctuary for elite breeders to showcase their masterpieces to the world."
+    },
+    "Showcase": {
+        "title": "Curated Specimens",
+        "subtitle": "\"Where nature meets artistry\"",
+        "cardLabel": "Crested Gecko",
+        "specimen": "Specimen"
+    },
+    "Nav": {
+        "home": "HOME",
+        "auctions": "AUCTIONS",
+        "lineage": "LINEAGE",
+        "dashboard": "DASHBOARD",
+        "shop": "SHOP",
+        "login": "LOGIN",
+        "profileSettings": "Profile Settings",
+        "sellerDashboard": "Seller Dashboard",
+        "myShop": "My Shop",
+        "logout": "Log out"
+    }
+}

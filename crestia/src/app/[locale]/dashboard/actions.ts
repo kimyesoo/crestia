@@ -10,13 +10,12 @@ const geckoSchema = z.object({
     morph: z.string().min(1, 'Morph is required'),
     gender: z.enum(['Male', 'Female', 'Unknown']),
     birth_date: z.string().optional(),
-    sire_id: z.string().optional().nullable(),
-    dam_id: z.string().optional().nullable(),
-    sire_name: z.string().optional().nullable(),
-    dam_name: z.string().optional().nullable(),
-    description: z.string().optional().nullable().or(z.literal('')),
+    sire_id: z.string().nullable().optional(),
+    dam_id: z.string().nullable().optional(),
+    sire_name: z.string().nullable().optional(),
+    dam_name: z.string().nullable().optional(),
+    description: z.string().nullable().optional().or(z.literal('')),
     is_for_sale: z.boolean().default(false),
-    // Image handling is separate
 });
 
 export async function createGecko(formData: FormData) {
@@ -56,13 +55,11 @@ export async function createGecko(formData: FormData) {
         const fileExt = proofFile.name.split('.').pop();
         const fileName = `${user.id}/proof_${Date.now()}.${fileExt}`;
         const { error: uploadError } = await supabase.storage
-            .from('gecko-images') // Reusing bucket for now
+            .from('gecko-images')
             .upload(fileName, proofFile);
 
         if (uploadError) {
             console.error('Proof Upload Error:', uploadError);
-            // Non-blocking error for proof? Maybe strict? Let's strict for now to ensure quality
-            // Or allow graceful fail. Let's log but proceed to not block registration.
         } else {
             const { data: publicData } = supabase.storage
                 .from('gecko-images')
@@ -72,15 +69,22 @@ export async function createGecko(formData: FormData) {
     }
 
     // 3. Parse and Validate Data
+    // Helper to Convert Empty Strings to Null
+    const getValue = (key: string) => {
+        const value = formData.get(key);
+        if (value === "null" || value === "" || value === null) return null;
+        return value;
+    }
+
     const rawData = {
         name: formData.get('name'),
         morph: formData.get('morph'),
         gender: formData.get('gender'),
         birth_date: formData.get('birth_date') || undefined,
-        sire_id: formData.get('sire_id') === "null" || formData.get('sire_id') === "" ? null : formData.get('sire_id'),
-        dam_id: formData.get('dam_id') === "null" || formData.get('dam_id') === "" ? null : formData.get('dam_id'),
-        sire_name: formData.get('sire_name') || null,
-        dam_name: formData.get('dam_name') || null,
+        sire_id: getValue('sire_id'),
+        dam_id: getValue('dam_id'),
+        sire_name: getValue('sire_name'),
+        dam_name: getValue('dam_name'),
         description: formData.get('description'),
         is_for_sale: formData.get('is_for_sale') === 'true',
     };
@@ -88,14 +92,13 @@ export async function createGecko(formData: FormData) {
     const parsed = geckoSchema.safeParse(rawData);
 
     if (!parsed.success) {
+        console.error("Validation failed:", parsed.error);
         return { error: 'Validation failed' };
     }
 
     const { data: validatedData } = parsed;
 
     // 4. Insert into Database
-    console.log("Attempting to insert gecko for Owner ID:", user.id);
-
     const { error: insertError } = await supabase
         .from('geckos')
         .insert({
@@ -105,27 +108,19 @@ export async function createGecko(formData: FormData) {
             gender: validatedData.gender,
             birth_date: validatedData.birth_date || null,
             image_url: imageUrl,
-            sire_id: validatedData.sire_id || null,
-            dam_id: validatedData.dam_id || null,
-            sire_name: validatedData.sire_name || null,
-            dam_name: validatedData.dam_name || null,
+            sire_id: validatedData.sire_id,
+            dam_id: validatedData.dam_id,
+            sire_name: validatedData.sire_name,
+            dam_name: validatedData.dam_name,
             proof_image_url: proofUrl,
             description: validatedData.description || null,
             is_for_sale: validatedData.is_for_sale,
         });
 
     if (insertError) {
-        console.error('Server Action Insert Error:', {
-            code: insertError.code,
-            message: insertError.message,
-            details: insertError.details,
-            hint: insertError.hint
-        });
+        console.error('Insert Error:', insertError);
         return { error: `Database Error: ${insertError.message}` };
     }
-
-
-    console.log("Gecko created successfully for Owner ID:", user.id);
 
     revalidatePath('/dashboard');
     revalidatePath('/shop');
@@ -212,15 +207,21 @@ export async function updateGecko(formData: FormData) {
     }
 
     // 3. Parse and Validate Data
+    const getValue = (key: string) => {
+        const value = formData.get(key);
+        if (value === "null" || value === "" || value === null) return null;
+        return value;
+    }
+
     const rawData = {
         name: formData.get('name'),
         morph: formData.get('morph'),
         gender: formData.get('gender'),
         birth_date: formData.get('birth_date') || undefined,
-        sire_id: formData.get('sire_id') === "null" || formData.get('sire_id') === "" ? null : formData.get('sire_id'),
-        dam_id: formData.get('dam_id') === "null" || formData.get('dam_id') === "" ? null : formData.get('dam_id'),
-        sire_name: formData.get('sire_name') || null,
-        dam_name: formData.get('dam_name') || null,
+        sire_id: getValue('sire_id'),
+        dam_id: getValue('dam_id'),
+        sire_name: getValue('sire_name'),
+        dam_name: getValue('dam_name'),
         description: formData.get('description'),
         is_for_sale: formData.get('is_for_sale') === 'true',
     };
@@ -239,17 +240,16 @@ export async function updateGecko(formData: FormData) {
         morph: validatedData.morph,
         gender: validatedData.gender,
         birth_date: validatedData.birth_date || null,
-        sire_id: validatedData.sire_id || null,
-        dam_id: validatedData.dam_id || null,
-        sire_name: validatedData.sire_name || null,
-        dam_name: validatedData.dam_name || null,
+        sire_id: validatedData.sire_id,
+        dam_id: validatedData.dam_id,
+        sire_name: validatedData.sire_name,
+        dam_name: validatedData.dam_name,
         description: validatedData.description || null,
         is_for_sale: validatedData.is_for_sale,
         // Only update images if changed
         ...(imageUrl && { image_url: imageUrl }),
         ...(proofUrl && { proof_image_url: proofUrl }),
     };
-
 
     const { error: updateError } = await supabase
         .from('geckos')

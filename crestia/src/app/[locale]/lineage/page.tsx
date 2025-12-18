@@ -34,24 +34,20 @@ export default async function LineagePage(props: LineagePageProps) {
     }
 
     if (id) {
-        // 3-Generation Fetch
-        // We Use explicit foreign key aliases if defined, or assume relation names.
-        // Based on schema: sire_id -> geckos, dam_id -> geckos.
-        // We also fetch sire_name/dam_name at each level to support "User Declared" manual entries.
-        
+        // 3-Generation Fetch with Explicit JOINs
         const { data, error } = await supabase
             .from("geckos")
             .select(`
                 id, name, morph, gender, image_url, sire_name, dam_name,
-                sire:geckos!sire_id ( 
+                sire:sire_id ( 
                     id, name, morph, gender, image_url, sire_name, dam_name,
-                    sire:geckos!sire_id ( id, name, morph, gender, image_url ),
-                    dam:geckos!dam_id ( id, name, morph, gender, image_url )
+                    sire:sire_id ( id, name, morph, gender, image_url ),
+                    dam:dam_id ( id, name, morph, gender, image_url )
                 ),
-                dam:geckos!dam_id ( 
+                dam:dam_id ( 
                     id, name, morph, gender, image_url, sire_name, dam_name,
-                    sire:geckos!sire_id ( id, name, morph, gender, image_url ),
-                    dam:geckos!dam_id ( id, name, morph, gender, image_url )
+                    sire:sire_id ( id, name, morph, gender, image_url ),
+                    dam:dam_id ( id, name, morph, gender, image_url )
                 )
             `)
             .eq("id", id)

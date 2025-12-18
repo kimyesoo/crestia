@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "npm run dev --prefix crestia",
+    "build": "npm run build --prefix crestia",
+    "start": "npm run start --prefix crestia",
+    "lint": "npm run lint --prefix crestia"
+  },
+  "dependencies": {
+    "next-intl": "^4.6.1"
+  }
+}
