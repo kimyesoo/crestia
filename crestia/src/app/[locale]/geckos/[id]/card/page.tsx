@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import html2canvas from "html2canvas";
 import Link from "next/link";
-import { GeckoCard, GeckoCardFace, CardFront, CardBack } from "@/components/gecko/GeckoCard";
+import { GeckoCardFinal, CardFrontFinal, CardBackFinal } from "@/components/gecko/GeckoCardFinal";
 
 
 
@@ -142,24 +142,20 @@ export default function GeckoCardPage() {
 
             {/* 1. 화면 미리보기용 (사용자 편의를 위해 축소) */}
             <div className="flex items-center justify-center py-10" style={{ transform: 'scale(0.55)', transformOrigin: 'center' }}>
-                <GeckoCard gecko={gecko} displayImage={localImageBase64} />
+                <GeckoCardFinal gecko={gecko} displayImage={localImageBase64} />
             </div>
 
             {/* 2. 인쇄용 Ghost 요소 (사용자 눈엔 안 보임, 인쇄 규격 완벽 준수 1062x685) */}
-            {/* Safe Area is handled internally by GeckoCardFace now. We just provide the canvas. */}
+            {/* Safe Area handled internally by GeckoCardFinal components. */}
             <div style={{ position: 'fixed', top: 0, left: '-9999px' }}>
                 {/* Front Side Ghost */}
                 <div id="card-print-front" style={{ width: '1062px', height: '685px', background: '#000' }}>
-                    <GeckoCardFace>
-                        <CardFront gecko={gecko} displayImage={localImageBase64} />
-                    </GeckoCardFace>
+                    <CardFrontFinal gecko={gecko} displayImage={localImageBase64} />
                 </div>
 
                 {/* Back Side Ghost */}
                 <div id="card-print-back" style={{ width: '1062px', height: '685px', background: '#000' }}>
-                    <GeckoCardFace>
-                        <CardBack gecko={gecko} />
-                    </GeckoCardFace>
+                    <CardBackFinal gecko={gecko} />
                 </div>
             </div>
 
