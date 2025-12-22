@@ -270,14 +270,46 @@ export default function RegistrationHelperPage() {
             // Wait a bit for fonts to render if needed (though usually okay)
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            const canvas = await html2canvas(pdfRef.current, {
+            // Workaround for html2canvas not supporting lab() colors from Tailwind 4
+            // Clone the element and convert any lab() colors to rgb()
+            const clonedElement = pdfRef.current.cloneNode(true) as HTMLElement;
+            document.body.appendChild(clonedElement);
+            clonedElement.style.position = 'absolute';
+            clonedElement.style.left = '-9999px';
+            clonedElement.style.top = '0';
+            clonedElement.style.zIndex = '-1';
+
+            // Recursively sanitize computed styles that might have lab() colors
+            const sanitizeLabColors = (element: HTMLElement) => {
+                const computedStyle = window.getComputedStyle(element);
+                const propsToCheck = ['color', 'backgroundColor', 'borderColor', 'outlineColor'];
+
+                propsToCheck.forEach(prop => {
+                    const value = computedStyle.getPropertyValue(prop);
+                    if (value && value.includes('lab(')) {
+                        // Convert to a safe fallback color (black or white based on prop)
+                        element.style.setProperty(prop, prop.includes('background') ? '#ffffff' : '#000000', 'important');
+                    }
+                });
+
+                Array.from(element.children).forEach(child => {
+                    if (child instanceof HTMLElement) {
+                        sanitizeLabColors(child);
+                    }
+                });
+            };
+
+            sanitizeLabColors(clonedElement);
+
+            const canvas = await html2canvas(clonedElement, {
                 scale: 2, // High resolution for print
                 useCORS: true,
-                logging: true,
+                logging: false,
                 backgroundColor: '#ffffff', // Force white background
-                // IMPORTANT: html2canvas works best element is "visible" in DOM layout
-                // We use z-index hiding, so it IS visible to the renderer.
             });
+
+            // Remove the cloned element
+            document.body.removeChild(clonedElement);
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
