@@ -62,13 +62,21 @@ export function Navbar({ user }: NavbarProps) {
         router.refresh();
     };
 
+
+    const NAV_ITEMS = [
+        { label: t('home'), sub: '(홈)', href: `/${locale}` },
+        { label: t('auctions'), sub: '(경매)', href: `/${locale}/auctions` },
+        { label: t('lineage'), sub: '(혈통)', href: `/${locale}/lineage` },
+        { label: 'REGISTRATION', sub: '(등록 도우미)', href: `/${locale}/registration-helper` },
+        ...(user ? [{ label: t('dashboard'), sub: '(마이페이지)', href: `/${locale}/dashboard` }] : []),
+        { label: t('shop'), sub: '(스토어)', href: `/${locale}/shop` },
+    ];
+
     const NavItems = () => (
         <>
-            <NavLink href={`/${locale}`}>{t('home')}</NavLink>
-            <NavLink href={`/${locale}/auctions`}>{t('auctions')}</NavLink>
-            <NavLink href={`/${locale}/lineage`}>{t('lineage')}</NavLink>
-            {user && <NavLink href={`/${locale}/dashboard`}>{t('dashboard')}</NavLink>}
-            <NavLink href={`/${locale}/shop`}>{t('shop')}</NavLink>
+            {NAV_ITEMS.map((item) => (
+                <NavLink key={item.label} href={item.href} label={item.label} sub={item.sub} />
+            ))}
         </>
     );
 
@@ -99,12 +107,12 @@ export function Navbar({ user }: NavbarProps) {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center gap-12">
+                <div className="hidden lg:flex items-center gap-6 xl:gap-8">
                     <NavItems />
                 </div>
 
-                {/* Right Side Actions */}
-                <div className="hidden md:flex items-center gap-6">
+                {/* Right Side Actions - Desktop */}
+                <div className="hidden lg:flex items-center gap-6">
                     <button
                         onClick={toggleLanguage}
                         className="text-sm font-medium text-zinc-400 hover:text-[#D4AF37] transition-colors uppercase tracking-widest"
@@ -154,7 +162,7 @@ export function Navbar({ user }: NavbarProps) {
                 </div>
 
                 {/* Mobile Menu */}
-                <div className="md:hidden flex items-center gap-4">
+                <div className="lg:hidden flex items-center gap-4">
                     <button
                         onClick={toggleLanguage}
                         className="text-xs font-medium text-zinc-400 hover:text-[#D4AF37] transition-colors uppercase tracking-widest"
@@ -217,14 +225,22 @@ export function Navbar({ user }: NavbarProps) {
     );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({ href, label, sub }: { href: string; label: string; sub: string }) {
     return (
         <Link
             href={href}
-            className="text-lg font-bold text-zinc-400 hover:text-[#D4AF37] transition-colors duration-300 uppercase tracking-widest relative group py-2 whitespace-nowrap"
+            className="group flex flex-col items-center justify-center leading-tight py-2 px-2"
         >
-            {children}
-            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full" />
+            {/* Main Label (English) */}
+            <span className="text-sm md:text-base font-bold text-zinc-400 group-hover:text-[#D4AF37] transition-colors duration-300 uppercase tracking-widest relative">
+                {label}
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full" />
+            </span>
+
+            {/* Sub Label (Korean) */}
+            <span className="text-[10px] text-zinc-600 group-hover:text-[#D4AF37]/70 transition-colors font-medium mt-[2px] tracking-tighter">
+                {sub}
+            </span>
         </Link>
     );
 }

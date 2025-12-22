@@ -80,6 +80,26 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
 
+
+        {/* --- [NEW] Hero Text Section --- */}
+        {/* Visibility Gradient Overlay */}
+        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
+
+        {/* Text Content */}
+        <div className="absolute bottom-[18%] left-0 w-full flex flex-col items-center text-center z-20 px-4">
+
+          {/* Main Title */}
+          <h2 className="text-[#D4AF37] font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] drop-shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-1000 uppercase">
+            The Global Standard of Lineage
+          </h2>
+
+          {/* Sub Description */}
+          <p className="mt-4 text-zinc-300 font-sans text-sm md:text-base opacity-90 leading-relaxed max-w-2xl drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+            검증된 ID 카드 발급부터 투명한 이력 추적까지.<br className="hidden md:block" />
+            신뢰할 수 있는 거래와 관리는 크레스티아에서 시작됩니다.
+          </p>
+        </div>
+
         {/* Scroll Indicator */}
         <motion.div
           animate={{ y: [0, 10, 0] }}

@@ -100,7 +100,7 @@ export default function GeckoDetailPage() {
     const shopName = gecko.profiles?.shop_name || "Unknown Breeder";
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="container mx-auto px-4 pt-32 pb-8 max-w-6xl">
             {/* Back Button */}
             <Link href="/dashboard" className="inline-flex items-center text-muted-foreground hover:text-gold-500 mb-6 transition-colors">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
