@@ -9,6 +9,8 @@
         "profileSettings": "Profile Settings",
         "sellerDashboard": "Seller Dashboard",
         "myShop": "My Shop",
+        "myAccount": "내 계정",
+        "profile": "프로필",
         "logout": "Log Out"
     },
     "Hero": {

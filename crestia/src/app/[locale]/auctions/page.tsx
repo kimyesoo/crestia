@@ -67,7 +67,7 @@ export default async function AuctionPage() {
                             </p>
                         </div>
                         <Button asChild variant="outline" className="border-gold-500/30 text-gold-500 hover:bg-gold-500/10">
-                            <Link href="/shop">View Shop Collection</Link>
+                            <Link href="/market">View Shop Collection</Link>
                         </Button>
                     </div>
                 )}

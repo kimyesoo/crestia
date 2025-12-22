@@ -147,7 +147,7 @@ export default async function LineagePage(props: LineagePageProps) {
                                 Enter a Gecko ID above or select one from your dashboard to view its full 3-generation pedigree tree.
                             </p>
                             <Button asChild className="mt-4 bg-zinc-100 text-black hover:bg-white">
-                                <a href="/shop">Browse Collection</a>
+                                <a href="/market">Browse Collection</a>
                             </Button>
                         </div>
                     )}

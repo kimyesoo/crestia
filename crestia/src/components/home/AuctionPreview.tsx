@@ -14,7 +14,7 @@ export function AuctionPreview({ auctions }: AuctionPreviewProps) {
         return (
             <div className="text-center py-20 bg-zinc-900/30 rounded-2xl border border-zinc-800">
                 <p className="text-zinc-500 mb-4">No active auctions at the moment.</p>
-                <Link href="/shop">
+                <Link href="/market">
                     <Button variant="outline" className="text-gold-500 border-gold-500 hover:bg-gold-500 hover:text-black">
                         Browse Shop
                     </Button>
