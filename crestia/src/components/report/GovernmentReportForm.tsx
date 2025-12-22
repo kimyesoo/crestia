@@ -249,8 +249,8 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             {/* 10. Seal */}
             <div className="relative text-right pr-6 mb-8">
                 <span className="font-bold text-[18px] mr-4">시장 · 군수 · 구청장</span>
-                <div className="absolute right-0 top-[-15px] w-[60px] h-[60px] border-[3px] border-red-600 rounded-full flex items-center justify-center text-red-600 text-[12px] opacity-70" style={{ transform: 'rotate(-10deg)', borderColor: '#e11d48', color: '#e11d48' }}>
-                    <div className="border border-red-600 w-[40px] h-[40px] flex items-center justify-center rounded-sm">
+                <div className="absolute right-0 top-[-15px] w-[60px] h-[60px] border-[3px] rounded-full flex items-center justify-center text-[12px] opacity-70" style={{ transform: 'rotate(-10deg)', borderColor: '#e11d48', color: '#e11d48' }}>
+                    <div className="w-[40px] h-[40px] flex items-center justify-center rounded-sm" style={{ border: '1px solid #e11d48' }}>
                         직인
                     </div>
                 </div>

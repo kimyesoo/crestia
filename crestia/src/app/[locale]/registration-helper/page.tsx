@@ -267,36 +267,82 @@ export default function RegistrationHelperPage() {
         if (!pdfRef.current) return;
 
         try {
-            // Wait a bit for fonts to render if needed (though usually okay)
+            // Wait for fonts to render
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            // Workaround for html2canvas not supporting lab() colors from Tailwind 4
-            // Clone the element and convert any lab() colors to rgb()
+            // Clone the element
             const clonedElement = pdfRef.current.cloneNode(true) as HTMLElement;
+
+            // Apply inline styles to prevent lab() color issues
+            // Force all colors to be safe before appending to DOM
+            const applyInlineStyles = (element: HTMLElement) => {
+                // Set explicit colors to avoid lab() computed values
+                const style = element.getAttribute('style') || '';
+
+                // Only modify elements that use Tailwind classes which might compute to lab()
+                if (element.classList.contains('text-black') || element.classList.contains('bg-white')) {
+                    element.style.color = '#000000';
+                    element.style.backgroundColor = '#ffffff';
+                }
+
+                // Process children
+                Array.from(element.children).forEach(child => {
+                    if (child instanceof HTMLElement) {
+                        applyInlineStyles(child);
+                    }
+                });
+            };
+
+            applyInlineStyles(clonedElement);
+
+            // Append to DOM
             document.body.appendChild(clonedElement);
             clonedElement.style.position = 'absolute';
             clonedElement.style.left = '-9999px';
             clonedElement.style.top = '0';
             clonedElement.style.zIndex = '-1';
 
-            // Recursively sanitize computed styles that might have lab() colors
+            // Wait for clone to render
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            // Now sanitize computed styles that might still have lab() colors
             const sanitizeLabColors = (element: HTMLElement) => {
-                const computedStyle = window.getComputedStyle(element);
-                const propsToCheck = ['color', 'backgroundColor', 'borderColor', 'outlineColor'];
+                try {
+                    const computedStyle = window.getComputedStyle(element);
+                    const propsToCheck = [
+                        'color',
+                        'backgroundColor',
+                        'borderColor',
+                        'borderTopColor',
+                        'borderRightColor',
+                        'borderBottomColor',
+                        'borderLeftColor',
+                        'outlineColor',
+                        'textDecorationColor',
+                        'caretColor'
+                    ];
 
-                propsToCheck.forEach(prop => {
-                    const value = computedStyle.getPropertyValue(prop);
-                    if (value && value.includes('lab(')) {
-                        // Convert to a safe fallback color (black or white based on prop)
-                        element.style.setProperty(prop, prop.includes('background') ? '#ffffff' : '#000000', 'important');
-                    }
-                });
+                    propsToCheck.forEach(prop => {
+                        try {
+                            const value = computedStyle.getPropertyValue(prop);
+                            if (value && (value.includes('lab(') || value.includes('oklch(') || value.includes('oklab('))) {
+                                // Convert to safe fallback color
+                                const isBackground = prop.toLowerCase().includes('background');
+                                element.style.setProperty(prop, isBackground ? '#ffffff' : '#000000', 'important');
+                            }
+                        } catch {
+                            // Ignore property access errors
+                        }
+                    });
 
-                Array.from(element.children).forEach(child => {
-                    if (child instanceof HTMLElement) {
-                        sanitizeLabColors(child);
-                    }
-                });
+                    Array.from(element.children).forEach(child => {
+                        if (child instanceof HTMLElement) {
+                            sanitizeLabColors(child);
+                        }
+                    });
+                } catch {
+                    // Ignore element errors
+                }
             };
 
             sanitizeLabColors(clonedElement);
@@ -306,6 +352,11 @@ export default function RegistrationHelperPage() {
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff', // Force white background
+                onclone: (clonedDoc) => {
+                    // Additional safety: sanitize the html2canvas internal clone too
+                    const root = clonedDoc.body;
+                    sanitizeLabColors(root);
+                }
             });
 
             // Remove the cloned element
