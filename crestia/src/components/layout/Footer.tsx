@@ -28,7 +28,7 @@ export function Footer() {
                         <h3 className="text-white font-serif font-bold mb-6">Explore</h3>
                         <ul className="space-y-4 text-sm text-zinc-500">
                             <li><FooterLink href="/auction">Live Auctions</FooterLink></li>
-                            <li><FooterLink href="/shop">Marketplace</FooterLink></li>
+                            <li><FooterLink href="/market">Marketplace</FooterLink></li>
                             <li><FooterLink href="/lineage">Lineage Search</FooterLink></li>
                             <li><FooterLink href="/dashboard">My Dashboard</FooterLink></li>
                         </ul>

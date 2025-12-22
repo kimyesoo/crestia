@@ -9,11 +9,6 @@ const dummyGecko: GeckoDetails = {
     name: "UNNAMED",
     morph: "LILLY WHITE",
     hatchDate: "2025-12-09",
-    gender: "Unknown",
-    sireId: "567", // Note: GeckoDetails doesn't strictly adhere to sireId/damId in interface shown earlier but checking GeckoDetails interface again... it has id, imageUrl... let's check the interface in GeckoCardFinal.tsx.
-    // Re-reading Step 147: GeckoDetails interface has: id, imageUrl, hatchDate, morph, breeder, sireName, damName, name, pedigree (complex object). 
-    // It DOES NOT have sireId, damId, gender in the interface definition in GeckoCardFinal.tsx lines 14-29. 
-    // However, the object in page.tsx had them. I should match the interface.
     breeder: "CRESTIA",
     imageUrl: "/images/placeholder.png", // 실제 이미지 경로로 수정 필요
     sireName: "Unknown",

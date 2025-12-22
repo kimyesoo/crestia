@@ -69,7 +69,7 @@ export default async function DashboardPage() {
                             <Link href="/dashboard/profile">Edit Profile</Link>
                         </Button>
                         <Button asChild className="bg-gold-600 text-black hover:bg-gold-500 hover:text-black font-bold flex-1 md:flex-none">
-                            <Link href="/shop">View Public Shop</Link>
+                            <Link href="/market">View Public Shop</Link>
                         </Button>
                     </div>
                 </header>
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                             <h2 className="text-2xl font-serif font-bold text-white">Recently Added</h2>
                             <p className="text-zinc-500 text-sm mt-1">Quickly manage your latest additions.</p>
                         </div>
-                        <Link href="/shop" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
+                        <Link href="/market" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
                             View All <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
