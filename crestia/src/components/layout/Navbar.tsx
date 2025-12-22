@@ -89,9 +89,10 @@ export function Navbar({ user }: NavbarProps) {
                     : "bg-gradient-to-b from-black/80 to-transparent py-6"
             )}
         >
-            <div className="container mx-auto px-6 flex items-center justify-between">
-                {/* Logo */}
-                <Link href={`/${locale}`} className="relative z-10 flex items-center gap-2 group">
+            <div className="container mx-auto px-6 h-full flex items-center justify-between relative">
+
+                {/* 1. Left: Logo */}
+                <Link href={`/${locale}`} className="relative z-20 flex-shrink-0 flex items-center gap-2 group">
                     <div className="relative w-12 h-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
                         <Image
                             src="/logo.png"
@@ -106,13 +107,13 @@ export function Navbar({ user }: NavbarProps) {
                     </span>
                 </Link>
 
-                {/* Desktop Navigation */}
-                <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+                {/* 2. Center: Navigation Items (Absolute Center) */}
+                <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-6 xl:gap-8 z-10">
                     <NavItems />
                 </div>
 
-                {/* Right Side Actions - Desktop */}
-                <div className="hidden lg:flex items-center gap-6">
+                {/* 3. Right: User Profile & Actions */}
+                <div className="hidden lg:flex items-center gap-6 z-20 flex-shrink-0">
                     <button
                         onClick={toggleLanguage}
                         className="text-sm font-medium text-zinc-400 hover:text-[#D4AF37] transition-colors uppercase tracking-widest"
@@ -161,8 +162,8 @@ export function Navbar({ user }: NavbarProps) {
                     )}
                 </div>
 
-                {/* Mobile Menu */}
-                <div className="lg:hidden flex items-center gap-4">
+                {/* Mobile Menu (Right aligned on mobile) */}
+                <div className="lg:hidden flex items-center gap-4 z-20">
                     <button
                         onClick={toggleLanguage}
                         className="text-xs font-medium text-zinc-400 hover:text-[#D4AF37] transition-colors uppercase tracking-widest"
