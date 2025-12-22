@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ChevronRight, Users, Sparkles, Fingerprint } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from 'next-intl';
 
@@ -110,84 +110,126 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ABOUT SECTION */}
-      <section className="relative py-24 md:py-40 z-10 bg-gradient-to-b from-black to-zinc-950">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            <FeatureCard
-              icon={<Fingerprint className="w-8 h-8 text-gold-500" />}
-              title={t('About.identityTitle')}
-              description={t('About.identityDesc')}
-              delay={0.1}
-            />
-            <FeatureCard
-              icon={<Users className="w-8 h-8 text-gold-500" />}
-              title={t('About.pedigreeTitle')}
-              description={t('About.pedigreeDesc')}
-              delay={0.3}
-            />
-            <FeatureCard
-              icon={<Sparkles className="w-8 h-8 text-gold-500" />}
-              title={t('About.marketTitle')}
-              description={t('About.marketDesc')}
-              delay={0.5}
-            />
-          </motion.div>
+      {/* 2. Service Shortcut Section */}
+      <section className="py-20 bg-zinc-900 border-t border-white/5">
+        <div className="container mx-auto px-4">
+          <h3 className="text-[#D4AF37] font-serif text-2xl mb-8 tracking-widest text-center">CRESTIA UTILITIES</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1: Registration Helper */}
+            <Link href="/registration-helper" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📄</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">신고 서류 원클릭 완성</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  복잡한 양도/양수/보관 신고, <br />
+                  엑셀만 넣으면 1초 만에 서식이 만들어집니다.
+                </p>
+              </div>
+            </Link>
+
+            {/* Card 2: ID Card Generator */}
+            <Link href="/card" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💳</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">디지털 ID 카드 발급</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  내 개체의 가치를 증명하는 <br />
+                  고품격 ID 카드와 혈통서를 발급받으세요.
+                </p>
+              </div>
+            </Link>
+
+            {/* Card 3: Community */}
+            <Link href="/community" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💬</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">브리더 라운지</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  사육 노하우 공유부터 모프 질문까지, <br />
+                  브리더들과 자유롭게 소통하세요.
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* SHOWCASE SECTION */}
-      <section className="relative py-20 z-10 overflow-hidden bg-zinc-950/80 backdrop-blur-sm border-t border-white/5">
-        <div className="container mx-auto px-4 mb-12 text-center">
-          <h2 className="font-display text-3xl md:text-5xl text-white mb-4">{t('Showcase.title')}</h2>
-          <p className="text-zinc-500 font-serif italic">{t('Showcase.subtitle')}</p>
-        </div>
-
-        {/* Marquee Effect */}
-        <div className="flex gap-8 animate-marquee whitespace-nowrap px-4">
-          {[1, 2, 3, 4, 1, 2, 3, 4].map((i, index) => (
-            <div
-              key={index}
-              className="w-[300px] h-[400px] bg-zinc-900/50 rounded-lg overflow-hidden border border-white/5 grayscale hover:grayscale-0 transition-all duration-700 hover:scale-105 shrink-0 relative group shadow-2xl"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 z-10" />
-              {/* Inner Pattern for "Unrevealed" Feeling */}
-              <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-800 via-black to-black opacity-50" />
-
-              <div className="absolute bottom-6 left-6 z-20">
-                <p className="text-gold-500 text-xs tracking-widest uppercase mb-1">{t('Showcase.cardLabel')}</p>
-                <h3 className="text-2xl font-serif text-white group-hover:text-gold-400 transition-colors">{t('Showcase.specimen')} #{i * 92}</h3>
-              </div>
+      {/* 3. Trending Now (Community) */}
+      <section className="py-20 bg-black relative">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h3 className="text-white font-serif text-3xl mb-2">TRENDING NOW</h3>
+              <p className="text-zinc-500">커뮤니티에서 가장 뜨거운 이야기</p>
             </div>
-          ))}
+            <Button variant="outline" className="border-zinc-700 text-zinc-300 hover:text-white hover:border-white">
+              <Link href="/community">더보기</Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "이번에 해칭한 릴리입니다", author: "GeckoLover", likes: 24, comments: 8, tag: "Hatching" },
+              { title: "신고 서류 작성 질문있어요", author: "Newbie01", likes: 12, comments: 15, tag: "Q&A" },
+              { title: "아잔틱 라인업 정리해봅니다", author: "BreederPro", likes: 56, comments: 23, tag: "Info" },
+              { title: "서울 파충류 박람회 후기", author: "ReptileFan", likes: 34, comments: 5, tag: "Review" },
+            ].map((post, i) => (
+              <Link href="/community" key={i} className="group bg-zinc-900/50 border border-zinc-800 p-6 rounded-lg hover:border-[#D4AF37]/50 hover:bg-zinc-900 transition-all duration-300">
+                <div className="text-xs text-[#D4AF37] mb-3 px-2 py-1 bg-[#D4AF37]/10 w-fit rounded">{post.tag}</div>
+                <h4 className="text-white font-medium text-lg mb-4 group-hover:text-[#D4AF37] transition-colors line-clamp-2">
+                  {post.title}
+                </h4>
+                <div className="flex items-center justify-between text-zinc-500 text-sm mt-auto">
+                  <span>{post.author}</span>
+                  <div className="flex gap-3">
+                    <span className="flex items-center gap-1">♥ {post.likes}</span>
+                    <span className="flex items-center gap-1">🗨 {post.comments}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Featured Geckos (Showcase) */}
+      <section className="py-20 bg-zinc-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h3 className="text-[#D4AF37] font-serif text-4xl mb-4">FEATURED GECKOS</h3>
+            <p className="text-zinc-400">브리더들의 자부심이 담긴 쇼케이스</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+              <div key={item} className="relative aspect-square group overflow-hidden rounded-xl bg-zinc-900">
+                {/* Placeholder for images - In production this would be next/image */}
+                <div className="absolute inset-0 bg-zinc-800 animate-pulse group-hover:animate-none transition-all" />
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-700 font-serif text-4xl opacity-20 group-hover:opacity-10 transition-opacity">
+                  #{item}
+                </div>
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <p className="text-[#D4AF37] text-xs font-bold tracking-widest mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">LILLY WHITE</p>
+                  <p className="text-white font-serif transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">My Precious #{item}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Button asChild className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black px-8 py-6 text-lg tracking-widest transition-all duration-500">
+              <Link href="/showcase">VIEW ALL GALLERY</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNode, title: string, description: string, delay: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.8 }}
-      className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-md hover:bg-white/10 hover:border-gold-500/30 transition-all duration-500 group shadow-lg"
-    >
-      <div className="mb-6 p-4 rounded-full bg-black/50 w-fit border border-white/10 group-hover:border-gold-500/50 transition-colors">
-        {icon}
-      </div>
-      <h3 className="text-xl font-serif text-white mb-3 group-hover:text-gold-400 transition-colors">{title}</h3>
-      <p className="text-zinc-400 leading-relaxed text-sm font-light">
-        {description}
-      </p>
-    </motion.div>
-  );
-}
+

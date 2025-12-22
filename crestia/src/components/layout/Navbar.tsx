@@ -65,11 +65,11 @@ export function Navbar({ user }: NavbarProps) {
 
     const NAV_ITEMS = [
         { label: t('home'), sub: '(홈)', href: `/${locale}` },
-        { label: t('auctions'), sub: '(경매)', href: `/${locale}/auctions` },
-        { label: t('lineage'), sub: '(혈통)', href: `/${locale}/lineage` },
-        { label: 'REGISTRATION', sub: '(등록 도우미)', href: `/${locale}/registration-helper` },
-        ...(user ? [{ label: t('dashboard'), sub: '(마이페이지)', href: `/${locale}/dashboard` }] : []),
-        { label: t('shop'), sub: '(스토어)', href: `/${locale}/shop` },
+        { label: 'SHOWCASE', sub: '(자랑하기)', href: `/${locale}/showcase` },
+        { label: 'LOUNGE', sub: '(커뮤니티)', href: `/${locale}/community` },
+        { label: 'REGISTRATION', sub: '(신고 도우미)', href: `/${locale}/registration-helper` },
+        { label: 'MARKET', sub: '(분양/경매)', href: `/${locale}/market` },
+        ...(user ? [{ label: 'MY BREEDS', sub: '(개체 관리)', href: `/${locale}/dashboard` }] : []),
     ];
 
     const NavItems = () => (
