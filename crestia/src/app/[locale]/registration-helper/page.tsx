@@ -8,6 +8,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { GovernmentReportForm } from '@/components/report/GovernmentReportForm';
+import AdBanner from '@/components/ads/AdBanner';
 
 // --- Styles from GeckoCard ---
 const carbonFiberStyle: React.CSSProperties = {
@@ -379,7 +380,7 @@ export default function RegistrationHelperPage() {
                 </div>
 
                 {/* --- [NEW] Action Section --- */}
-                <div className="grid md:grid-cols-2 gap-6 mb-12">
+                <div className="flex flex-col gap-8 mb-12 max-w-2xl mx-auto w-full">
 
                     {/* Step 1: Download Template */}
                     <div className="flex flex-col gap-4 p-6 border border-zinc-700 rounded-xl bg-zinc-900/50">
@@ -395,6 +396,9 @@ export default function RegistrationHelperPage() {
                             📥 양식 엑셀 다운로드
                         </button>
                     </div>
+
+                    {/* ADVERTISEMENT BANNER */}
+                    <AdBanner dataAdSlot="1234567890" />
 
                     {/* Step 3: Upload File */}
                     <div

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Crestia",
@@ -28,6 +29,14 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className="dark">
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Navbar user={user} />
