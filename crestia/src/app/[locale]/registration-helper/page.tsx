@@ -270,97 +270,63 @@ export default function RegistrationHelperPage() {
             // Wait for fonts to render
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            // Clone the element
-            const clonedElement = pdfRef.current.cloneNode(true) as HTMLElement;
-
-            // Apply inline styles to prevent lab() color issues
-            // Force all colors to be safe before appending to DOM
-            const applyInlineStyles = (element: HTMLElement) => {
-                // Set explicit colors to avoid lab() computed values
-                const style = element.getAttribute('style') || '';
-
-                // Only modify elements that use Tailwind classes which might compute to lab()
-                if (element.classList.contains('text-black') || element.classList.contains('bg-white')) {
-                    element.style.color = '#000000';
-                    element.style.backgroundColor = '#ffffff';
-                }
-
-                // Process children
-                Array.from(element.children).forEach(child => {
-                    if (child instanceof HTMLElement) {
-                        applyInlineStyles(child);
-                    }
-                });
-            };
-
-            applyInlineStyles(clonedElement);
-
-            // Append to DOM
-            document.body.appendChild(clonedElement);
-            clonedElement.style.position = 'absolute';
-            clonedElement.style.left = '-9999px';
-            clonedElement.style.top = '0';
-            clonedElement.style.zIndex = '-1';
-
-            // Wait for clone to render
-            await new Promise(resolve => setTimeout(resolve, 50));
-
-            // Now sanitize computed styles that might still have lab() colors
-            const sanitizeLabColors = (element: HTMLElement) => {
-                try {
-                    const computedStyle = window.getComputedStyle(element);
-                    const propsToCheck = [
-                        'color',
-                        'backgroundColor',
-                        'borderColor',
-                        'borderTopColor',
-                        'borderRightColor',
-                        'borderBottomColor',
-                        'borderLeftColor',
-                        'outlineColor',
-                        'textDecorationColor',
-                        'caretColor'
-                    ];
-
-                    propsToCheck.forEach(prop => {
-                        try {
-                            const value = computedStyle.getPropertyValue(prop);
-                            if (value && (value.includes('lab(') || value.includes('oklch(') || value.includes('oklab('))) {
-                                // Convert to safe fallback color
-                                const isBackground = prop.toLowerCase().includes('background');
-                                element.style.setProperty(prop, isBackground ? '#ffffff' : '#000000', 'important');
-                            }
-                        } catch {
-                            // Ignore property access errors
-                        }
-                    });
-
-                    Array.from(element.children).forEach(child => {
-                        if (child instanceof HTMLElement) {
-                            sanitizeLabColors(child);
-                        }
-                    });
-                } catch {
-                    // Ignore element errors
-                }
-            };
-
-            sanitizeLabColors(clonedElement);
-
-            const canvas = await html2canvas(clonedElement, {
+            const canvas = await html2canvas(pdfRef.current, {
                 scale: 2, // High resolution for print
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff', // Force white background
-                onclone: (clonedDoc) => {
-                    // Additional safety: sanitize the html2canvas internal clone too
-                    const root = clonedDoc.body;
-                    sanitizeLabColors(root);
+                onclone: (clonedDoc, element) => {
+                    // Inject CSS override to eliminate all lab() colors
+                    const styleEl = clonedDoc.createElement('style');
+                    styleEl.textContent = `
+                        *, *::before, *::after {
+                            --tw-text-opacity: 1 !important;
+                            --tw-bg-opacity: 1 !important;
+                            --tw-border-opacity: 1 !important;
+                        }
+                        .text-black, [class*="text-black"] { color: #000000 !important; }
+                        .text-white, [class*="text-white"] { color: #ffffff !important; }
+                        .bg-white, [class*="bg-white"] { background-color: #ffffff !important; }
+                        .bg-black, [class*="bg-black"] { background-color: #000000 !important; }
+                        .border-black, [class*="border-black"] { border-color: #000000 !important; }
+                        .text-gray-400 { color: #9ca3af !important; }
+                        .text-gray-500 { color: #6b7280 !important; }
+                        .text-zinc-400 { color: #a1a1aa !important; }
+                        .text-zinc-500 { color: #71717a !important; }
+                        .text-zinc-600 { color: #52525b !important; }
+                        .bg-zinc-900 { background-color: #18181b !important; }
+                        .bg-\\[\\#dcdcdc\\] { background-color: #dcdcdc !important; }
+                        /* Force the report form to use safe colors */
+                        [class*="bg-white"], .relative.bg-white { 
+                            background-color: #ffffff !important;
+                            color: #000000 !important;
+                        }
+                    `;
+                    clonedDoc.head.appendChild(styleEl);
+
+                    // Also force inline styles on the cloned element
+                    element.style.backgroundColor = '#ffffff';
+                    element.style.color = '#000000';
+
+                    // Recursively apply safe colors
+                    const forceColors = (el: Element) => {
+                        if (el instanceof HTMLElement) {
+                            const computed = clonedDoc.defaultView?.getComputedStyle(el);
+                            if (computed) {
+                                // Force safe colors for any element
+                                if (el.classList.contains('bg-white') || el.classList.contains('relative')) {
+                                    el.style.backgroundColor = '#ffffff';
+                                }
+                                if (el.classList.contains('text-black')) {
+                                    el.style.color = '#000000';
+                                }
+                            }
+                        }
+                        Array.from(el.children).forEach(forceColors);
+                    };
+                    forceColors(element);
                 }
             });
-
-            // Remove the cloned element
-            document.body.removeChild(clonedElement);
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
