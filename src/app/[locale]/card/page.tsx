@@ -171,11 +171,22 @@ export default function CardPage() {
 
                 {/* Card Preview */}
                 {geckoDetails && (
-                    <GeckoCardFinal gecko={geckoDetails} />
+                    <>
+                        <GeckoCardFinal gecko={geckoDetails} />
+
+                        {/* Download Button */}
+                        <a
+                            href={`/ko/geckos/${selectedGecko?.id}/card`}
+                            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#B38728] to-[#FCF6BA] text-black rounded-lg font-bold hover:opacity-90 transition-opacity"
+                        >
+                            <CreditCard className="w-5 h-5" />
+                            Download High-Resolution Card
+                        </a>
+                    </>
                 )}
 
                 <p className="text-gray-500 mt-8 text-sm">
-                    * This preview uses the final high-resolution print format.
+                    * Click the card to flip, or use the download button for high-resolution print version.
                 </p>
             </div>
         </div>

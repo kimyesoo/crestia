@@ -121,7 +121,32 @@ export default function GeckoCardPage() {
                 scrollY: 0,
                 windowWidth: 1920, // Ensure ample viewport
                 x: 0,
-                y: 0
+                y: 0,
+                // Fix for lab()/oklab() color function parsing error
+                onclone: (clonedDoc: Document) => {
+                    const style = clonedDoc.createElement('style');
+                    style.innerHTML = `
+                        /* Override Tailwind CSS lab()/oklab() colors with HEX equivalents */
+                        * {
+                            --tw-bg-opacity: 1 !important;
+                            --tw-text-opacity: 1 !important;
+                            --tw-border-opacity: 1 !important;
+                        }
+                        .text-white { color: #ffffff !important; }
+                        .text-black { color: #000000 !important; }
+                        .text-zinc-400 { color: #a1a1aa !important; }
+                        .text-zinc-500 { color: #71717a !important; }
+                        .text-zinc-600 { color: #52525b !important; }
+                        .text-zinc-800 { color: #27272a !important; }
+                        .bg-black { background-color: #000000 !important; }
+                        .bg-white { background-color: #ffffff !important; }
+                        .bg-zinc-900 { background-color: #18181b !important; }
+                        .bg-zinc-800 { background-color: #27272a !important; }
+                        .border-zinc-800 { border-color: #27272a !important; }
+                        .border-zinc-900 { border-color: #18181b !important; }
+                    `;
+                    clonedDoc.head.appendChild(style);
+                }
             } as any);
 
             const link = document.createElement("a");
