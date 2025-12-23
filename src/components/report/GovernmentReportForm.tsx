@@ -180,7 +180,15 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
                 </colgroup>
                 <thead>
                     <tr style={{ height: '30px' }}>
-                        <td rowSpan={Math.max(minRows, filledData.length) + 1} style={{ ...cellLabel, backgroundColor: colorWhite, lineHeight: '1.4' }}>
+                        <td rowSpan={Math.max(minRows, filledData.length) + 1} style={{
+                            ...cellLabel,
+                            backgroundColor: colorWhite,
+                            lineHeight: '1.4',
+                            borderLeft: `2px solid ${colorBlack}`,
+                            borderRight: borderBlack,
+                            borderTop: 'none',
+                            borderBottom: borderBlack,
+                        }}>
                             <div style={{ ...flexCol, ...flexCenter, height: '100%' }}>
                                 <span style={{ marginBottom: '8px', fontWeight: 'bold', color: colorBlack }}>지정관리<br />야생동물<br />정 미</span>
                                 <span style={{ fontSize: '9px', fontWeight: 'normal', color: colorDarkGray }}>
