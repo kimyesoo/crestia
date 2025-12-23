@@ -1,6 +1,0 @@
-{
-    "buildCommand": "cd crestia && npm run build",
-    "installCommand": "cd crestia && npm install",
-    "framework": "nextjs",
-    "outputDirectory": "crestia/.next"
-}
