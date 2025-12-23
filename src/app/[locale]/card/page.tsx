@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GeckoCardFinal, GeckoDetails } from '@/components/gecko/GeckoCardFinal';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -12,7 +12,7 @@ interface Gecko {
     id: string;
     name: string;
     morph: string;
-    hatch_date: string | null;
+    birth_date: string | null;
     image_url: string | null;
     breeder_name: string | null;
     sire_name: string | null;
@@ -28,7 +28,9 @@ export default function CardPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
-    const supabase = createClient();
+
+    // Memoize supabase client to prevent multiple instances
+    const supabase = useMemo(() => createClient(), []);
 
     useEffect(() => {
         const checkAuthAndLoadGeckos = async () => {
@@ -41,16 +43,17 @@ export default function CardPage() {
 
             setUser(user);
 
-            // Fetch user's geckos
+            // Fetch user's geckos (correct column name: birth_date)
             const { data: geckosData, error } = await supabase
                 .from('geckos')
-                .select('id, name, morph, hatch_date, image_url, breeder_name, sire_name, dam_name, sire_id, dam_id')
+                .select('id, name, morph, birth_date, image_url, breeder_name, sire_name, dam_name, sire_id, dam_id')
                 .eq('owner_id', user.id)
                 .order('name', { ascending: true });
 
             if (error) {
                 console.error('Error fetching geckos:', error);
             } else {
+                console.log('Fetched geckos:', geckosData);
                 setGeckos(geckosData || []);
                 if (geckosData && geckosData.length > 0) {
                     setSelectedGecko(geckosData[0]);
@@ -63,11 +66,12 @@ export default function CardPage() {
         checkAuthAndLoadGeckos();
     }, [router, supabase]);
 
+
     const geckoDetails: GeckoDetails | null = selectedGecko ? {
         id: selectedGecko.id,
         name: selectedGecko.name || 'UNNAMED',
         morph: selectedGecko.morph || 'Unknown',
-        hatchDate: selectedGecko.hatch_date || 'Unknown',
+        hatchDate: selectedGecko.birth_date || 'Unknown',
         breeder: selectedGecko.breeder_name || 'Unknown',
         imageUrl: selectedGecko.image_url || '/images/placeholder.png',
         sireName: selectedGecko.sire_name || 'Unknown',

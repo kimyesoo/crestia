@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, UploadCloud, Loader2, AlertTriangle, Save } from "lucide-react";
+import { CalendarIcon, UploadCloud, Loader2, AlertTriangle, Save, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { updateGecko } from "@/app/[locale]/dashboard/actions";
+import { updateGecko, deleteGecko } from "@/app/[locale]/dashboard/actions";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -56,6 +57,8 @@ interface EditGeckoFormProps {
 
 export function EditGeckoForm({ gecko, potentialParents }: EditGeckoFormProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const router = useRouter();
 
     // Initial previews
     const [preview, setPreview] = useState<string | null>(gecko.image_url || null);
@@ -64,6 +67,24 @@ export function EditGeckoForm({ gecko, potentialParents }: EditGeckoFormProps) {
     // Modes for linege entry
     const [sireMode, setSireMode] = useState<"system" | "manual">(gecko.sire_id ? "system" : "manual");
     const [damMode, setDamMode] = useState<"system" | "manual">(gecko.dam_id ? "system" : "manual");
+
+    // Delete handler
+    const handleDelete = async () => {
+        if (!confirm(`Are you sure you want to delete "${gecko.name}"? This action cannot be undone.`)) {
+            return;
+        }
+
+        setIsDeleting(true);
+        const result = await deleteGecko(gecko.id);
+
+        if (result?.error) {
+            toast.error("Failed to delete gecko", { description: result.error });
+            setIsDeleting(false);
+        } else {
+            toast.success("Gecko Deleted", { description: `${gecko.name} has been removed.` });
+            router.push('/dashboard');
+        }
+    };
 
     // Filter Parents
     const sires = potentialParents.filter(p => p.gender === 'Male');
@@ -472,21 +493,36 @@ export function EditGeckoForm({ gecko, potentialParents }: EditGeckoFormProps) {
                             )}
                         />
 
-                        <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-gradient-to-r from-gold-400 to-gold-600 text-black hover:from-gold-300 hover:to-gold-500 font-bold border-0 shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all duration-500"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving Changes...
-                                </>
-                            ) : (
-                                <>
-                                    <Save className="mr-2 h-4 w-4" /> Save Changes
-                                </>
-                            )}
-                        </Button>
+                        <div className="flex gap-3">
+                            <Button
+                                type="submit"
+                                disabled={isLoading || isDeleting}
+                                className="flex-1 bg-gradient-to-r from-gold-400 to-gold-600 text-black hover:from-gold-300 hover:to-gold-500 font-bold border-0 shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all duration-500"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="mr-2 h-4 w-4" /> Save Changes
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                disabled={isLoading || isDeleting}
+                                onClick={handleDelete}
+                                className="bg-red-600 hover:bg-red-700 text-white font-bold"
+                            >
+                                {isDeleting ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Trash2 className="h-4 w-4" />
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </form>

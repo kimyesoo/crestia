@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { PedigreeChart, PedigreeNode } from '@/components/lineage/PedigreeChart';
 import { Navbar } from '@/components/layout/Navbar';
@@ -31,7 +31,9 @@ export default function LineagePage() {
     const [isLoadingLineage, setIsLoadingLineage] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
-    const supabase = createClient();
+
+    // Memoize supabase client to prevent multiple instances
+    const supabase = useMemo(() => createClient(), []);
 
     useEffect(() => {
         const checkAuthAndLoadGeckos = async () => {

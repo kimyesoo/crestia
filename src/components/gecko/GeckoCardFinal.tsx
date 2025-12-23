@@ -198,7 +198,7 @@ export const CardBackFinal = ({ gecko }: { gecko: GeckoDetails }) => {
                     {/* 1. Self */}
                     <div className="w-[20%] flex flex-col justify-center items-center relative">
                         <div className="text-[#D4AF37] font-bold text-xs mb-2 tracking-widest absolute -top-8 text-center w-full">SELF</div>
-                        <PedigreeBox label="ID / NAME" text={`${gecko.id} / ${selfName}`} />
+                        <PedigreeBox label="NAME" text={selfName} />
                         {/* Connector Output */}
                         <div className="absolute right-[-20%] top-1/2 w-[20%] h-[2px] bg-[#D4AF37]" />
                     </div>

@@ -270,3 +270,33 @@ export async function updateGecko(formData: FormData) {
     const locale = (await cookies()).get('NEXT_LOCALE')?.value || 'en';
     redirect({ href: '/dashboard', locale });
 }
+
+export async function deleteGecko(geckoId: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: 'Unauthorized' };
+    }
+
+    if (!geckoId) {
+        return { error: 'Gecko ID is required' };
+    }
+
+    // Delete gecko (only if owned by user)
+    const { error: deleteError } = await supabase
+        .from('geckos')
+        .delete()
+        .eq('id', geckoId)
+        .eq('owner_id', user.id);
+
+    if (deleteError) {
+        console.error('Delete Error:', deleteError);
+        return { error: `Failed to delete: ${deleteError.message}` };
+    }
+
+    revalidatePath('/dashboard');
+    revalidatePath('/shop');
+
+    return { success: true };
+}
