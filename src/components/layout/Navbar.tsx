@@ -117,15 +117,17 @@ export function Navbar({ user }: NavbarProps) {
         {
             label: 'TOOLS',
             sub: '(도구)',
-            href: `/${locale}/registration-helper`
+            children: [
+                { label: '신고서 자동생성', sub: 'Registration', href: `/${locale}/registration-helper`, icon: <FileText className="w-4 h-4" /> },
+                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <FileText className="w-4 h-4" /> },
+                { label: 'ID 카드', sub: 'Card', href: `/${locale}/card`, icon: <ImageIcon className="w-4 h-4" /> },
+            ]
         },
         ...(user ? [{
             label: 'MY PAGE',
             sub: '(마이페이지)',
             children: [
                 { label: '대시보드', sub: 'Dashboard', href: `/${locale}/dashboard`, icon: <LayoutDashboard className="w-4 h-4" /> },
-                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <FileText className="w-4 h-4" /> },
-                { label: 'ID 카드', sub: 'Card', href: `/${locale}/card`, icon: <ImageIcon className="w-4 h-4" /> },
                 { label: '프로필', sub: 'Profile', href: `/${locale}/dashboard/profile`, icon: <UserIcon className="w-4 h-4" /> },
             ]
         }] : []),
