@@ -53,7 +53,7 @@ export default function PostDetailPage() {
             // Fetch post
             const { data: postData, error: postError } = await supabase
                 .from('community_posts')
-                .select('*, profiles:user_id(username)')
+                .select('*')
                 .eq('id', postId)
                 .single();
 
@@ -74,7 +74,7 @@ export default function PostDetailPage() {
             // Fetch comments
             const { data: commentsData } = await supabase
                 .from('community_comments')
-                .select('*, profiles:user_id(username)')
+                .select('*')
                 .eq('post_id', postId)
                 .order('created_at', { ascending: true });
 
@@ -142,7 +142,7 @@ export default function PostDetailPage() {
         const { data, error } = await supabase
             .from('community_comments')
             .insert({ post_id: postId, user_id: currentUser, content: newComment })
-            .select('*, profiles:user_id(username)')
+            .select('*')
             .single();
 
         if (error) {

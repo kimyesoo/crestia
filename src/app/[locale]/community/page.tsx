@@ -48,7 +48,7 @@ export default function CommunityPage() {
 
             let query = supabase
                 .from('community_posts')
-                .select('*, profiles:user_id(username)')
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (activeTab !== 'all') {
