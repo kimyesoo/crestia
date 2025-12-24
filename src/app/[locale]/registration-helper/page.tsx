@@ -276,55 +276,76 @@ export default function RegistrationHelperPage() {
                 logging: false,
                 backgroundColor: '#ffffff', // Force white background
                 onclone: (clonedDoc, element) => {
-                    // Inject CSS override to eliminate all lab() colors
+                    // 1. Inject comprehensive CSS override
                     const styleEl = clonedDoc.createElement('style');
                     styleEl.textContent = `
-                        *, *::before, *::after {
+                        /* Override Tailwind CSS lab()/oklab()/oklch() colors with HEX equivalents */
+                        :root, *, *::before, *::after {
                             --tw-text-opacity: 1 !important;
                             --tw-bg-opacity: 1 !important;
                             --tw-border-opacity: 1 !important;
                         }
-                        .text-black, [class*="text-black"] { color: #000000 !important; }
+                        
+                        /* White/Black */
                         .text-white, [class*="text-white"] { color: #ffffff !important; }
+                        .text-black, [class*="text-black"] { color: #000000 !important; }
                         .bg-white, [class*="bg-white"] { background-color: #ffffff !important; }
                         .bg-black, [class*="bg-black"] { background-color: #000000 !important; }
-                        .border-black, [class*="border-black"] { border-color: #000000 !important; }
-                        .text-gray-400 { color: #9ca3af !important; }
-                        .text-gray-500 { color: #6b7280 !important; }
+                        
+                        /* Zinc scale */
                         .text-zinc-400 { color: #a1a1aa !important; }
                         .text-zinc-500 { color: #71717a !important; }
                         .text-zinc-600 { color: #52525b !important; }
                         .bg-zinc-900 { background-color: #18181b !important; }
+                        .bg-zinc-800 { background-color: #27272a !important; }
+                        
+                        /* Gray scale */
+                        .text-gray-400 { color: #9ca3af !important; }
+                        .text-gray-500 { color: #6b7280 !important; }
+                        
+                        /* Custom colors */
                         .bg-\\[\\#dcdcdc\\] { background-color: #dcdcdc !important; }
-                        /* Force the report form to use safe colors */
-                        [class*="bg-white"], .relative.bg-white { 
+                        
+                        /* Force the report form wrapper to use safe colors */
+                        [class*="bg-white"], .relative { 
                             background-color: #ffffff !important;
                             color: #000000 !important;
+                        }
+                        
+                        /* Override any gradient background */
+                        [class*="bg-gradient"] { 
+                            background-image: none !important;
                         }
                     `;
                     clonedDoc.head.appendChild(styleEl);
 
-                    // Also force inline styles on the cloned element
+                    // 2. Force inline styles on the main element
                     element.style.backgroundColor = '#ffffff';
                     element.style.color = '#000000';
 
-                    // Recursively apply safe colors
-                    const forceColors = (el: Element) => {
+                    // 3. Traverse ALL elements and replace any lab/oklab/oklch colors
+                    const allElements = clonedDoc.querySelectorAll('*');
+                    allElements.forEach((el) => {
                         if (el instanceof HTMLElement) {
                             const computed = clonedDoc.defaultView?.getComputedStyle(el);
                             if (computed) {
-                                // Force safe colors for any element
-                                if (el.classList.contains('bg-white') || el.classList.contains('relative')) {
+                                const bgColor = computed.backgroundColor;
+                                const textColor = computed.color;
+                                const borderColor = computed.borderColor;
+
+                                // Replace any lab/oklab/oklch colors with safe HEX fallbacks
+                                if (bgColor && (bgColor.includes('lab(') || bgColor.includes('oklab(') || bgColor.includes('oklch('))) {
                                     el.style.backgroundColor = '#ffffff';
                                 }
-                                if (el.classList.contains('text-black')) {
+                                if (textColor && (textColor.includes('lab(') || textColor.includes('oklab(') || textColor.includes('oklch('))) {
                                     el.style.color = '#000000';
+                                }
+                                if (borderColor && (borderColor.includes('lab(') || borderColor.includes('oklab(') || borderColor.includes('oklch('))) {
+                                    el.style.borderColor = '#000000';
                                 }
                             }
                         }
-                        Array.from(el.children).forEach(forceColors);
-                    };
-                    forceColors(element);
+                    });
                 }
             });
 
