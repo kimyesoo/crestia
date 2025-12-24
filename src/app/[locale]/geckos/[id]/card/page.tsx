@@ -52,22 +52,23 @@ export default function GeckoCardPage() {
                 // Map data to GeckoDetails interface
                 const mappedGecko = {
                     id: data.id,
+                    name: data.name || 'UNNAMED',  // Added name field
                     imageUrl: data.image_url,
-                    hatchDate: data.hatch_date,
+                    hatchDate: data.birth_date || 'Unknown',  // Fixed: birth_date not hatch_date
                     morph: data.morph || 'Unknown',
-                    breeder: data.breeder || 'Unknown',
-                    sireName: data.sire?.name || 'N/A',
-                    damName: data.dam?.name || 'N/A',
+                    breeder: 'Crestia',  // breeder column doesn't exist in DB
+                    sireName: data.sire?.name || data.sire_name || 'Unknown',
+                    damName: data.dam?.name || data.dam_name || 'Unknown',
                     pedigree: {
-                        sire: { id: data.sire?.id, name: data.sire?.name },
-                        dam: { id: data.dam?.id, name: data.dam?.name },
+                        sire: { id: data.sire?.id || data.sire_id, name: data.sire?.name || data.sire_name || 'Unknown' },
+                        dam: { id: data.dam?.id || data.dam_id, name: data.dam?.name || data.dam_name || 'Unknown' },
                         grandSires: [
-                            { id: data.sire?.sire?.id, name: data.sire?.sire?.name }, // Paternal Grandsire
-                            { id: data.dam?.sire?.id, name: data.dam?.sire?.name }    // Maternal Grandsire
+                            { id: data.sire?.sire?.id, name: data.sire?.sire?.name || 'Unknown' }, // Paternal Grandsire
+                            { id: data.dam?.sire?.id, name: data.dam?.sire?.name || 'Unknown' }    // Maternal Grandsire
                         ],
                         grandDams: [
-                            { id: data.sire?.dam?.id, name: data.sire?.dam?.name },   // Paternal Granddam
-                            { id: data.dam?.dam?.id, name: data.dam?.dam?.name }      // Maternal Granddam
+                            { id: data.sire?.dam?.id, name: data.sire?.dam?.name || 'Unknown' },   // Paternal Granddam
+                            { id: data.dam?.dam?.id, name: data.dam?.dam?.name || 'Unknown' }      // Maternal Granddam
                         ]
                     }
                 };
