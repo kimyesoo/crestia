@@ -190,7 +190,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
                             borderBottom: borderBlack,
                         }}>
                             <div style={{ ...flexCol, ...flexCenter, height: '100%' }}>
-                                <span style={{ marginBottom: '8px', fontWeight: 'bold', color: colorBlack }}>지정관리<br />야생동물<br />정 미</span>
+                                <span style={{ marginBottom: '8px', fontWeight: 'bold', color: colorBlack }}>지정관리<br />야생동물<br />정보</span>
                                 <span style={{ fontSize: '9px', fontWeight: 'normal', color: colorDarkGray }}>
                                     ※ 기재내용이<br />많은 경우 별<br />지로 작성
                                 </span>
