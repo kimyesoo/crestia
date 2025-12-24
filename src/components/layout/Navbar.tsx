@@ -118,7 +118,8 @@ export function Navbar({ user }: NavbarProps) {
             label: 'TOOLS',
             sub: '(도구)',
             children: [
-                { label: '신고서 자동생성', sub: 'Registration', href: `/${locale}/registration-helper`, icon: <FileText className="w-4 h-4" /> },
+                { label: 'Tools', sub: '도구 모음', href: `/${locale}/tools`, icon: <FileText className="w-4 h-4" /> },
+                { label: '분양 계약서', sub: 'Contract', href: `/${locale}/tools/contract`, icon: <FileText className="w-4 h-4" /> },
                 { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <FileText className="w-4 h-4" /> },
                 { label: 'ID 카드', sub: 'Card', href: `/${locale}/card`, icon: <ImageIcon className="w-4 h-4" /> },
             ]
