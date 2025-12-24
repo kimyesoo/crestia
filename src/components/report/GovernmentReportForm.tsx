@@ -41,9 +41,11 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
     const borderThick = `2px solid ${colorBlack}`;
     const borderDouble = `3px double ${colorBlack}`;
 
-    // Base Cell Style
+    // Base Cell Style - using outline for html2canvas compatibility
     const cellBase: React.CSSProperties = {
-        border: borderBlack,
+        border: 'none',
+        outline: `1px solid ${colorBlack}`,
+        outlineOffset: '-1px',
         padding: '0 4px',
         fontFamily: fontMain,
         fontSize: '11px',
@@ -106,7 +108,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </div>
 
             {/* 4. Receipt Header Table */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', borderTop: borderThick, borderBottom: borderDouble }}>
+            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', border: borderThick }}>
                 <colgroup>
                     <col style={{ width: '13%' }} />
                     <col style={{ width: '27%' }} />
@@ -128,7 +130,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </table>
 
             {/* 5. Person Info Tables */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '2px', borderTop: borderBlack }}>
+            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', marginTop: '2px', border: borderBlack }}>
                 <colgroup>
                     <col style={{ width: '13%' }} />
                     <col style={{ width: '13%' }} />
@@ -170,7 +172,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </table>
 
             {/* 6. Gecko List Table */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '2px', borderTop: borderDouble, borderBottom: borderBlack }}>
+            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', marginTop: '2px', border: borderThick }}>
                 <colgroup>
                     <col style={{ width: '13%' }} />
                     <col style={{ width: '27%' }} />
