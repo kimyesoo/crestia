@@ -121,7 +121,7 @@ export default function CommunityPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background py-8 px-4">
+        <div className="min-h-screen bg-background pt-28 pb-8 px-4">
             <div className="max-w-5xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -146,8 +146,8 @@ export default function CommunityPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeTab === tab.id
-                                    ? 'bg-[#D4AF37] text-black'
-                                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                                ? 'bg-[#D4AF37] text-black'
+                                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
                                 }`}
                         >
                             {tab.label}

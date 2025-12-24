@@ -218,7 +218,7 @@ export default function PostDetailPage() {
     if (!post) return null;
 
     return (
-        <div className="min-h-screen bg-background py-8 px-4">
+        <div className="min-h-screen bg-background pt-28 pb-8 px-4">
             <div className="max-w-4xl mx-auto">
                 {/* Back Button */}
                 <Link href="/community" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-6 transition">
