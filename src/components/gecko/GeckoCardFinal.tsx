@@ -41,7 +41,7 @@ const LabelValue = ({ label, value }: { label: string; value: string }) => (
         <div className="text-zinc-400 text-sm font-semibold uppercase tracking-wider">
             {label}
         </div>
-        <div className="text-white text-lg font-bold uppercase tracking-wide break-words leading-tight">
+        <div className="text-white text-lg font-bold uppercase tracking-wide leading-tight" style={{ wordBreak: 'break-all' }}>
             {value}
         </div>
     </div>
@@ -116,7 +116,7 @@ export const CardFrontFinal = ({ gecko, displayImage }: { gecko: GeckoDetails; d
                     {/* Right: Info Fields */}
                     <div className="flex-1 flex flex-col justify-center h-full pt-4">
                         <div className="flex flex-col gap-2">
-                            <LabelValue label="ID Number" value={gecko.id} />
+                            <LabelValue label="ID Number" value={gecko.id.length > 20 ? `${gecko.id.slice(0, 8)}...${gecko.id.slice(-4)}` : gecko.id} />
                             <LabelValue label="Hatch Date" value={gecko.hatchDate} />
                             <LabelValue label="Morph" value={gecko.morph || "Unknown"} />
                             <LabelValue label="Breeder" value={gecko.breeder || "Unknown"} />
