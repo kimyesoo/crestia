@@ -14,7 +14,6 @@ interface Gecko {
     morph: string;
     birth_date: string | null;
     image_url: string | null;
-    breeder_name: string | null;
     sire_name: string | null;
     dam_name: string | null;
     sire_id: string | null;
@@ -46,7 +45,7 @@ export default function CardPage() {
             // Fetch user's geckos (correct column name: birth_date)
             const { data: geckosData, error } = await supabase
                 .from('geckos')
-                .select('id, name, morph, birth_date, image_url, breeder_name, sire_name, dam_name, sire_id, dam_id')
+                .select('id, name, morph, birth_date, image_url, sire_name, dam_name, sire_id, dam_id')
                 .eq('owner_id', user.id)
                 .order('name', { ascending: true });
 
@@ -72,7 +71,7 @@ export default function CardPage() {
         name: selectedGecko.name || 'UNNAMED',
         morph: selectedGecko.morph || 'Unknown',
         hatchDate: selectedGecko.birth_date || 'Unknown',
-        breeder: selectedGecko.breeder_name || 'Unknown',
+        breeder: 'Crestia',  // breeder column doesn't exist in DB
         imageUrl: selectedGecko.image_url || '/images/placeholder.png',
         sireName: selectedGecko.sire_name || 'Unknown',
         damName: selectedGecko.dam_name || 'Unknown',
