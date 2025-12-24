@@ -1,280 +1,263 @@
 'use client';
 
-import { useState } from 'react';
-import { Navbar } from '@/components/layout/Navbar';
-import { CommunityTabs } from '@/components/community/CommunityTabs';
-import { PostCard, Post } from '@/components/community/PostCard';
-import { GalleryGrid } from '@/components/community/GalleryGrid';
+import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { User } from '@supabase/supabase-js';
-import { useEffect } from 'react';
-import {
-    Newspaper,
-    BookOpen,
-    Image as ImageIcon,
-    MessageSquare,
-    Sparkles
-} from 'lucide-react';
+import { PenLine, Heart, MessageCircle, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-// Mock Data
-const MOCK_POSTS: Post[] = [
-    // 공지사항
-    {
-        id: 'notice-1',
-        title: '🎉 Crestia 커뮤니티 오픈 안내',
-        summary: '안녕하세요! 크레스티드 게코 전문 플랫폼 Crestia 커뮤니티가 오픈했습니다. 사육자분들의 많은 참여 부탁드립니다.',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'notice',
-        author: 'Crestia',
-        createdAt: new Date('2024-12-20'),
-        views: 1250,
-        comments: 45,
-        likes: 89
-    },
-    {
-        id: 'notice-2',
-        title: '📢 야생동물 신고 도우미 기능 업데이트',
-        summary: 'PDF 자동 생성 기능이 개선되었습니다. 이제 더 빠르고 정확하게 신고서를 작성하실 수 있습니다.',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'notice',
-        author: 'Crestia',
-        createdAt: new Date('2024-12-18'),
-        views: 890,
-        comments: 23,
-        likes: 56
-    },
-    // 가이드
-    {
-        id: 'guide-1',
-        title: '크레스티드 게코 초보 사육 가이드 (완벽 정리)',
-        summary: '처음 크레스티드 게코를 키우시는 분들을 위한 완벽 가이드입니다. 사육장 셋팅부터 먹이급여, 온습도 관리까지 모든 것을 알려드립니다.',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'guide',
-        author: '게코마스터',
-        createdAt: new Date('2024-12-15'),
-        views: 3420,
-        comments: 156,
-        likes: 423
-    },
-    {
-        id: 'guide-2',
-        title: '게코 탈피 불량 해결 방법 총정리',
-        summary: '탈피 불량은 습도 관리가 핵심입니다. 올바른 습도 유지법과 탈피 불량 시 대처법을 알아봅시다.',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'guide',
-        author: '수의사토리',
-        createdAt: new Date('2024-12-10'),
-        views: 2100,
-        comments: 89,
-        likes: 312
-    },
-    // 게코스타그램
-    {
-        id: 'gallery-1',
-        title: '우리집 막내 릴리화이트 ❤️',
-        summary: '오늘 새로 맞이한 릴리화이트 베이비입니다!',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '게코러버',
-        createdAt: new Date('2024-12-22'),
-        views: 560,
-        comments: 34,
-        likes: 178
-    },
-    {
-        id: 'gallery-2',
-        title: '할로윈 크레스티드 자랑해요',
-        summary: '3년째 키우고 있는 할크입니다',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '할크아빠',
-        createdAt: new Date('2024-12-21'),
-        views: 440,
-        comments: 28,
-        likes: 145
-    },
-    {
-        id: 'gallery-3',
-        title: '사육장 리모델링 완료!',
-        summary: '바이오액티브 테라리움으로 꾸며봤어요',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '테라프로',
-        createdAt: new Date('2024-12-20'),
-        views: 890,
-        comments: 67,
-        likes: 234
-    },
-    {
-        id: 'gallery-4',
-        title: '먹방 타임 🍽️',
-        summary: '오늘도 밀웜 먹는 우리 아기',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '먹방게코',
-        createdAt: new Date('2024-12-19'),
-        views: 320,
-        comments: 19,
-        likes: 98
-    },
-    {
-        id: 'gallery-5',
-        title: '첫 핸들링 성공!',
-        summary: '드디어 손 위에 올라왔어요',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '뉴비사육사',
-        createdAt: new Date('2024-12-18'),
-        views: 510,
-        comments: 42,
-        likes: 156
-    },
-    {
-        id: 'gallery-6',
-        title: '화이트아웃 베이비 탄생 🎊',
-        summary: '드디어 첫 해칭!',
-        thumbnail: '/hero-gecko.jpg',
-        category: 'gallery',
-        author: '브리더킴',
-        createdAt: new Date('2024-12-17'),
-        views: 1200,
-        comments: 89,
-        likes: 345
-    },
-    // 자유게시판
-    {
-        id: 'board-1',
-        title: '게코 온도 관리 어떻게 하세요?',
-        summary: '겨울철 온도 관리가 어렵네요. 다들 어떤 방법으로 관리하시는지 궁금합니다.',
-        category: 'board',
-        author: '초보사육사',
-        createdAt: new Date('2024-12-22'),
-        views: 230,
-        comments: 45,
-        likes: 12
-    },
-    {
-        id: 'board-2',
-        title: '먹이 추천 부탁드려요',
-        summary: '파충류 전용 사료 중에 어떤 게 좋을까요? 현재 판게아를 먹이고 있는데 다른 것도 시도해보고 싶어요.',
-        category: 'board',
-        author: '게코초보',
-        createdAt: new Date('2024-12-21'),
-        views: 180,
-        comments: 32,
-        likes: 8
-    },
-    {
-        id: 'board-3',
-        title: '오프라인 모임 있나요?',
-        summary: '서울 근교에서 게코 사육자들 오프라인 모임이 있다면 참여하고 싶습니다!',
-        category: 'board',
-        author: '게코친구',
-        createdAt: new Date('2024-12-20'),
-        views: 340,
-        comments: 56,
-        likes: 34
-    },
-];
+interface Post {
+    id: string;
+    user_id: string;
+    category: string;
+    title: string;
+    content: string;
+    image_url: string | null;
+    view_count: number;
+    created_at: string;
+    profiles?: { username: string | null };
+    likes_count?: number;
+    comments_count?: number;
+}
 
 const TABS = [
-    { id: 'all', label: '전체', icon: <Sparkles className="w-4 h-4" /> },
-    { id: 'notice', label: '공지', icon: <Newspaper className="w-4 h-4" /> },
-    { id: 'guide', label: '가이드', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'gallery', label: '게코스타그램', icon: <ImageIcon className="w-4 h-4" /> },
-    { id: 'board', label: '자유글', icon: <MessageSquare className="w-4 h-4" /> },
+    { id: 'all', label: '전체' },
+    { id: 'notice', label: '공지사항' },
+    { id: 'gallery', label: '갤러리' },
+    { id: 'board', label: '자유게시판' },
 ];
 
 export default function CommunityPage() {
+    const supabase = useMemo(() => createClient(), []);
     const [activeTab, setActiveTab] = useState('all');
-    const [user, setUser] = useState<User | null>(null);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<string | null>(null);
 
     useEffect(() => {
-        const supabase = createClient();
-        supabase.auth.getUser().then(({ data }) => {
-            setUser(data.user);
-        });
-    }, []);
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user?.id || null);
+        };
+        fetchUser();
+    }, [supabase]);
 
-    const filteredPosts = activeTab === 'all'
-        ? MOCK_POSTS
-        : MOCK_POSTS.filter(post => post.category === activeTab);
+    useEffect(() => {
+        const fetchPosts = async () => {
+            setLoading(true);
 
-    const galleryPosts = filteredPosts.filter(post => post.category === 'gallery');
-    const nonGalleryPosts = filteredPosts.filter(post => post.category !== 'gallery');
+            let query = supabase
+                .from('community_posts')
+                .select('*, profiles:user_id(username)')
+                .order('created_at', { ascending: false });
+
+            if (activeTab !== 'all') {
+                query = query.eq('category', activeTab);
+            }
+
+            const { data, error } = await query.limit(50);
+
+            if (error) {
+                console.error('Error fetching posts:', error);
+                setPosts([]);
+            } else {
+                // Get likes and comments count for each post
+                const postsWithCounts = await Promise.all(
+                    (data || []).map(async (post) => {
+                        const { count: likesCount } = await supabase
+                            .from('community_likes')
+                            .select('*', { count: 'exact', head: true })
+                            .eq('post_id', post.id);
+
+                        const { count: commentsCount } = await supabase
+                            .from('community_comments')
+                            .select('*', { count: 'exact', head: true })
+                            .eq('post_id', post.id);
+
+                        return {
+                            ...post,
+                            likes_count: likesCount || 0,
+                            comments_count: commentsCount || 0,
+                        };
+                    })
+                );
+                setPosts(postsWithCounts);
+            }
+
+            setLoading(false);
+        };
+
+        fetchPosts();
+    }, [activeTab, supabase]);
+
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = now.getTime() - date.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+
+        if (hours < 1) return '방금 전';
+        if (hours < 24) return `${hours}시간 전`;
+        if (hours < 48) return '어제';
+        return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    };
+
+    const getCategoryColor = (category: string) => {
+        switch (category) {
+            case 'notice': return 'bg-red-500/20 text-red-400';
+            case 'gallery': return 'bg-purple-500/20 text-purple-400';
+            case 'board': return 'bg-blue-500/20 text-blue-400';
+            default: return 'bg-zinc-500/20 text-zinc-400';
+        }
+    };
+
+    const getCategoryLabel = (category: string) => {
+        switch (category) {
+            case 'notice': return '공지';
+            case 'gallery': return '갤러리';
+            case 'board': return '자유';
+            default: return category;
+        }
+    };
 
     return (
-        <div className="min-h-screen bg-black text-white">
-            <Navbar user={user} />
-
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <div className="min-h-screen bg-background py-8 px-4">
+            <div className="max-w-5xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#FCF6BA] mb-3">
-                        Community
-                    </h1>
-                    <p className="text-zinc-500 text-sm md:text-base">
-                        크레스티드 게코 사육자들을 위한 커뮤니티 공간입니다
-                    </p>
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white mb-2">
+                            <span className="text-[#D4AF37]">COMMUNITY</span>
+                        </h1>
+                        <p className="text-zinc-500">크레스티드 게코 사육자들을 위한 커뮤니티</p>
+                    </div>
+                    <Link href="/community/write">
+                        <Button className="bg-[#D4AF37] hover:bg-[#C5A028] text-black gap-2">
+                            <PenLine className="w-4 h-4" />
+                            글쓰기
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Tabs */}
-                <div className="mb-8">
-                    <CommunityTabs
-                        tabs={TABS}
-                        activeTab={activeTab}
-                        onTabChange={setActiveTab}
-                    />
+                <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+                    {TABS.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeTab === tab.id
+                                    ? 'bg-[#D4AF37] text-black'
+                                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
 
-                {/* Content */}
-                {activeTab === 'gallery' ? (
+                {/* Posts List */}
+                {loading ? (
+                    <div className="text-center py-20 text-zinc-500">로딩 중...</div>
+                ) : posts.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-zinc-500 mb-4">아직 게시글이 없습니다.</p>
+                        {user && (
+                            <Link href="/community/write">
+                                <Button variant="outline">첫 번째 글 작성하기</Button>
+                            </Link>
+                        )}
+                    </div>
+                ) : activeTab === 'gallery' ? (
                     // Gallery Grid View
-                    <GalleryGrid posts={galleryPosts} />
-                ) : activeTab === 'all' ? (
-                    // Mixed View: Gallery Grid + Post List
-                    <div className="space-y-10">
-                        {/* Gallery Section */}
-                        {galleryPosts.length > 0 && (
-                            <section>
-                                <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-4">
-                                    <ImageIcon className="w-5 h-5 text-[#D4AF37]" />
-                                    게코스타그램
-                                </h2>
-                                <GalleryGrid posts={galleryPosts.slice(0, 4)} />
-                            </section>
-                        )}
-
-                        {/* Posts Section */}
-                        {nonGalleryPosts.length > 0 && (
-                            <section>
-                                <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-4">
-                                    <Newspaper className="w-5 h-5 text-[#D4AF37]" />
-                                    최신 글
-                                </h2>
-                                <div className="space-y-3">
-                                    {nonGalleryPosts.map((post) => (
-                                        <PostCard key={post.id} post={post} />
-                                    ))}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {posts.map((post) => (
+                            <Link
+                                key={post.id}
+                                href={`/community/${post.id}`}
+                                className="group relative aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 hover:border-[#D4AF37]/50 transition-all"
+                            >
+                                {post.image_url ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={post.image_url}
+                                        alt={post.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-zinc-800">
+                                        <span className="text-4xl">🦎</span>
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                                    <p className="text-white text-sm font-medium line-clamp-2">{post.title}</p>
+                                    <div className="flex gap-3 mt-2 text-zinc-400 text-xs">
+                                        <span className="flex items-center gap-1">
+                                            <Heart className="w-3 h-3" /> {post.likes_count}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <MessageCircle className="w-3 h-3" /> {post.comments_count}
+                                        </span>
+                                    </div>
                                 </div>
-                            </section>
-                        )}
+                            </Link>
+                        ))}
                     </div>
                 ) : (
-                    // Filtered Post List View
+                    // List View
                     <div className="space-y-3">
-                        {filteredPosts.length > 0 ? (
-                            filteredPosts.map((post) => (
-                                <PostCard key={post.id} post={post} />
-                            ))
-                        ) : (
-                            <div className="text-center py-20 text-zinc-500">
-                                아직 등록된 글이 없습니다.
-                            </div>
-                        )}
+                        {posts.map((post) => (
+                            <Link
+                                key={post.id}
+                                href={`/community/${post.id}`}
+                                className="block bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 hover:border-[#D4AF37]/30 hover:bg-zinc-900 transition-all"
+                            >
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className={`text-xs px-2 py-0.5 rounded ${getCategoryColor(post.category)}`}>
+                                                {getCategoryLabel(post.category)}
+                                            </span>
+                                            <span className="text-zinc-500 text-xs">
+                                                {post.profiles?.username || '익명'}
+                                            </span>
+                                            <span className="text-zinc-600 text-xs">
+                                                {formatDate(post.created_at)}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-white font-medium text-lg mb-1 truncate">
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-zinc-500 text-sm line-clamp-1">
+                                            {post.content}
+                                        </p>
+                                    </div>
+                                    {post.image_url && (
+                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={post.image_url}
+                                                alt=""
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-4 mt-3 text-zinc-500 text-sm">
+                                    <span className="flex items-center gap-1">
+                                        <Eye className="w-4 h-4" /> {post.view_count}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <Heart className="w-4 h-4" /> {post.likes_count}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <MessageCircle className="w-4 h-4" /> {post.comments_count}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 )}
-            </main>
+            </div>
         </div>
     );
 }
