@@ -124,28 +124,98 @@ export default function GeckoCardPage() {
                 y: 0,
                 // Fix for lab()/oklab() color function parsing error
                 onclone: (clonedDoc: Document) => {
+                    // 1. Inject comprehensive CSS overrides
                     const style = clonedDoc.createElement('style');
                     style.innerHTML = `
-                        /* Override Tailwind CSS lab()/oklab() colors with HEX equivalents */
-                        * {
+                        /* Override Tailwind CSS lab()/oklab()/oklch() colors with HEX equivalents */
+                        :root, * {
                             --tw-bg-opacity: 1 !important;
                             --tw-text-opacity: 1 !important;
                             --tw-border-opacity: 1 !important;
                         }
-                        .text-white { color: #ffffff !important; }
-                        .text-black { color: #000000 !important; }
+                        
+                        /* White/Black */
+                        .text-white, [class*="text-white"] { color: #ffffff !important; }
+                        .text-black, [class*="text-black"] { color: #000000 !important; }
+                        .bg-white, [class*="bg-white"] { background-color: #ffffff !important; }
+                        .bg-black, [class*="bg-black"] { background-color: #000000 !important; }
+                        
+                        /* Zinc scale */
+                        .text-zinc-50 { color: #fafafa !important; }
+                        .text-zinc-100 { color: #f4f4f5 !important; }
+                        .text-zinc-200 { color: #e4e4e7 !important; }
+                        .text-zinc-300 { color: #d4d4d8 !important; }
                         .text-zinc-400 { color: #a1a1aa !important; }
                         .text-zinc-500 { color: #71717a !important; }
                         .text-zinc-600 { color: #52525b !important; }
+                        .text-zinc-700 { color: #3f3f46 !important; }
                         .text-zinc-800 { color: #27272a !important; }
-                        .bg-black { background-color: #000000 !important; }
-                        .bg-white { background-color: #ffffff !important; }
-                        .bg-zinc-900 { background-color: #18181b !important; }
+                        .text-zinc-900 { color: #18181b !important; }
+                        .text-zinc-950 { color: #09090b !important; }
+                        
+                        .bg-zinc-50 { background-color: #fafafa !important; }
+                        .bg-zinc-100 { background-color: #f4f4f5 !important; }
+                        .bg-zinc-200 { background-color: #e4e4e7 !important; }
+                        .bg-zinc-300 { background-color: #d4d4d8 !important; }
+                        .bg-zinc-400 { background-color: #a1a1aa !important; }
+                        .bg-zinc-500 { background-color: #71717a !important; }
+                        .bg-zinc-600 { background-color: #52525b !important; }
+                        .bg-zinc-700 { background-color: #3f3f46 !important; }
                         .bg-zinc-800 { background-color: #27272a !important; }
+                        .bg-zinc-900 { background-color: #18181b !important; }
+                        .bg-zinc-950 { background-color: #09090b !important; }
+                        [class*="bg-zinc-900\\/"] { background-color: #18181b !important; }
+                        [class*="bg-zinc-950\\/"] { background-color: #09090b !important; }
+                        [class*="bg-black\\/"] { background-color: #000000 !important; }
+                        
                         .border-zinc-800 { border-color: #27272a !important; }
                         .border-zinc-900 { border-color: #18181b !important; }
+                        
+                        /* Gold colors */
+                        .text-gold-500, .text-\\[\\#D4AF37\\] { color: #D4AF37 !important; }
+                        .bg-gold-500 { background-color: #D4AF37 !important; }
+                        .border-gold-500, .border-\\[\\#D4AF37\\] { border-color: #D4AF37 !important; }
+                        [class*="border-\\[\\#D4AF37\\]"] { border-color: #D4AF37 !important; }
+                        
+                        /* Gray scale (fallback) */
+                        .text-gray-400 { color: #9ca3af !important; }
+                        .text-gray-500 { color: #6b7280 !important; }
+                        .text-gray-600 { color: #4b5563 !important; }
+                        
+                        /* Gradient backgrounds - use solid fallback */
+                        [class*="bg-gradient"] { 
+                            background-image: none !important;
+                            background-color: #D4AF37 !important;
+                        }
+                        
+                        /* Shadow overrides */
+                        [class*="shadow"] {
+                            box-shadow: none !important;
+                        }
                     `;
                     clonedDoc.head.appendChild(style);
+
+                    // 2. Traverse all elements and replace computed colors
+                    const allElements = clonedDoc.querySelectorAll('*');
+                    allElements.forEach((el) => {
+                        const htmlEl = el as HTMLElement;
+                        const computed = window.getComputedStyle(htmlEl);
+
+                        // Replace any lab(), oklab(), oklch() colors with fallbacks
+                        const bgColor = computed.backgroundColor;
+                        const textColor = computed.color;
+                        const borderColor = computed.borderColor;
+
+                        if (bgColor && (bgColor.includes('lab(') || bgColor.includes('oklab(') || bgColor.includes('oklch('))) {
+                            htmlEl.style.backgroundColor = '#000000';
+                        }
+                        if (textColor && (textColor.includes('lab(') || textColor.includes('oklab(') || textColor.includes('oklch('))) {
+                            htmlEl.style.color = '#ffffff';
+                        }
+                        if (borderColor && (borderColor.includes('lab(') || borderColor.includes('oklab(') || borderColor.includes('oklch('))) {
+                            htmlEl.style.borderColor = '#D4AF37';
+                        }
+                    });
                 }
             } as any);
 
