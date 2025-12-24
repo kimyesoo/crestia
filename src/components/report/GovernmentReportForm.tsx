@@ -29,53 +29,47 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
         filledData.push({});
     }
 
-    // --- Visual Constants (ALL HEX colors - no Tailwind) ---
+    // --- Styles ---
     const fontMain = '"Batang", "BatangChe", "Malgun Gothic", serif';
-    const colorBlack = '#000000';
-    const colorWhite = '#ffffff';
-    const colorGray = '#dcdcdc';
-    const colorDarkGray = '#444444';
-    const colorRed = '#e11d48';
 
-    const borderBlack = `1px solid ${colorBlack}`;
-    const borderThick = `2px solid ${colorBlack}`;
-    const borderDouble = `3px double ${colorBlack}`;
-
-    // Base Cell Style - using outline for html2canvas compatibility
-    const cellBase: React.CSSProperties = {
-        border: 'none',
-        outline: `1px solid ${colorBlack}`,
-        outlineOffset: '-1px',
-        padding: '0 4px',
+    // Cell base styles
+    const cellStyle: React.CSSProperties = {
+        padding: '6px 8px',
         fontFamily: fontMain,
         fontSize: '11px',
-        verticalAlign: 'middle',
-        boxSizing: 'border-box',
-        backgroundColor: colorWhite,
-        color: colorBlack,
-    };
-
-    const cellCenter: React.CSSProperties = {
-        ...cellBase,
-        textAlign: 'center',
-    };
-
-    const cellLabel: React.CSSProperties = {
-        ...cellCenter,
-        backgroundColor: colorGray,
-        fontWeight: 'normal',
-    };
-
-    // Flexbox helper styles (inline only, no Tailwind)
-    const flexCenter: React.CSSProperties = {
+        color: '#000000',
+        backgroundColor: '#ffffff',
+        borderRight: '1px solid #000000',
+        borderBottom: '1px solid #000000',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        boxSizing: 'border-box',
     };
 
-    const flexCol: React.CSSProperties = {
+    const labelStyle: React.CSSProperties = {
+        ...cellStyle,
+        backgroundColor: '#dcdcdc',
+        fontWeight: 'normal',
+    };
+
+    const grayCell: React.CSSProperties = {
+        ...cellStyle,
+        backgroundColor: '#dcdcdc',
+    };
+
+    // Row wrapper
+    const rowStyle: React.CSSProperties = {
         display: 'flex',
-        flexDirection: 'column',
+        width: '100%',
+    };
+
+    // Table wrapper with top and left borders
+    const tableStyle: React.CSSProperties = {
+        width: '100%',
+        borderTop: '2px solid #000000',
+        borderLeft: '1px solid #000000',
+        marginBottom: '0',
     };
 
     return (
@@ -85,290 +79,223 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
                 position: 'relative',
                 width: '210mm',
                 minHeight: '297mm',
-                padding: '20mm 15mm',
+                padding: '15mm 15mm',
                 fontFamily: fontMain,
                 boxSizing: 'border-box',
-                backgroundColor: colorWhite,
-                color: colorBlack,
+                backgroundColor: '#ffffff',
+                color: '#000000',
             }}
         >
-            {/* 1. Document Header Info */}
-            <div style={{ fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', letterSpacing: '-0.5px', color: colorBlack }}>
+            {/* 1. Document Header */}
+            <div style={{ fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', color: '#000000' }}>
                 ■ 야생생물 보호 및 관리에 관한 법률 시행규칙 [별지 제31호의9서식]
             </div>
 
             {/* 2. Main Title */}
-            <h1 style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', letterSpacing: '-0.5px', marginBottom: '8px', lineHeight: '1.2', color: colorBlack }}>
+            <h1 style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#000000' }}>
                 지정관리 야생동물 [ {isYangdo ? '√' : ' '} ] 양도 [ {isYangsu ? '√' : ' '} ] 양수 [ {isBogan ? '√' : ' '} ] 보관 신고서(신고확인증)
             </h1>
 
             {/* 3. Instructions */}
-            <div style={{ fontSize: '10px', marginBottom: '4px', textAlign: 'left', letterSpacing: '-0.5px', color: colorBlack }}>
+            <div style={{ fontSize: '10px', marginBottom: '6px', color: '#000000' }}>
                 ※ 색상이 어두운 칸은 신고인이 작성하지 않으며, [ ]에는 해당되는 곳에 √표시를 합니다.
             </div>
 
-            {/* 4. Receipt Header Table */}
-            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', border: borderThick }}>
-                <colgroup>
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '27%' }} />
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '27%' }} />
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '7%' }} />
-                </colgroup>
-                <tbody>
-                    <tr style={{ height: '32px' }}>
-                        <td style={cellLabel}>접수번호</td>
-                        <td style={{ ...cellBase, backgroundColor: colorGray }}></td>
-                        <td style={cellLabel}>접수일</td>
-                        <td style={{ ...cellBase, backgroundColor: colorGray }}></td>
-                        <td style={cellLabel}>처리기간</td>
-                        <td style={{ ...cellCenter, backgroundColor: colorGray }}>7일</td>
-                    </tr>
-                </tbody>
-            </table>
+            {/* 4. Receipt Header */}
+            <div style={tableStyle}>
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '15%', borderTop: 'none' }}>접수번호</div>
+                    <div style={{ ...grayCell, width: '25%', borderTop: 'none' }}></div>
+                    <div style={{ ...labelStyle, width: '15%', borderTop: 'none' }}>접수일</div>
+                    <div style={{ ...grayCell, width: '25%', borderTop: 'none' }}></div>
+                    <div style={{ ...labelStyle, width: '12%', borderTop: 'none' }}>처리기간</div>
+                    <div style={{ ...grayCell, width: '8%', borderRight: 'none', borderTop: 'none' }}>7일</div>
+                </div>
+            </div>
 
-            {/* 5. Person Info Tables */}
-            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', marginTop: '2px', border: borderBlack }}>
-                <colgroup>
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '44%' }} />
-                    <col style={{ width: '10%' }} />
-                    <col style={{ width: '20%' }} />
-                </colgroup>
-                <tbody>
-                    <tr style={{ height: '30px' }}>
-                        <td rowSpan={2} style={cellLabel}>양도인</td>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>상호(성명)</td>
-                        <td style={cellBase}>{isYangdo ? reportInfo.name : ''}</td>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>연락처</td>
-                        <td style={cellBase}>{isYangdo ? reportInfo.contact : ''}</td>
-                    </tr>
-                    <tr style={{ height: '30px' }}>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>주소</td>
-                        <td colSpan={3} style={cellBase}>{isYangdo ? reportInfo.address : ''}</td>
-                    </tr>
+            {/* 5. 양도인 Section */}
+            <div style={{ ...tableStyle, borderTop: '2px solid #000000', marginTop: '0' }}>
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '13%', height: '60px', borderTop: 'none' }}>양도인</div>
+                    <div style={{ ...cellStyle, width: '12%', borderTop: 'none', justifyContent: 'center' }}>상호(성명)</div>
+                    <div style={{ ...cellStyle, width: '35%', borderTop: 'none', justifyContent: 'flex-start' }}>{isYangdo ? reportInfo.name : ''}</div>
+                    <div style={{ ...cellStyle, width: '12%', borderTop: 'none', justifyContent: 'center' }}>연락처</div>
+                    <div style={{ ...cellStyle, width: '28%', borderRight: 'none', borderTop: 'none', justifyContent: 'flex-start' }}>{isYangdo ? reportInfo.contact : ''}</div>
+                </div>
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '13%', visibility: 'hidden', borderTop: 'none' }}>양도인</div>
+                    <div style={{ ...cellStyle, width: '12%', justifyContent: 'center' }}>주소</div>
+                    <div style={{ ...cellStyle, width: '75%', borderRight: 'none', justifyContent: 'flex-start' }}>{isYangdo ? reportInfo.address : ''}</div>
+                </div>
+            </div>
 
-                    <tr style={{ height: '4px', border: 'none' }}>
-                        <td colSpan={5} style={{ borderLeft: 'none', borderRight: 'none', borderTop: borderDouble, borderBottom: 'none', height: '4px', padding: 0 }}></td>
-                    </tr>
+            {/* 6. 양수인(보관인) Section */}
+            <div style={{ ...tableStyle, borderTop: '2px solid #000000', marginTop: '0' }}>
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '13%', height: '60px', borderTop: 'none', flexDirection: 'column', lineHeight: '1.3' }}>
+                        <span>양수인</span>
+                        <span>(보관인)</span>
+                    </div>
+                    <div style={{ ...cellStyle, width: '12%', borderTop: 'none', justifyContent: 'center' }}>상호(성명)</div>
+                    <div style={{ ...cellStyle, width: '35%', borderTop: 'none', justifyContent: 'flex-start' }}>{isYangdo ? '' : reportInfo.name}</div>
+                    <div style={{ ...cellStyle, width: '12%', borderTop: 'none', justifyContent: 'center' }}>연락처</div>
+                    <div style={{ ...cellStyle, width: '28%', borderRight: 'none', borderTop: 'none', justifyContent: 'flex-start' }}>{isYangdo ? '' : reportInfo.contact}</div>
+                </div>
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '13%', visibility: 'hidden' }}>양수인</div>
+                    <div style={{ ...cellStyle, width: '12%', justifyContent: 'center' }}>주소</div>
+                    <div style={{ ...cellStyle, width: '75%', borderRight: 'none', justifyContent: 'flex-start' }}>{isYangdo ? '' : reportInfo.address}</div>
+                </div>
+            </div>
 
-                    <tr style={{ height: '30px' }}>
-                        <td rowSpan={2} style={cellLabel}>
-                            양수인<br />(보관인)
-                        </td>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>상호(성명)</td>
-                        <td style={cellBase}>{isYangdo ? '' : reportInfo.name}</td>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>연락처</td>
-                        <td style={cellBase}>{isYangdo ? '' : reportInfo.contact}</td>
-                    </tr>
-                    <tr style={{ height: '30px' }}>
-                        <td style={{ ...cellBase, textAlign: 'center' }}>주소</td>
-                        <td colSpan={3} style={cellBase}>{isYangdo ? '' : reportInfo.address}</td>
-                    </tr>
-                </tbody>
-            </table>
+            {/* 7. 야생동물 정보 Table */}
+            <div style={{ ...tableStyle, borderTop: '2px solid #000000', marginTop: '0' }}>
+                {/* Header Row */}
+                <div style={rowStyle}>
+                    <div style={{ ...labelStyle, width: '13%', minHeight: '90px', borderTop: 'none', flexDirection: 'column', lineHeight: '1.4', textAlign: 'center' }}>
+                        <span style={{ fontWeight: 'bold' }}>지정관리</span>
+                        <span style={{ fontWeight: 'bold' }}>야생동물</span>
+                        <span style={{ fontWeight: 'bold' }}>정보</span>
+                        <span style={{ fontSize: '9px', color: '#444444', marginTop: '4px' }}>※ 기재내용이</span>
+                        <span style={{ fontSize: '9px', color: '#444444' }}>많은 경우 별</span>
+                        <span style={{ fontSize: '9px', color: '#444444' }}>지로 작성</span>
+                    </div>
+                    <div style={{ ...cellStyle, width: '27%', borderTop: 'none', fontWeight: 'bold' }}>학명</div>
+                    <div style={{ ...cellStyle, width: '12%', borderTop: 'none', fontWeight: 'bold' }}>수량</div>
+                    <div style={{ ...cellStyle, width: '18%', borderTop: 'none', fontWeight: 'bold' }}>용도</div>
+                    <div style={{ ...cellStyle, width: '30%', borderRight: 'none', borderTop: 'none', fontWeight: 'bold' }}>양도사유(보관사유)</div>
+                </div>
 
-            {/* 6. Gecko List Table */}
-            <table cellSpacing={0} cellPadding={0} style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0px', marginTop: '2px', border: borderThick }}>
-                <colgroup>
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '27%' }} />
-                    <col style={{ width: '13%' }} />
-                    <col style={{ width: '20%' }} />
-                    <col style={{ width: '27%' }} />
-                </colgroup>
-                <thead>
-                    <tr style={{ height: '30px' }}>
-                        <td rowSpan={Math.max(minRows, filledData.length) + 1} style={{
-                            ...cellLabel,
-                            backgroundColor: colorWhite,
-                            lineHeight: '1.4',
-                            borderLeft: `2px solid ${colorBlack}`,
-                            borderRight: borderBlack,
-                            borderTop: 'none',
-                            borderBottom: borderBlack,
-                        }}>
-                            <div style={{ ...flexCol, ...flexCenter, height: '100%' }}>
-                                <span style={{ marginBottom: '8px', fontWeight: 'bold', color: colorBlack }}>지정관리<br />야생동물<br />정보</span>
-                                <span style={{ fontSize: '9px', fontWeight: 'normal', color: colorDarkGray }}>
-                                    ※ 기재내용이<br />많은 경우 별<br />지로 작성
-                                </span>
-                            </div>
-                        </td>
-                        <td style={cellCenter}>학명</td>
-                        <td style={cellCenter}>수량</td>
-                        <td style={cellCenter}>용도</td>
-                        <td style={cellCenter}>양도사유(보관사유)</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filledData.map((row, idx) => (
-                        <tr key={idx} style={{ height: '28px' }}>
-                            <td style={{ ...cellBase, textAlign: 'left', paddingLeft: '8px', fontStyle: 'italic' }}>
-                                {row['학명'] || row['Scientific Name'] || row['학명(자동생성)'] || ''}
-                            </td>
-                            <td style={cellCenter}>
-                                {row['수량'] || (row['학명'] ? 1 : '')}
-                            </td>
-                            <td style={cellCenter}>
-                                {row['학명'] ? '반려용' : ''}
-                            </td>
-                            <td style={{ ...cellBase, textAlign: 'left', paddingLeft: '8px' }}>
-                                {row['학명'] ? reportInfo.reason : ''}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                {/* Data Rows */}
+                {filledData.map((row, idx) => (
+                    <div key={idx} style={rowStyle}>
+                        <div style={{ ...cellStyle, width: '13%', visibility: 'hidden' }}>-</div>
+                        <div style={{ ...cellStyle, width: '27%', justifyContent: 'flex-start', fontStyle: 'italic' }}>
+                            {row['학명'] || row['Scientific Name'] || row['학명(자동생성)'] || ''}
+                        </div>
+                        <div style={{ ...cellStyle, width: '12%' }}>
+                            {row['수량'] || (row['학명'] ? 1 : '')}
+                        </div>
+                        <div style={{ ...cellStyle, width: '18%' }}>
+                            {row['학명'] ? '반려용' : ''}
+                        </div>
+                        <div style={{ ...cellStyle, width: '30%', borderRight: 'none', justifyContent: 'flex-start' }}>
+                            {row['학명'] ? reportInfo.reason : ''}
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-            {/* 7. Declaration */}
-            <div style={{ marginTop: '24px', marginBottom: '16px', textAlign: 'center', fontSize: '12px', lineHeight: '1.6', color: colorBlack }}>
+            {/* 8. Declaration */}
+            <div style={{ marginTop: '20px', marginBottom: '12px', textAlign: 'center', fontSize: '12px', lineHeight: '1.6', color: '#000000' }}>
                 <p>
                     「야생생물 보호 및 관리에 관한 법률」 제22조의4제2항 전단 및 같은 법 시행규칙 제29조의6제1항에<br />
                     따라 위와 같이 지정관리 야생동물의 [ {isYangdo ? '√' : ' '} ]양도, [ {isYangsu ? '√' : ' '} ]양수, [ {isBogan ? '√' : ' '} ]보관을 신고합니다.
                 </p>
             </div>
 
-            <div style={{ textAlign: 'center', marginBottom: '24px', fontSize: '14px', color: colorBlack }}>
+            <div style={{ textAlign: 'center', marginBottom: '16px', fontSize: '14px', color: '#000000' }}>
                 {year}년 &nbsp; {month}월 &nbsp; {day}일
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '24px', paddingRight: '40px', fontSize: '12px', color: colorBlack }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '20px', paddingRight: '40px', fontSize: '12px', color: '#000000' }}>
                 <span style={{ marginRight: '32px' }}>신고인</span>
                 <span style={{ marginRight: '32px', fontWeight: 'bold' }}>{reportInfo.name}</span>
                 <span>(서명 또는 인)</span>
             </div>
 
-            <div style={{ textAlign: 'left', fontWeight: 'bold', fontSize: '18px', marginBottom: '16px', color: colorBlack }}>
-                시장 · 군수 · 구청장 <span style={{ fontSize: '14px', fontWeight: 'normal', marginLeft: '8px' }}>귀하</span>
+            <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '16px', color: '#000000' }}>
+                시장 · 군수 · 구청장 <span style={{ fontSize: '12px', fontWeight: 'normal', marginLeft: '8px' }}>귀하</span>
             </div>
 
-            {/* 8. Cut Line */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '24px 0' }}>
-                <div style={{ borderTop: `1px dashed ${colorBlack}`, flexGrow: 1 }}></div>
-                <div style={{ margin: '0 16px', fontSize: '11px', color: colorBlack }}>자르는 선</div>
-                <div style={{ borderTop: `1px dashed ${colorBlack}`, flexGrow: 1 }}></div>
+            {/* 9. Cut Line */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '20px 0' }}>
+                <div style={{ borderTop: '1px dashed #000000', flexGrow: 1 }}></div>
+                <div style={{ margin: '0 16px', fontSize: '11px', color: '#000000' }}>자르는 선</div>
+                <div style={{ borderTop: '1px dashed #000000', flexGrow: 1 }}></div>
             </div>
 
-            {/* 9. Certificate Header */}
-            <div style={{ fontSize: '12px', marginBottom: '8px', color: colorBlack }}>
+            {/* 10. Certificate Header */}
+            <div style={{ fontSize: '12px', marginBottom: '8px', color: '#000000' }}>
                 제 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 호
             </div>
 
-            <h1 style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', letterSpacing: '-0.5px', marginBottom: '16px', color: colorBlack }}>
+            <h1 style={{ textAlign: 'center', fontSize: '18px', fontWeight: 'bold', marginBottom: '12px', color: '#000000' }}>
                 지정관리 야생동물 [ {isYangdo ? '√' : ' '} ]양도 [ {isYangsu ? '√' : ' '} ]양수 [ {isBogan ? '√' : ' '} ]보관 신고확인증
             </h1>
 
-            <div style={{ marginTop: '16px', marginBottom: '32px', textAlign: 'center', fontSize: '12px', lineHeight: '1.6', padding: '0 16px', color: colorBlack }}>
+            <div style={{ marginTop: '12px', marginBottom: '20px', textAlign: 'center', fontSize: '12px', lineHeight: '1.6', color: '#000000' }}>
                 <p>
                     「야생생물 보호 및 관리에 관한 법률」 제22조의4제2항 전단 및 같은 법 시행규칙 제29조의6제1항에 따라<br />
                     지정관리 야생동물의 [ {isYangdo ? '√' : ' '} ]양도, [ {isYangsu ? '√' : ' '} ]양수, [ {isBogan ? '√' : ' '} ]보관을 신고하였음을 확인합니다.
                 </p>
             </div>
 
-            <div style={{ textAlign: 'center', marginBottom: '40px', fontSize: '14px', color: colorBlack }}>
+            <div style={{ textAlign: 'center', marginBottom: '24px', fontSize: '14px', color: '#000000' }}>
                 {year}년 &nbsp; {month}월 &nbsp; {day}일
             </div>
 
-            {/* 10. Seal */}
-            <div style={{ position: 'relative', textAlign: 'right', paddingRight: '24px', marginBottom: '32px' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '18px', marginRight: '16px', color: colorBlack }}>시장 · 군수 · 구청장</span>
+            {/* 11. Seal */}
+            <div style={{ position: 'relative', textAlign: 'right', paddingRight: '24px', marginBottom: '24px' }}>
+                <span style={{ fontWeight: 'bold', fontSize: '16px', marginRight: '16px', color: '#000000' }}>시장 · 군수 · 구청장</span>
                 <div style={{
                     position: 'absolute',
                     right: 0,
-                    top: '-15px',
-                    width: '60px',
-                    height: '60px',
-                    border: `3px solid ${colorRed}`,
+                    top: '-12px',
+                    width: '50px',
+                    height: '50px',
+                    border: '2px solid #e11d48',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '12px',
+                    fontSize: '11px',
                     opacity: 0.7,
-                    transform: 'rotate(-10deg)',
-                    color: colorRed
+                    transform: 'rotate(-5deg)',
+                    color: '#e11d48'
                 }}>
-                    <div style={{
-                        width: '40px',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '2px',
-                        border: `1px solid ${colorRed}`
-                    }}>
-                        직인
-                    </div>
+                    <span>직인</span>
                 </div>
             </div>
 
-            <div style={{ textAlign: 'left', fontSize: '12px', marginBottom: '16px', color: colorBlack }}>귀하</div>
+            <div style={{ fontSize: '12px', marginBottom: '16px', color: '#000000' }}>귀하</div>
 
-            {/* 11. Footer Flowchart */}
-            <div style={{ border: borderBlack, backgroundColor: colorWhite }}>
-                {/* Header Bar */}
-                <div style={{ backgroundColor: colorGray, borderBottom: borderBlack, textAlign: 'center', padding: '4px 0', fontSize: '11px', fontWeight: 'bold', color: colorBlack }}>
-                    처리절차
-                </div>
-
-                {/* Flow Diagram */}
-                <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', fontSize: '10px', backgroundColor: colorWhite }}>
-                    {/* Step 1 */}
-                    <div style={{ ...flexCol, alignItems: 'center' }}>
-                        <div style={{ width: '80px', height: '35px', border: borderBlack, ...flexCenter, backgroundColor: colorWhite, marginBottom: '8px', color: colorBlack }}>
-                            신고서 작성
-                        </div>
+            {/* 12. Processing Flow */}
+            <div style={{ borderTop: '1px solid #000000', paddingTop: '12px', marginTop: '16px' }}>
+                <div style={{ textAlign: 'center', fontSize: '11px', marginBottom: '8px', color: '#000000' }}>처리절차</div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '10px', color: '#000000' }}>
+                    <div style={{ border: '1px solid #000', padding: '6px 12px', textAlign: 'center' }}>
+                        신고서 작성
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: colorBlack }}>→</span>
-
-                    {/* Step 2 */}
-                    <div style={{ ...flexCol, alignItems: 'center' }}>
-                        <div style={{ width: '80px', height: '35px', border: borderBlack, ...flexCenter, backgroundColor: colorWhite, marginBottom: '8px', color: colorBlack }}>
-                            접수
-                        </div>
+                    <span style={{ margin: '0 8px' }}>→</span>
+                    <div style={{ border: '1px solid #000', padding: '6px 12px', textAlign: 'center' }}>
+                        접수
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: colorBlack }}>→</span>
-
-                    {/* Step 3 */}
-                    <div style={{ ...flexCol, alignItems: 'center' }}>
-                        <div style={{ width: '80px', height: '35px', border: borderBlack, ...flexCenter, backgroundColor: colorWhite, marginBottom: '8px', color: colorBlack }}>
-                            검토
-                        </div>
+                    <span style={{ margin: '0 8px' }}>→</span>
+                    <div style={{ border: '1px solid #000', padding: '6px 12px', textAlign: 'center' }}>
+                        검토
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: colorBlack }}>→</span>
-
-                    {/* Step 4 */}
-                    <div style={{ ...flexCol, alignItems: 'center' }}>
-                        <div style={{ width: '80px', height: '35px', border: borderBlack, ...flexCenter, backgroundColor: colorWhite, marginBottom: '8px', color: colorBlack }}>
-                            결재
-                        </div>
+                    <span style={{ margin: '0 8px' }}>→</span>
+                    <div style={{ border: '1px solid #000', padding: '6px 12px', textAlign: 'center' }}>
+                        결재
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: colorBlack }}>→</span>
-
-                    {/* Step 5 */}
-                    <div style={{ ...flexCol, alignItems: 'center' }}>
-                        <div style={{ width: '90px', height: '35px', border: borderBlack, ...flexCol, ...flexCenter, backgroundColor: colorWhite, lineHeight: 1, marginBottom: '8px', color: colorBlack }}>
-                            <span>신고확인증</span>
-                            <span>작성 · 발급</span>
-                        </div>
+                    <span style={{ margin: '0 8px' }}>→</span>
+                    <div style={{ border: '1px solid #000', padding: '6px 12px', textAlign: 'center' }}>
+                        신고확인증<br />작성·발급
                     </div>
                 </div>
-
-                {/* Bottom Roles */}
-                <div style={{ borderTop: borderBlack, display: 'flex', fontSize: '9px', backgroundColor: colorWhite }}>
-                    <div style={{ flex: 1, padding: '4px 0', textAlign: 'center', borderRight: borderBlack, color: colorBlack }}>신고인</div>
-                    <div style={{ flex: 4, padding: '4px 0', textAlign: 'center', color: colorBlack }}>처리기관: 시 · 군 · 구</div>
+                <div style={{ display: 'flex', justifyContent: 'center', fontSize: '9px', marginTop: '4px', color: '#444444' }}>
+                    <span style={{ marginRight: '80px' }}>신고인</span>
+                    <span>처리기관: 시 · 군 · 구</span>
                 </div>
             </div>
-            {/* Bottom thick line */}
-            <div style={{ borderBottom: borderThick }}></div>
+
+            {/* Page Number */}
+            <div style={{ textAlign: 'center', fontSize: '10px', marginTop: '16px', color: '#000000' }}>
+                - 1 -
+            </div>
         </div>
     );
 });
 
 GovernmentReportForm.displayName = 'GovernmentReportForm';
-
