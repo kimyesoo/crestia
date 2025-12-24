@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import html2canvas from "html2canvas";
-import GeckoCardContent from "@/components/GeckoCardContent";
+import { GeckoCardFinal, CardFrontFinal, CardBackFinal, GeckoDetails } from "@/components/gecko/GeckoCardFinal";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -99,6 +99,24 @@ export default function GeckoDetailPage() {
 
     const shopName = gecko.profiles?.shop_name || "Unknown Breeder";
 
+    // Map gecko data to GeckoDetails for CardFrontFinal
+    const geckoDetails: GeckoDetails = {
+        id: gecko.id,
+        name: gecko.name || 'UNNAMED',
+        imageUrl: gecko.image_url,
+        hatchDate: gecko.birth_date || 'Unknown',
+        morph: gecko.morph || 'Unknown',
+        breeder: shopName,
+        sireName: gecko.sire?.name || gecko.sire_name || 'Unknown',
+        damName: gecko.dam?.name || gecko.dam_name || 'Unknown',
+        pedigree: {
+            sire: { id: gecko.sire?.id || gecko.sire_id, name: gecko.sire?.name || gecko.sire_name || 'Unknown' },
+            dam: { id: gecko.dam?.id || gecko.dam_id, name: gecko.dam?.name || gecko.dam_name || 'Unknown' },
+            grandSires: [{ id: 'unknown', name: 'Unknown' }, { id: 'unknown', name: 'Unknown' }],
+            grandDams: [{ id: 'unknown', name: 'Unknown' }, { id: 'unknown', name: 'Unknown' }]
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 pt-32 pb-8 max-w-6xl">
             {/* Back Button */}
@@ -132,8 +150,8 @@ export default function GeckoDetailPage() {
                         </p>
 
                         {/* Preview (Scaled Down) */}
-                        <div className="origin-top transform scale-50 md:scale-75 mb-[-100px] md:mb-[-50px]">
-                            <GeckoCardContent side="front" gecko={gecko} localImageBase64={localImageBase64} is3D={false} />
+                        <div className="origin-top transform scale-[0.35] md:scale-50 mb-[-200px] md:mb-[-150px]">
+                            <CardFrontFinal gecko={geckoDetails} displayImage={localImageBase64} />
                         </div>
 
                         {/* Download Buttons */}
@@ -185,11 +203,11 @@ export default function GeckoDetailPage() {
 
             {/* Hidden Ghost Cards for Download */}
             <div style={{ position: 'fixed', top: 0, left: '-9999px', pointerEvents: 'none' }}>
-                <div id="print-front-hidden">
-                    <GeckoCardContent side="front" gecko={gecko} localImageBase64={localImageBase64} is3D={false} />
+                <div id="print-front-hidden" style={{ width: '1062px', height: '685px' }}>
+                    <CardFrontFinal gecko={geckoDetails} displayImage={localImageBase64} />
                 </div>
-                <div id="print-back-hidden">
-                    <GeckoCardContent side="back" gecko={gecko} localImageBase64={localImageBase64} is3D={false} />
+                <div id="print-back-hidden" style={{ width: '1062px', height: '685px' }}>
+                    <CardBackFinal gecko={geckoDetails} />
                 </div>
             </div>
         </div>

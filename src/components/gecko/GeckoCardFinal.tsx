@@ -193,7 +193,7 @@ export const CardBackFinal = ({ gecko }: { gecko: GeckoDetails }) => {
                 </div>
 
                 {/* Pedigree Tree Layout */}
-                <div className="flex-1 flex flex-row items-center justify-between w-full relative px-10">
+                <div className="flex-1 flex flex-row items-center justify-center w-full relative gap-8">
 
                     {/* 1. Self */}
                     <div className="w-[20%] flex flex-col justify-center items-center relative">
@@ -236,16 +236,7 @@ export const CardBackFinal = ({ gecko }: { gecko: GeckoDetails }) => {
                             <PedigreeBox label="GRANDDAM" text={getName(gecko.pedigree.grandDams[1])} />
                         </div>
                     </div>
-
-                    {/* 4. Great Grandparents (Visual Only List) */}
-                    <div className="w-[15%] flex flex-col justify-around h-full text-[8px] text-zinc-500 pl-4 border-l border-zinc-800">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <div className="w-2 h-[1px] bg-[#D4AF37]" />
-                                <span>Unknown</span>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Note: Great Grandparents removed to prevent clipping in print */}
 
                 </div>
             </div>
