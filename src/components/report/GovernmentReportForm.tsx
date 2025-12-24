@@ -93,7 +93,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </div>
 
             {/* Table 1: Receipt */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '0' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', marginBottom: '0' }}>
                 <tbody>
                     <tr>
                         <td style={{ ...thickGray, width: '15%' }}>접수번호</td>
@@ -107,7 +107,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </table>
 
             {/* Table 2: 양도인 */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '0' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', marginBottom: '0' }}>
                 <tbody>
                     <tr>
                         <td style={{ ...thickGray, width: '13%' }} rowSpan={2}>양도인</td>
@@ -124,7 +124,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </table>
 
             {/* Table 3: 양수인(보관인) */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '0' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', marginBottom: '0' }}>
                 <tbody>
                     <tr>
                         <td style={{ ...thickGray, width: '13%' }} rowSpan={2}>양수인<br />(보관인)</td>
@@ -141,7 +141,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             </table>
 
             {/* Table 4: 야생동물 정보 */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '0' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', marginBottom: '0' }}>
                 <tbody>
                     <tr>
                         <td style={{ ...thickGray, width: '13%', fontSize: '10px', lineHeight: '1.3' }} rowSpan={filledData.length + 1}>
@@ -234,7 +234,7 @@ export const GovernmentReportForm = forwardRef<HTMLDivElement, GovernmentReportF
             <div style={{ fontSize: '12px', marginBottom: '16px' }}>귀하</div>
 
             {/* Processing Flow */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', borderTop: '1px solid #000' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', borderTop: '1px solid #000' }}>
                 <tbody>
                     <tr>
                         <td colSpan={9} style={{ textAlign: 'center', fontSize: '11px', padding: '8px 0 4px', border: 'none' }}>처리절차</td>
