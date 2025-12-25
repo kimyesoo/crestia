@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { ArrowLeft, FileDown, Printer } from 'lucide-react';
+import { ArrowLeft, FileDown, Printer, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface ContractData {
     transactionDate: string;
@@ -41,6 +43,7 @@ const initialData: ContractData = {
 
 export default function ContractPage() {
     const [data, setData] = useState<ContractData>(initialData);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
 
     const handleChange = (field: keyof ContractData, value: string) => {
@@ -81,6 +84,43 @@ export default function ContractPage() {
         }, 250);
     };
 
+    const handleDownloadPDF = async () => {
+        const printContent = previewRef.current;
+        if (!printContent) return;
+
+        setIsGeneratingPDF(true);
+        try {
+            const canvas = await html2canvas(printContent, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4',
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = 10;
+
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.save(`분양계약서_${data.transactionDate || 'draft'}.pdf`);
+        } catch (error) {
+            console.error('PDF 생성 오류:', error);
+            alert('PDF 생성 중 오류가 발생했습니다.');
+        } finally {
+            setIsGeneratingPDF(false);
+        }
+    };
+
     const formatDate = (dateStr: string) => {
         if (!dateStr) return '____년 __월 __일';
         const date = new Date(dateStr);
@@ -111,9 +151,17 @@ export default function ContractPage() {
                             <Printer className="w-4 h-4" />
                             인쇄하기
                         </Button>
-                        <Button onClick={handlePrint} className="gap-2 bg-[#D4AF37] hover:bg-[#C5A028] text-black">
-                            <FileDown className="w-4 h-4" />
-                            PDF 다운로드
+                        <Button
+                            onClick={handleDownloadPDF}
+                            disabled={isGeneratingPDF}
+                            className="gap-2 bg-[#D4AF37] hover:bg-[#C5A028] text-black"
+                        >
+                            {isGeneratingPDF ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <FileDown className="w-4 h-4" />
+                            )}
+                            {isGeneratingPDF ? 'PDF 생성 중...' : 'PDF 다운로드'}
                         </Button>
                     </div>
                 </div>

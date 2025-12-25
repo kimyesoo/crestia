@@ -20,7 +20,7 @@ const tools = [
         description: '내 도마뱀에게 딱 맞는 이름은? AI가 센스 있는 이름을 지어드립니다.',
         icon: Sparkles,
         href: '/tools/naming',
-        available: false,
+        available: true,
     },
     {
         id: 'calculator',
