@@ -93,7 +93,7 @@ export default function ContractPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="bg-background">
             {/* Header */}
             <div className="border-b border-zinc-800 bg-zinc-900/50">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">

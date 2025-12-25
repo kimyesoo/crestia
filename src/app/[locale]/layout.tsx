@@ -43,7 +43,7 @@ export default async function RootLayout({
       <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Navbar user={user} />
-          <main className="flex-1 relative min-h-screen">
+          <main className="flex-1 relative min-h-screen pt-20">
             {children}
           </main>
           <Toaster />
