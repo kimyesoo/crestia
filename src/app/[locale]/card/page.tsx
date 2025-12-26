@@ -96,10 +96,10 @@ export default function CardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black">
+        <div className="min-h-screen bg-black overflow-x-hidden">
             <Navbar user={user} />
 
-            <div className="flex flex-col items-center pt-28 pb-20 px-4">
+            <div className="flex flex-col items-center pt-28 pb-20 px-4 overflow-x-hidden">
                 <h1 className="text-3xl text-[#D4AF37] font-bold mb-2 tracking-widest font-serif">
                     ID CARD GENERATOR
                 </h1>

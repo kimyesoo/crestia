@@ -26,10 +26,10 @@ const tools = [
         id: 'calculator',
         title: '모프 계산기',
         titleEn: 'Morph Calculator',
-        description: '부모 개체의 모프를 넣으면 2세의 확률을 계산해 드립니다.',
+        description: 'Gen 2.0 유전학 알고리즘! 부모 개체의 유전형을 입력하면 2세의 확률과 디자이너 모프를 계산합니다.',
         icon: Calculator,
         href: '/tools/calculator',
-        available: false,
+        available: true,
     },
 ];
 

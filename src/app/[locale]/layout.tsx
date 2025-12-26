@@ -40,10 +40,10 @@ export default async function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col`}>
+      <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col overflow-x-hidden`}>
         <NextIntlClientProvider messages={messages}>
           <Navbar user={user} />
-          <main className="flex-1 relative min-h-screen pt-20">
+          <main className="flex-1 relative min-h-screen pt-20 overflow-x-hidden">
             {children}
           </main>
           <Toaster />

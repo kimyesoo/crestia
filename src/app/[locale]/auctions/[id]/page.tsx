@@ -95,7 +95,7 @@ export default async function AuctionDetailPage({ params }: AuctionDetailPagePro
 
                                     {/* Connectivity Links */}
                                     <div className="flex gap-4 pt-2">
-                                        <a href={`/lineage?id=${auction.gecko.id}`} className="text-xs text-gold-500 hover:text-gold-400 flex items-center gap-2 uppercase tracking-wider font-bold">
+                                        <a href={`/lineage?gecko=${auction.gecko.id}`} className="text-xs text-gold-500 hover:text-gold-400 flex items-center gap-2 uppercase tracking-wider font-bold">
                                             <Dna className="w-3 h-3" /> View Lineage
                                         </a>
                                         <a href={`/geckos/${auction.gecko.id}/card`} className="text-xs text-gold-500 hover:text-gold-400 flex items-center gap-2 uppercase tracking-wider font-bold">

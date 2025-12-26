@@ -115,25 +115,12 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <h3 className="text-[#D4AF37] font-serif text-2xl mb-8 tracking-widest text-center">CRESTIA UTILITIES</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1: Registration Helper */}
-            <Link href="/registration-helper" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-              <div className="relative z-10">
-                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📄</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">신고 서류 원클릭 완성</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
-                  복잡한 양도/양수/보관 신고, <br />
-                  엑셀만 넣으면 1초 만에 서식이 만들어집니다.
-                </p>
-              </div>
-            </Link>
-
-            {/* Card 2: ID Card Generator */}
+            {/* Card 1: ID Card Generator */}
             <Link href="/card" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               <div className="relative z-10">
                 <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💳</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">디지털 ID 카드 발급</h4>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">디지털 ID 카드</h4>
                 <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
                   내 개체의 가치를 증명하는 <br />
                   고품격 ID 카드와 혈통서를 발급받으세요.
@@ -141,15 +128,28 @@ export default function LandingPage() {
               </div>
             </Link>
 
-            {/* Card 3: Community */}
-            <Link href="/community" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+            {/* Card 2: Morph Calculator */}
+            <Link href="/tools/calculator" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               <div className="relative z-10">
-                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💬</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">브리더 라운지</h4>
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">🧬</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">모프 계산기</h4>
                 <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
-                  사육 노하우 공유부터 모프 질문까지, <br />
-                  브리더들과 자유롭게 소통하세요.
+                  부모 유전자를 입력하면 <br />
+                  자손의 모프 확률을 계산합니다.
+                </p>
+              </div>
+            </Link>
+
+            {/* Card 3: Contract Generator */}
+            <Link href="/tools/contract" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📋</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">분양 계약서</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  안전한 거래를 위한 <br />
+                  전문 분양 계약서를 작성하세요.
                 </p>
               </div>
             </Link>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Plus, ShieldCheck, Store, LayoutDashboard, Clock, ChevronRight, Edit, CreditCard } from "lucide-react";
+import { Plus, ShieldCheck, Store, LayoutDashboard, Clock, ChevronRight, Edit, CreditCard, GitFork } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     const isVerified = profile?.is_verified || false;
 
     return (
-        <div className="text-gold-500 font-sans pt-32">
+        <div className="text-gold-500 font-sans pt-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
             <div className="max-w-6xl mx-auto space-y-12">
 
                 {/* Header with Profile Summary */}
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
                             <Link href="/dashboard/profile">Edit Profile</Link>
                         </Button>
                         <Button asChild className="bg-gold-600 text-black hover:bg-gold-500 hover:text-black font-bold flex-1 md:flex-none">
-                            <Link href="/market">View Public Shop</Link>
+                            <Link href="/showcase">View Public Shop</Link>
                         </Button>
                     </div>
                 </header>
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                             <h2 className="text-2xl font-serif font-bold text-white">Recently Added</h2>
                             <p className="text-zinc-500 text-sm mt-1">Quickly manage your latest additions.</p>
                         </div>
-                        <Link href="/market" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
+                        <Link href="/showcase" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
                             View All <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
@@ -134,14 +134,23 @@ export default async function DashboardPage() {
                                 </div>
                                 <div className="flex gap-2">
                                     <Link
+                                        href={`/lineage?gecko=${gecko.id}`}
+                                        className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-green-400 hover:bg-zinc-800 transition-colors"
+                                        title="View Lineage"
+                                    >
+                                        <GitFork className="w-4 h-4" />
+                                    </Link>
+                                    <Link
                                         href={`/geckos/${gecko.id}/card`}
                                         className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-gold-500 hover:bg-zinc-800 transition-colors"
+                                        title="ID Card"
                                     >
                                         <CreditCard className="w-4 h-4" />
                                     </Link>
                                     <Link
                                         href={`/dashboard/edit/${gecko.id}`}
                                         className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                                        title="Edit"
                                     >
                                         <Edit className="w-4 h-4" />
                                     </Link>

@@ -110,8 +110,8 @@ export function Navbar({ user }: NavbarProps) {
             label: 'MARKET',
             sub: '(마켓)',
             children: [
-                { label: '경매/분양', sub: 'Auction', href: `/${locale}/market`, icon: <Gavel className="w-4 h-4" /> },
-                { label: '용품 추천', sub: 'Shop', href: `/${locale}/shop`, icon: <ShoppingBag className="w-4 h-4" /> },
+                { label: '경매/분양', sub: 'Auction', href: `/${locale}/market/auction`, icon: <Gavel className="w-4 h-4" /> },
+                { label: '용품 추천', sub: 'Shop', href: `/${locale}/market/shop`, icon: <ShoppingBag className="w-4 h-4" /> },
             ]
         },
         {
@@ -152,6 +152,7 @@ export function Navbar({ user }: NavbarProps) {
                                 src="/logo.png"
                                 alt="Crestia Logo"
                                 fill
+                                sizes="40px"
                                 className="object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
                                 priority
                             />

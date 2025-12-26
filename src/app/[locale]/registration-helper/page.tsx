@@ -2,13 +2,13 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx-js-style';
-import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Navbar } from '@/components/layout/Navbar';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { GovernmentReportForm } from '@/components/report/GovernmentReportForm';
 import AdBanner from '@/components/ads/AdBanner';
+import { loadKoreanFont } from '@/lib/pdf/koreanFont';
 
 // --- Styles from GeckoCard ---
 const carbonFiberStyle: React.CSSProperties = {
@@ -26,7 +26,7 @@ const carbonFiberStyle: React.CSSProperties = {
 const SPECIES_MAP: Record<string, { sci: string; kor: string }> = {
     // Crested Gecko
     '크레': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' },
-    '상관': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' }, // crested -> 상(crest) 관(crown)
+    '상관': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' },
     '릴리': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' },
     '카푸': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' },
     '아잔': { sci: 'Correlophus ciliatus', kor: '볏도마뱀붙이' },
@@ -53,6 +53,7 @@ export default function RegistrationHelperPage() {
     const [fileName, setFileName] = useState<string>('');
     const [isDragOver, setIsDragOver] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
     const pdfRef = useRef<HTMLDivElement>(null);
 
     // 1. Report Info State
@@ -81,18 +82,14 @@ export default function RegistrationHelperPage() {
             const jsonData = XLSX.utils.sheet_to_json(ws);
 
             const processed = jsonData.map((row: any) => {
-                // Simple heuristic to find the name/morph column
-                // Search keys for '품종', '모프', '이름', '종류'
                 const nameKey = Object.keys(row).find(k =>
                     k.includes('품종') || k.includes('모프') || k.includes('이름') || k.includes('종류')
                 ) || '';
 
                 const nameVal = nameKey ? String(row[nameKey]) : '';
 
-                // Default Mapping
                 let mapped = { sci: '', kor: '' };
 
-                // 1. Exact or partial match from map
                 for (const [key, val] of Object.entries(SPECIES_MAP)) {
                     if (nameVal.includes(key)) {
                         mapped = val;
@@ -152,7 +149,6 @@ export default function RegistrationHelperPage() {
 
         const ws = XLSX.utils.aoa_to_sheet([headers, example]);
 
-        // Column widths
         ws['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 15 }, { wch: 15 }];
 
         const wb = XLSX.utils.book_new();
@@ -161,32 +157,18 @@ export default function RegistrationHelperPage() {
     };
 
     const handleDownloadReport = () => {
-        // ... (Keep existing Excel Logic 100% intact, it's good backup)
-        // 1. Grid Data Construction (Columns A-F)
         const sheetData = [
-            // Row 0: Title
             ["■ 지정관리 야생동물 [" + (reportInfo.type === '양도' ? 'V' : ' ') + "]양도  [" + (reportInfo.type === '양수' ? 'V' : ' ') + "]양수  [" + (reportInfo.type === '보관' ? 'V' : ' ') + "]보관 신고서", "", "", "", "", ""],
-
-            // Row 1: Spacing
             ["", "", "", "", "", ""],
-
-            // Row 2: Receipt Info
             ["접수번호", "", "접수일", "", "처리기간", "7일"],
-
-            // Row 3-4: Reporter (Seller)
             ["신고인\n(양도인)", "성명(상호)", reportInfo.name, "", "연락처", reportInfo.contact],
             ["", "주소", reportInfo.address, "", "", ""],
-
-            // Row 5-6: Receiver (Buyer)
             ["양수인\n(보관인)", "성명(상호)", "직접 기재 필요", "", "연락처", "직접 기재 필요"],
             ["", "주소", "직접 기재 필요", "", "", ""],
-
-            // Row 7: List Header
             ["[ 신고 대상 개체 목록 ]", "", "", "", "", ""],
             ["연번", "학명 (Scientific Name)", "국명", "수량", "용도", "양도(보관) 사유"],
         ];
 
-        // 2. Add Gecko List
         data.forEach((row, index) => {
             sheetData.push([
                 index + 1,
@@ -198,10 +180,8 @@ export default function RegistrationHelperPage() {
             ]);
         });
 
-        // 3. Create Worksheet
         const ws = XLSX.utils.aoa_to_sheet(sheetData);
 
-        // 4. Style Definitions
         const borderStyle = {
             top: { style: "thin", color: { rgb: "000000" } },
             bottom: { style: "thin", color: { rgb: "000000" } },
@@ -215,7 +195,6 @@ export default function RegistrationHelperPage() {
             border: borderStyle
         };
 
-        // 5. Apply Styles Loop
         const range = XLSX.utils.decode_range(ws['!ref'] || "A1:A1");
         for (let R = range.s.r; R <= range.e.r; ++R) {
             for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -228,7 +207,7 @@ export default function RegistrationHelperPage() {
                     ws[cellAddress].s = {
                         ...baseStyle,
                         font: { name: "Malgun Gothic", sz: 14, bold: true },
-                        border: {} // No border for title box
+                        border: {}
                     };
                 }
                 if (R === 8 || (C === 0 && R > 2)) {
@@ -237,7 +216,6 @@ export default function RegistrationHelperPage() {
             }
         }
 
-        // 6. Cell Merges
         ws['!merges'] = [
             { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
             { s: { r: 3, c: 0 }, e: { r: 4, c: 0 } },
@@ -249,7 +227,6 @@ export default function RegistrationHelperPage() {
             { s: { r: 7, c: 0 }, e: { r: 7, c: 5 } },
         ];
 
-        // 7. Dimensions
         ws['!cols'] = [
             { wch: 15 }, { wch: 30 }, { wch: 20 }, { wch: 10 }, { wch: 15 }, { wch: 25 }
         ];
@@ -257,121 +234,243 @@ export default function RegistrationHelperPage() {
             { hpt: 30 }, { hpt: 10 }, { hpt: 25 }, { hpt: 30 }, { hpt: 30 }, { hpt: 30 }, { hpt: 30 }, { hpt: 25 }, { hpt: 30 }
         ];
 
-        // 8. Download
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "신고서");
         XLSX.writeFile(wb, `지정관리야생동물_${reportInfo.type}신고서_${reportInfo.name}.xlsx`);
     };
 
+    // Korean PDF with NanumGothic font
     const handleDownloadPDF = async () => {
-        if (!pdfRef.current) return;
+        if (isGeneratingPDF) return;
+
+        setIsGeneratingPDF(true);
 
         try {
-            // Wait for fonts to render
-            await new Promise(resolve => setTimeout(resolve, 100));
+            const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const canvas = await html2canvas(pdfRef.current, {
-                scale: 2, // High resolution for print
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff', // Force white background
-                onclone: (clonedDoc, element) => {
-                    // 1. Inject comprehensive CSS override
-                    const styleEl = clonedDoc.createElement('style');
-                    styleEl.textContent = `
-                        /* Override Tailwind CSS lab()/oklab()/oklch() colors with HEX equivalents */
-                        :root, *, *::before, *::after {
-                            --tw-text-opacity: 1 !important;
-                            --tw-bg-opacity: 1 !important;
-                            --tw-border-opacity: 1 !important;
-                        }
-                        
-                        /* White/Black */
-                        .text-white, [class*="text-white"] { color: #ffffff !important; }
-                        .text-black, [class*="text-black"] { color: #000000 !important; }
-                        .bg-white, [class*="bg-white"] { background-color: #ffffff !important; }
-                        .bg-black, [class*="bg-black"] { background-color: #000000 !important; }
-                        
-                        /* Zinc scale */
-                        .text-zinc-400 { color: #a1a1aa !important; }
-                        .text-zinc-500 { color: #71717a !important; }
-                        .text-zinc-600 { color: #52525b !important; }
-                        .bg-zinc-900 { background-color: #18181b !important; }
-                        .bg-zinc-800 { background-color: #27272a !important; }
-                        
-                        /* Gray scale */
-                        .text-gray-400 { color: #9ca3af !important; }
-                        .text-gray-500 { color: #6b7280 !important; }
-                        
-                        /* Custom colors */
-                        .bg-\\[\\#dcdcdc\\] { background-color: #dcdcdc !important; }
-                        
-                        /* Force the report form wrapper to use safe colors */
-                        [class*="bg-white"], .relative { 
-                            background-color: #ffffff !important;
-                            color: #000000 !important;
-                        }
-                        
-                        /* Override any gradient background */
-                        [class*="bg-gradient"] { 
-                            background-image: none !important;
-                        }
-                    `;
-                    clonedDoc.head.appendChild(styleEl);
+            // Load Korean font
+            await loadKoreanFont(pdf);
 
-                    // 2. Force inline styles on the main element
-                    element.style.backgroundColor = '#ffffff';
-                    element.style.color = '#000000';
+            const pageWidth = 210;
+            const margin = 15;
+            const contentWidth = pageWidth - margin * 2;
 
-                    // 3. Traverse ALL elements and replace any lab/oklab/oklch colors
-                    const allElements = clonedDoc.querySelectorAll('*');
-                    allElements.forEach((el) => {
-                        if (el instanceof HTMLElement) {
-                            const computed = clonedDoc.defaultView?.getComputedStyle(el);
-                            if (computed) {
-                                const bgColor = computed.backgroundColor;
-                                const textColor = computed.color;
-                                const borderColor = computed.borderColor;
+            let y = margin;
 
-                                // Replace any lab/oklab/oklch colors with safe HEX fallbacks
-                                if (bgColor && (bgColor.includes('lab(') || bgColor.includes('oklab(') || bgColor.includes('oklch('))) {
-                                    el.style.backgroundColor = '#ffffff';
-                                }
-                                if (textColor && (textColor.includes('lab(') || textColor.includes('oklab(') || textColor.includes('oklch('))) {
-                                    el.style.color = '#000000';
-                                }
-                                if (borderColor && (borderColor.includes('lab(') || borderColor.includes('oklab(') || borderColor.includes('oklch('))) {
-                                    el.style.borderColor = '#000000';
-                                }
-                            }
-                        }
-                    });
+            // Helper function for drawing cells with Korean text
+            const drawCell = (x: number, w: number, h: number, text: string, options: { fill?: boolean, align?: 'left' | 'center', fontSize?: number, bold?: boolean } = {}) => {
+                if (options.fill) {
+                    pdf.setFillColor(220, 220, 220);
+                    pdf.rect(x, y, w, h, 'F');
                 }
+                pdf.setDrawColor(0);
+                pdf.rect(x, y, w, h, 'S');
+                pdf.setFontSize(options.fontSize || 9);
+                pdf.setFont('NanumGothic', options.bold ? 'bold' : 'normal');
+                const textX = options.align === 'center' ? x + w / 2 : x + 2;
+                pdf.text(text, textX, y + h / 2 + 1.5, { align: options.align || 'left', maxWidth: w - 4 });
+            };
+
+            // === HEADER ===
+            pdf.setFont('NanumGothic', 'bold');
+            pdf.setFontSize(8);
+            pdf.text('■ 야생생물 보호 및 관리에 관한 법률 시행규칙 [별지 제31호의9서식]', margin, y);
+            y += 8;
+
+            // === TITLE ===
+            const isYangdo = reportInfo.type === '양도';
+            const isYangsu = reportInfo.type === '양수';
+            const isBogan = reportInfo.type === '보관' || (!isYangdo && !isYangsu);
+
+            pdf.setFontSize(16);
+            pdf.setFont('NanumGothic', 'bold');
+            const check = (checked: boolean) => checked ? '√' : ' ';
+            pdf.text(
+                `지정관리 야생동물 [ ${check(isYangdo)} ] 양도 [ ${check(isYangsu)} ] 양수 [ ${check(isBogan)} ] 보관 신고서`,
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 8;
+
+            pdf.setFontSize(7);
+            pdf.setFont('NanumGothic', 'normal');
+            pdf.text('※ 색상이 어두운 칸은 신고인이 작성하지 않으며, [ ]에는 해당되는 곳에 √표시를 합니다.', margin, y);
+            y += 6;
+
+            // === TABLE 1: Receipt Info ===
+            const col1 = contentWidth * 0.15;
+            const col2 = contentWidth * 0.25;
+            const col3 = contentWidth * 0.15;
+            const col4 = contentWidth * 0.25;
+            const col5 = contentWidth * 0.12;
+            const col6 = contentWidth * 0.08;
+            const rowH = 8;
+
+            let x = margin;
+            drawCell(x, col1, rowH, '접수번호', { fill: true, align: 'center' }); x += col1;
+            drawCell(x, col2, rowH, '', { fill: true, align: 'center' }); x += col2;
+            drawCell(x, col3, rowH, '접수일', { fill: true, align: 'center' }); x += col3;
+            drawCell(x, col4, rowH, '', { fill: true, align: 'center' }); x += col4;
+            drawCell(x, col5, rowH, '처리기간', { fill: true, align: 'center' }); x += col5;
+            drawCell(x, col6, rowH, '7일', { fill: true, align: 'center' });
+            y += rowH;
+
+            // === TABLE 2: 양도인 ===
+            x = margin;
+            const labelW = contentWidth * 0.13;
+            const fieldLabelW = contentWidth * 0.12;
+            const fieldValueW = contentWidth * 0.35;
+            const contactLabelW = contentWidth * 0.12;
+            const contactValueW = contentWidth * 0.28;
+
+            drawCell(x, labelW, rowH * 2, '양도인', { fill: true, align: 'center' });
+            drawCell(x + labelW, fieldLabelW, rowH, '상호(성명)', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW, fieldValueW, rowH, isYangdo ? reportInfo.name : '');
+            drawCell(x + labelW + fieldLabelW + fieldValueW, contactLabelW, rowH, '연락처', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW + fieldValueW + contactLabelW, contactValueW, rowH, isYangdo ? reportInfo.contact : '');
+            y += rowH;
+            drawCell(x + labelW, fieldLabelW, rowH, '주소', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW, fieldValueW + contactLabelW + contactValueW, rowH, isYangdo ? reportInfo.address : '');
+            y += rowH;
+
+            // === TABLE 3: 양수인(보관인) ===
+            drawCell(x, labelW, rowH * 2, '양수인\n(보관인)', { fill: true, align: 'center' });
+            drawCell(x + labelW, fieldLabelW, rowH, '상호(성명)', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW, fieldValueW, rowH, !isYangdo ? reportInfo.name : '');
+            drawCell(x + labelW + fieldLabelW + fieldValueW, contactLabelW, rowH, '연락처', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW + fieldValueW + contactLabelW, contactValueW, rowH, !isYangdo ? reportInfo.contact : '');
+            y += rowH;
+            drawCell(x + labelW, fieldLabelW, rowH, '주소', { align: 'center' });
+            drawCell(x + labelW + fieldLabelW, fieldValueW + contactLabelW + contactValueW, rowH, !isYangdo ? reportInfo.address : '');
+            y += rowH;
+
+            // === TABLE 4: 야생동물 정보 ===
+            const listLabelW = contentWidth * 0.13;
+            const nameW = contentWidth * 0.32;
+            const qtyW = contentWidth * 0.10;
+            const purposeW = contentWidth * 0.15;
+            const reasonW = contentWidth * 0.30;
+
+            const minRows = 5;
+            const filledData = [...data];
+            while (filledData.length < minRows) {
+                filledData.push({});
+            }
+            const listHeight = rowH * (filledData.length + 1);
+
+            drawCell(x, listLabelW, listHeight, '지정관리\n야생동물\n정보', { fill: true, align: 'center' });
+
+            const listX = x + listLabelW;
+            drawCell(listX, nameW, rowH, '학명', { align: 'center', fontSize: 8, bold: true });
+            drawCell(listX + nameW, qtyW, rowH, '수량', { align: 'center', fontSize: 8, bold: true });
+            drawCell(listX + nameW + qtyW, purposeW, rowH, '용도', { align: 'center', fontSize: 8, bold: true });
+            drawCell(listX + nameW + qtyW + purposeW, reasonW, rowH, '양도사유(보관사유)', { align: 'center', fontSize: 8, bold: true });
+            y += rowH;
+
+            filledData.forEach((row) => {
+                const sciName = row['학명'] || row['학명(자동생성)'] || '';
+                const qty = row['수량'] || (sciName ? '1' : '');
+                const purpose = sciName ? '반려용' : '';
+                const reason = sciName ? reportInfo.reason : '';
+
+                drawCell(listX, nameW, rowH, sciName, { fontSize: 8 });
+                drawCell(listX + nameW, qtyW, rowH, String(qty), { align: 'center', fontSize: 8 });
+                drawCell(listX + nameW + qtyW, purposeW, rowH, purpose, { align: 'center', fontSize: 8 });
+                drawCell(listX + nameW + qtyW + purposeW, reasonW, rowH, reason, { fontSize: 8 });
+                y += rowH;
             });
 
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
-            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+            y += 8;
 
-            // Calc ratio to fit width exactly, but ensure it fits height too
-            const widthRatio = pdfWidth / imgWidth;
-            const heightRatio = pdfHeight / imgHeight;
-            const ratio = Math.min(widthRatio, heightRatio);
+            // === DECLARATION ===
+            pdf.setFontSize(10);
+            pdf.setFont('NanumGothic', 'normal');
+            pdf.text(
+                '「야생생물 보호 및 관리에 관한 법률」 제22조의4제2항 전단 및 같은 법 시행규칙 제29조의6제1항에',
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 5;
+            pdf.text(
+                `따라 위와 같이 지정관리 야생동물의 [ ${check(isYangdo)} ]양도, [ ${check(isYangsu)} ]양수, [ ${check(isBogan)} ]보관을 신고합니다.`,
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 12;
 
-            const finalWidth = imgWidth * ratio;
-            const finalHeight = imgHeight * ratio;
+            const today = new Date();
+            pdf.setFontSize(12);
+            pdf.text(`${today.getFullYear()}년  ${today.getMonth() + 1}월  ${today.getDate()}일`, pageWidth / 2, y, { align: 'center' });
+            y += 12;
 
-            // Center horizontally if scaled down by height
-            const xOffset = (pdfWidth - finalWidth) / 2;
+            pdf.setFontSize(10);
+            pdf.text(`신고인   ${reportInfo.name}   (서명 또는 인)`, pageWidth - margin, y, { align: 'right' });
+            y += 12;
 
-            pdf.addImage(imgData, 'PNG', xOffset, 0, finalWidth, finalHeight);
+            pdf.setFontSize(14);
+            pdf.setFont('NanumGothic', 'bold');
+            pdf.text('시장 · 군수 · 구청장  귀하', margin, y);
+            y += 15;
+
+            // === Cut Line ===
+            pdf.setLineDashPattern([2, 2], 0);
+            pdf.line(margin, y, pageWidth - margin, y);
+            pdf.setFontSize(8);
+            pdf.setFont('NanumGothic', 'normal');
+            pdf.text('자르는 선', pageWidth / 2, y - 2, { align: 'center' });
+            pdf.setLineDashPattern([], 0);
+            y += 10;
+
+            // === CERTIFICATE ===
+            pdf.setFontSize(10);
+            pdf.text('제          호', margin, y);
+            y += 8;
+
+            pdf.setFontSize(14);
+            pdf.setFont('NanumGothic', 'bold');
+            pdf.text(
+                `지정관리 야생동물 [ ${check(isYangdo)} ]양도 [ ${check(isYangsu)} ]양수 [ ${check(isBogan)} ]보관 신고확인증`,
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 12;
+
+            pdf.setFontSize(10);
+            pdf.setFont('NanumGothic', 'normal');
+            pdf.text(
+                '「야생생물 보호 및 관리에 관한 법률」 제22조의4제2항 전단 및 같은 법 시행규칙 제29조의6제1항에 따라',
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 5;
+            pdf.text(
+                `지정관리 야생동물의 [ ${check(isYangdo)} ]양도, [ ${check(isYangsu)} ]양수, [ ${check(isBogan)} ]보관을 신고하였음을 확인합니다.`,
+                pageWidth / 2, y, { align: 'center' }
+            );
+            y += 12;
+
+            pdf.setFontSize(12);
+            pdf.text(`${today.getFullYear()}년  ${today.getMonth() + 1}월  ${today.getDate()}일`, pageWidth / 2, y, { align: 'center' });
+            y += 15;
+
+            pdf.setFontSize(14);
+            pdf.setFont('NanumGothic', 'bold');
+            pdf.text('시장 · 군수 · 구청장', pageWidth - margin - 35, y, { align: 'right' });
+
+            // Draw seal circle
+            pdf.setDrawColor(200, 50, 50);
+            pdf.circle(pageWidth - margin - 12, y - 5, 10, 'S');
+            pdf.setFontSize(8);
+            pdf.setTextColor(200, 50, 50);
+            pdf.text('직인', pageWidth - margin - 12, y - 5, { align: 'center' });
+            pdf.setTextColor(0, 0, 0);
+            y += 10;
+
+            pdf.setFontSize(10);
+            pdf.setFont('NanumGothic', 'normal');
+            pdf.text('귀하', margin, y);
+
             pdf.save(`지정관리야생동물_${reportInfo.type}신고서_${reportInfo.name}.pdf`);
         } catch (err) {
-            console.error('PDF Generation Error:', err);
-            alert('PDF 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            console.error('PDF 생성 오류:', err);
+            alert('PDF 생성 중 오류가 발생했습니다. 폰트 로딩에 실패했을 수 있습니다.');
+        } finally {
+            setIsGeneratingPDF(false);
         }
     };
 
@@ -497,11 +596,11 @@ export default function RegistrationHelperPage() {
                 {/* Preview Area */}
                 {data.length > 0 && (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
                             <h2 className="text-2xl font-bold text-white border-l-4 border-[#D4AF37] pl-4">
                                 Data Preview <span className="text-sm font-normal text-zinc-500 ml-2">({data.length} rows)</span>
                             </h2>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 <button
                                     onClick={handleDownloadReport}
                                     className="bg-[#D4AF37] text-black font-bold py-3 px-6 rounded-full hover:bg-[#F2C94C] transition shadow-[0_0_20px_rgba(212,175,55,0.4)] flex items-center gap-2"
@@ -511,10 +610,11 @@ export default function RegistrationHelperPage() {
                                 </button>
                                 <button
                                     onClick={handleDownloadPDF}
-                                    className="bg-white text-black font-bold py-3 px-6 rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.4)] flex items-center gap-2"
+                                    disabled={isGeneratingPDF}
+                                    className="bg-white text-black font-bold py-3 px-6 rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.4)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <span>📄</span>
-                                    <span>PDF (OFFICIAL)</span>
+                                    <span>{isGeneratingPDF ? '⏳' : '📄'}</span>
+                                    <span>{isGeneratingPDF ? 'PDF 생성중...' : 'PDF (한글)'}</span>
                                 </button>
                                 <button
                                     onClick={handleDownload}
@@ -552,9 +652,7 @@ export default function RegistrationHelperPage() {
                 )}
             </main>
 
-            {/* Hidden Government Form for PDF Generation 
-                Fixed positioning with negative z-index to stay in viewport but hidden.
-            */}
+            {/* Hidden Government Form for PDF Generation */}
             <div
                 className="fixed top-0 left-0"
                 style={{
