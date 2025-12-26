@@ -31,7 +31,11 @@ import {
     Gavel,
     ShoppingBag,
     FileText,
-    X
+    X,
+    Sparkles,
+    Calculator,
+    GitFork,
+    Dna
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { useTranslations, useLocale } from 'next-intl';
@@ -94,6 +98,7 @@ export function Navbar({ user }: NavbarProps) {
             sub: '(가이드)',
             children: [
                 { label: '초보 가이드', sub: 'Beginner Guide', href: `/${locale}/guide/beginner`, icon: <BookOpen className="w-4 h-4" /> },
+                { label: '모프 가이드', sub: 'Morph Guide', href: `/${locale}/guide/morphs`, icon: <Dna className="w-4 h-4" /> },
                 { label: '사육 꿀팁', sub: 'Care Tips', href: `/${locale}/guide/tips`, icon: <Lightbulb className="w-4 h-4" /> },
             ]
         },
@@ -102,7 +107,7 @@ export function Navbar({ user }: NavbarProps) {
             sub: '(커뮤니티)',
             children: [
                 { label: '공지사항', sub: 'Notice', href: `/${locale}/community/notice`, icon: <Bell className="w-4 h-4" /> },
-                { label: '게코스타그램', sub: 'Gallery', href: `/${locale}/community/gallery`, icon: <ImageIcon className="w-4 h-4" /> },
+                { label: '크레스타그램', sub: 'Gallery', href: `/${locale}/community/gallery`, icon: <ImageIcon className="w-4 h-4" /> },
                 { label: '자유게시판', sub: 'Board', href: `/${locale}/community/board`, icon: <MessageSquare className="w-4 h-4" /> },
             ]
         },
@@ -118,9 +123,10 @@ export function Navbar({ user }: NavbarProps) {
             label: 'TOOLS',
             sub: '(도구)',
             children: [
-                { label: 'Tools', sub: '도구 모음', href: `/${locale}/tools`, icon: <FileText className="w-4 h-4" /> },
+                { label: '2세 작명소', sub: 'Naming', href: `/${locale}/tools/naming`, icon: <Sparkles className="w-4 h-4" /> },
+                { label: '모프 계산기', sub: 'Calculator', href: `/${locale}/tools/calculator`, icon: <Calculator className="w-4 h-4" /> },
                 { label: '분양 계약서', sub: 'Contract', href: `/${locale}/tools/contract`, icon: <FileText className="w-4 h-4" /> },
-                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <FileText className="w-4 h-4" /> },
+                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <GitFork className="w-4 h-4" /> },
                 { label: 'ID 카드', sub: 'Card', href: `/${locale}/card`, icon: <ImageIcon className="w-4 h-4" /> },
             ]
         },

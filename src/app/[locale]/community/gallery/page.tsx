@@ -87,7 +87,7 @@ export default function GalleryPage() {
                         Geckostagram
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#FCF6BA] mb-4">
-                        게코스타그램
+                        크레스타그램
                     </h1>
                     <p className="text-zinc-400 text-lg leading-relaxed">
                         자랑하고 싶은 게코 사진을 공유하고 다른 사육자들의 게코를 구경하세요!

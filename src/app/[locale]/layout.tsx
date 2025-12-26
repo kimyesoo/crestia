@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import Script from "next/script";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Crestia",
@@ -28,7 +29,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="dark">
+    <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -40,12 +41,13 @@ export default async function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col overflow-x-hidden`}>
+      <body className={`antialiased bg-background text-foreground font-sans min-h-screen flex flex-col overflow-x-hidden`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <Navbar user={user} />
-          <main className="flex-1 relative min-h-screen pt-20 overflow-x-hidden">
+          <main className="flex-1 relative pt-20 overflow-x-hidden">
             {children}
           </main>
+          <Footer />
           <Toaster />
         </NextIntlClientProvider>
       </body>

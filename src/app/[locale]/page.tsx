@@ -14,7 +14,7 @@ export default function LandingPage() {
   const t = useTranslations();
 
   return (
-    <div className="relative min-h-screen bg-black text-white selection:bg-gold-500/30 font-sans">
+    <div className="relative min-h-screen bg-black text-white selection:bg-gold-500/30 font-sans overflow-x-hidden">
 
       {/* HERO SECTION CONTAINER */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
@@ -51,7 +51,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative font-serif text-6xl md:text-9xl font-bold tracking-[0.2em] bg-gradient-to-r from-[#FBF5b7] via-[#D4AF37] to-[#aa771c] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] ml-4"
+              className="relative font-serif text-5xl sm:text-6xl md:text-9xl font-bold tracking-[0.1em] sm:tracking-[0.2em] bg-gradient-to-r from-[#FBF5b7] via-[#D4AF37] to-[#aa771c] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] ml-2 sm:ml-4"
             >
               {t('Hero.title')}
             </motion.h1>
@@ -89,7 +89,7 @@ export default function LandingPage() {
         <div className="absolute bottom-[18%] left-0 w-full flex flex-col items-center text-center z-20 px-4">
 
           {/* Main Title */}
-          <h2 className="text-[#D4AF37] font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] drop-shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-1000 uppercase">
+          <h2 className="text-[#D4AF37] font-serif text-lg sm:text-2xl md:text-3xl font-bold tracking-normal sm:tracking-[0.1em] md:tracking-[0.2em] drop-shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-1000 uppercase px-2">
             The Global Standard of Lineage
           </h2>
 
@@ -113,7 +113,7 @@ export default function LandingPage() {
       {/* 2. Service Shortcut Section */}
       <section className="py-20 bg-zinc-900 border-t border-white/5">
         <div className="container mx-auto px-4">
-          <h3 className="text-[#D4AF37] font-serif text-2xl mb-8 tracking-widest text-center">CRESTIA UTILITIES</h3>
+          <h3 className="text-[#D4AF37] font-serif text-xl sm:text-2xl mb-8 tracking-wide sm:tracking-widest text-center">CRESTIA UTILITIES</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 1: ID Card Generator */}
             <Link href="/card" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">

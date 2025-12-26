@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                             <h2 className="text-2xl font-serif font-bold text-white">Recently Added</h2>
                             <p className="text-zinc-500 text-sm mt-1">Quickly manage your latest additions.</p>
                         </div>
-                        <Link href="/showcase" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
+                        <Link href="/dashboard/geckos" className="text-sm text-gold-500 hover:text-gold-400 flex items-center gap-1">
                             View All <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
