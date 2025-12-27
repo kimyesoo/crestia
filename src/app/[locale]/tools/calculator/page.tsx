@@ -14,6 +14,7 @@ import {
     type TierType,
     type WarningType,
 } from '@/lib/genetics/calculateGenetics';
+import { AdSenseBanner } from '@/components/ads/AdSenseBanner';
 
 // ============================================
 // UI COMPONENTS
@@ -287,6 +288,20 @@ export default function MorphCalculatorPage() {
                 </div>
             </div>
 
+            {/* SEO Content Section */}
+            <div className="max-w-6xl mx-auto px-4 pt-8">
+                <div className="bg-gradient-to-r from-[#D4AF37]/10 to-transparent border-l-4 border-[#D4AF37] pl-4 py-3 mb-6">
+                    <h1 className="text-2xl font-bold text-white mb-2">
+                        크레스티드 게코 모프 계산기 (유전 확률 예측)
+                    </h1>
+                    <p className="text-zinc-400 text-sm leading-relaxed">
+                        멘델의 유전 법칙을 기반으로 부모 개체의 형질을 분석하여 2세의 모프를 예측합니다.
+                        릴리 화이트, 아잔틱, 카푸치노, 세이블, 루왁 등 최신 모프 데이터를 지원하며,
+                        치사 유전자와 건강 위험도까지 자동으로 계산해드립니다.
+                    </p>
+                </div>
+            </div>
+
             {/* Main Content */}
             <div className="max-w-6xl mx-auto px-4 py-8">
                 {/* Info Banner */}
@@ -483,6 +498,15 @@ export default function MorphCalculatorPage() {
                                 실제 결과는 환경 요인, 유전자 상호작용, 또는 아직 알려지지 않은 유전적 요소에 의해 달라질 수 있습니다.
                                 번식 결정 전 전문 브리더와 상담하세요.
                             </p>
+                        </div>
+
+                        {/* 광고 배너 - 결과 하단 */}
+                        <div className="mt-6">
+                            <AdSenseBanner
+                                slot="2345678901"
+                                format="horizontal"
+                                className="rounded-xl overflow-hidden"
+                            />
                         </div>
                     </div>
                 )}

@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/client';
 import { PenLine, Eye, Clock, Pin, BookOpen, Lightbulb, Dna, ChevronRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+// Note: Metadata is defined in a separate layout.tsx for client components
+
 interface GuidePost {
     id: string;
     user_id: string;

@@ -243,6 +243,21 @@ export default function NamingPage() {
                 </div>
             </div>
 
+            {/* SEO Content Section */}
+            <div className="relative max-w-4xl mx-auto px-4 pt-6">
+                <div className="bg-gradient-to-r from-purple-500/10 to-transparent border-l-4 border-purple-400 pl-4 py-3 mb-6">
+                    <h1 className="text-2xl font-bold text-white mb-2">
+                        파충류/도마뱀 이름 짓기 (AI 작명소)
+                    </h1>
+                    <p className="text-zinc-400 text-sm leading-relaxed">
+                        소중한 반려 도마뱀에게 어울리는 특별한 이름을 지어주세요.
+                        크레스티드 게코, 레오파드 게코 등 다양한 파충류에 어울리는
+                        영어, 한글, 일본어 스타일의 유니크한 이름을 추천해 드립니다.
+                        모프 색상과 성격에 맞는 센스 있는 이름을 짓기 위한 최고의 선택!
+                    </p>
+                </div>
+            </div>
+
             {/* Main Content */}
             <div className="relative max-w-4xl mx-auto px-4 py-8">
                 <AnimatePresence mode="wait">

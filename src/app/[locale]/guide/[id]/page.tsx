@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import { SocialActions } from '@/components/SocialActions';
 import { EmojiButton } from '@/components/EmojiButton';
+import { AdSenseBanner } from '@/components/ads/AdSenseBanner';
 
 interface GuidePost {
     id: string;
@@ -290,6 +291,36 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
 
     return (
         <div className="min-h-screen bg-background pt-28 pb-8 px-4">
+            {/* JSON-LD Structured Data for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Article",
+                        "headline": post.title,
+                        "image": post.image_url || "https://crestia.vercel.app/logo.png",
+                        "datePublished": post.created_at,
+                        "author": {
+                            "@type": "Person",
+                            "name": "Crestia Team"
+                        },
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Crestia",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://crestia.vercel.app/logo.png"
+                            }
+                        },
+                        "description": post.content.substring(0, 160),
+                        "mainEntityOfPage": {
+                            "@type": "WebPage",
+                            "@id": `https://crestia.vercel.app/guide/${post.id}`
+                        }
+                    })
+                }}
+            />
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
@@ -467,6 +498,15 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
                         </ReactMarkdown>
                     </div>
                 </article>
+
+                {/* 광고 배너 - 본문과 댓글 사이 */}
+                <div className="my-6">
+                    <AdSenseBanner
+                        slot="1234567890"
+                        format="horizontal"
+                        className="rounded-xl overflow-hidden"
+                    />
+                </div>
 
                 {/* Comments Section */}
                 <div ref={commentsRef} className="mt-8 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">

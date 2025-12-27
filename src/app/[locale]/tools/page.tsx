@@ -1,7 +1,15 @@
-'use client';
-
+import type { Metadata } from "next";
 import Link from 'next/link';
-import { FileText, Sparkles, Calculator, ArrowRight } from 'lucide-react';
+import { FileText, Sparkles, Calculator, ArrowRight, GitFork, CreditCard } from 'lucide-react';
+
+export const metadata: Metadata = {
+    title: "Tools - 브리더 유틸리티",
+    description: "멘델 유전 법칙 기반 2세 모프 예측, AI 작명소, 분양 계약서 생성기.",
+    openGraph: {
+        title: "Crestia Tools - 브리더 유틸리티",
+        description: "멘델 유전 법칙 기반 2세 모프 예측, AI 작명소, 분양 계약서 생성기.",
+    },
+};
 
 const tools = [
     {
@@ -29,6 +37,24 @@ const tools = [
         description: 'Gen 2.0 유전학 알고리즘! 부모 개체의 유전형을 입력하면 2세의 확률과 디자이너 모프를 계산합니다.',
         icon: Calculator,
         href: '/tools/calculator',
+        available: true,
+    },
+    {
+        id: 'lineage',
+        title: '혈통도',
+        titleEn: 'Lineage Tree',
+        description: '내 게코의 가계도를 시각적으로 확인하세요. 부모, 조부모까지 한눈에!',
+        icon: GitFork,
+        href: '/lineage',
+        available: true,
+    },
+    {
+        id: 'card',
+        title: 'ID 카드',
+        titleEn: 'ID Card Generator',
+        description: '분양용 ID 카드를 자동으로 생성하세요. 프리미엄 디자인!',
+        icon: CreditCard,
+        href: '/card',
         available: true,
     },
 ];

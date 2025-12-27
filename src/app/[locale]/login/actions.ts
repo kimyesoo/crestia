@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 
 export async function login(formData: FormData) {
     const supabase = await createClient()
+    const redirectTo = formData.get('redirectTo') as string | null;
 
     const data = {
         email: formData.get('email') as string,
@@ -22,11 +23,15 @@ export async function login(formData: FormData) {
     revalidatePath('/', 'layout')
 
     const locale = (await cookies()).get('NEXT_LOCALE')?.value || 'en';
-    redirect({ href: '/', locale });
+
+    // Redirect to the specified page or home
+    const targetPath = redirectTo || '/';
+    redirect({ href: targetPath, locale });
 }
 
 export async function signup(formData: FormData) {
     const supabase = await createClient()
+    const redirectTo = formData.get('redirectTo') as string | null;
 
     const data = {
         email: formData.get('email') as string,
@@ -47,5 +52,8 @@ export async function signup(formData: FormData) {
     revalidatePath('/', 'layout')
 
     const locale = (await cookies()).get('NEXT_LOCALE')?.value || 'en';
-    redirect({ href: '/', locale });
+
+    // Redirect to the specified page or home
+    const targetPath = redirectTo || '/';
+    redirect({ href: targetPath, locale });
 }
