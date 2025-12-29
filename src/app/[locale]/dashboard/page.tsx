@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DeleteGeckoButton } from "@/components/DeleteGeckoButton";
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -150,10 +151,11 @@ export default async function DashboardPage() {
                                     <Link
                                         href={`/dashboard/edit/${gecko.id}`}
                                         className="h-8 w-8 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-                                        title="Edit"
+                                        title="수정"
                                     >
                                         <Edit className="w-4 h-4" />
                                     </Link>
+                                    <DeleteGeckoButton geckoId={gecko.id} geckoName={gecko.name} />
                                 </div>
                             </div>
                         ))}

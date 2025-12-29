@@ -25,6 +25,7 @@ const TABS = [
     { id: 'notice', label: '공지사항' },
     { id: 'gallery', label: '갤러리' },
     { id: 'board', label: '자유게시판' },
+    { id: 'qna', label: 'Q&A' },
 ];
 
 export default function CommunityPage() {
@@ -107,6 +108,7 @@ export default function CommunityPage() {
             case 'notice': return 'bg-red-500/20 text-red-400';
             case 'gallery': return 'bg-purple-500/20 text-purple-400';
             case 'board': return 'bg-blue-500/20 text-blue-400';
+            case 'qna': return 'bg-green-500/20 text-green-400';
             default: return 'bg-zinc-500/20 text-zinc-400';
         }
     };
@@ -116,6 +118,7 @@ export default function CommunityPage() {
             case 'notice': return '공지';
             case 'gallery': return '갤러리';
             case 'board': return '자유';
+            case 'qna': return 'Q&A';
             default: return category;
         }
     };
@@ -140,7 +143,7 @@ export default function CommunityPage() {
                 </div>
 
                 {/* Featured Sections Hub */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <Link
                         href="/community/notice"
                         className="group block bg-gradient-to-br from-red-500/20 to-red-500/5 border border-red-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
@@ -197,6 +200,26 @@ export default function CommunityPage() {
                                 </h3>
                                 <p className="text-zinc-500 text-sm">Free Board</p>
                                 <p className="text-zinc-400 text-sm mt-2 line-clamp-2">자유롭게 이야기를 나눠보세요</p>
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/community/qna"
+                        className="group block bg-gradient-to-br from-green-500/20 to-green-500/5 border border-green-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-xl bg-zinc-900/50 text-green-400">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-[#D4AF37] transition-colors">
+                                    Q&A
+                                </h3>
+                                <p className="text-zinc-500 text-sm">Questions & Answers</p>
+                                <p className="text-zinc-400 text-sm mt-2 line-clamp-2">사육 관련 질문과 답변을 나눠보세요</p>
                             </div>
                         </div>
                     </Link>

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { ArrowLeft, Send, ImagePlus, X } from 'lucide-react';
@@ -14,9 +14,18 @@ import { toast } from 'sonner';
 
 export default function WritePostPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const supabase = useMemo(() => createClient(), []);
 
     const [category, setCategory] = useState('board');
+
+    // Set category from URL query parameter
+    useEffect(() => {
+        const categoryParam = searchParams.get('category');
+        if (categoryParam && ['board', 'gallery', 'qna', 'notice'].includes(categoryParam)) {
+            setCategory(categoryParam);
+        }
+    }, [searchParams]);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -85,6 +94,7 @@ export default function WritePostPage() {
                             <SelectContent>
                                 <SelectItem value="board">자유게시판</SelectItem>
                                 <SelectItem value="gallery">갤러리</SelectItem>
+                                <SelectItem value="qna">Q&A</SelectItem>
                                 <SelectItem value="notice">공지사항</SelectItem>
                             </SelectContent>
                         </Select>

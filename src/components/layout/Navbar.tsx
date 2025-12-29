@@ -99,8 +99,8 @@ export function Navbar({ user }: NavbarProps) {
             href: `/${locale}/guide`,
             children: [
                 { label: '초보 가이드', sub: 'Beginner Guide', href: `/${locale}/guide/beginner`, icon: <BookOpen className="w-4 h-4" /> },
-                { label: '모프 가이드', sub: 'Morph Guide', href: `/${locale}/guide/morphs`, icon: <Dna className="w-4 h-4" /> },
-                { label: '커뮤니티 가이드', sub: 'Community Guide', href: `/${locale}/guide/community`, icon: <Lightbulb className="w-4 h-4" /> },
+                { label: '모프 도감', sub: 'Morphopedia', href: `/${locale}/guide/morphs`, icon: <Dna className="w-4 h-4" /> },
+                { label: '사육 지식', sub: 'Care Guide', href: `/${locale}/guide/care`, icon: <Lightbulb className="w-4 h-4" /> },
             ]
         },
         {
@@ -111,6 +111,7 @@ export function Navbar({ user }: NavbarProps) {
                 { label: '공지사항', sub: 'Notice', href: `/${locale}/community/notice`, icon: <Bell className="w-4 h-4" /> },
                 { label: '크레스타그램', sub: 'Gallery', href: `/${locale}/community/gallery`, icon: <ImageIcon className="w-4 h-4" /> },
                 { label: '자유게시판', sub: 'Board', href: `/${locale}/community/board`, icon: <MessageSquare className="w-4 h-4" /> },
+                { label: 'Q&A', sub: '질문답변', href: `/${locale}/community/qna`, icon: <Lightbulb className="w-4 h-4" /> },
             ]
         },
         // ===== MARKET 메뉴 (경매/분양은 임시 숨김 - 용품 추천만 활성화) =====
