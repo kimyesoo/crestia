@@ -27,12 +27,13 @@ export default function GeckoCardPage() {
         const fetchGecko = async () => {
             if (!params.id) return;
             try {
-                // Fetch with Deep Lineage (Grandparents)
+                // Fetch with Deep Lineage (Grandparents) and Profile info
                 // Note: Aliasing FK relationships: sire:sire_id (...), dam:dam_id (...)
                 const { data, error } = await supabase
                     .from("geckos")
                     .select(`
                         *,
+                        profiles (shop_name),
                         sire:sire_id (
                             id, name,
                             sire:sire_id (id, name),
@@ -56,7 +57,7 @@ export default function GeckoCardPage() {
                     imageUrl: data.image_url,
                     hatchDate: data.birth_date || 'Unknown',  // Fixed: birth_date not hatch_date
                     morph: data.morph || 'Unknown',
-                    breeder: 'Crestia',  // breeder column doesn't exist in DB
+                    breeder: data.profiles?.shop_name || 'Unknown Breeder',  // Use shop_name from profiles
                     sireName: data.sire?.name || data.sire_name || 'Unknown',
                     damName: data.dam?.name || data.dam_name || 'Unknown',
                     pedigree: {
@@ -234,15 +235,14 @@ export default function GeckoCardPage() {
     if (!gecko) return <div className="min-h-screen bg-black flex items-center justify-center text-red-500">Gecko not found.</div>;
 
     return (
-        <div style={{ backgroundColor: '#000', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="min-h-screen bg-black flex flex-col items-center justify-start pt-24 pb-12 px-4 overflow-x-hidden">
 
-            {/* 1. 화면 미리보기용 (사용자 편의를 위해 축소) */}
-            <div className="flex items-center justify-center py-10" style={{ transform: 'scale(0.55)', transformOrigin: 'center' }}>
+            {/* 1. 화면 미리보기용 - GeckoCardFinal이 자동으로 스케일링 처리 */}
+            <div className="w-full max-w-6xl overflow-hidden">
                 <GeckoCardFinal gecko={gecko} displayImage={localImageBase64} />
             </div>
 
             {/* 2. 인쇄용 Ghost 요소 (사용자 눈엔 안 보임, 인쇄 규격 완벽 준수 1062x685) */}
-            {/* Safe Area handled internally by GeckoCardFinal components. */}
             <div style={{ position: 'fixed', top: 0, left: '-9999px' }}>
                 {/* Front Side Ghost */}
                 <div id="card-print-front" style={{ width: '1062px', height: '685px', background: '#000' }}>
@@ -255,20 +255,25 @@ export default function GeckoCardPage() {
                 </div>
             </div>
 
-            {/* 버튼 */}
-            <div style={{ marginTop: '50px', display: 'flex', gap: '20px' }}>
-                <button onClick={() => router.back()} style={{ padding: '12px 30px', borderRadius: '30px', border: '1px solid #D4AF37', background: 'transparent', color: '#D4AF37' }}>RETURN</button>
+            {/* 버튼 - 모바일 반응형 */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full max-w-md px-4">
+                <button
+                    onClick={() => router.back()}
+                    className="flex-1 py-3 px-6 rounded-full border border-[#D4AF37] bg-transparent text-[#D4AF37] font-medium hover:bg-[#D4AF37]/10 transition-colors"
+                >
+                    RETURN
+                </button>
                 <button
                     onClick={() => handleDownload('front')}
                     disabled={!localImageBase64 && gecko?.imageUrl}
-                    style={{ padding: '12px 30px', borderRadius: '30px', border: 'none', background: 'linear-gradient(to bottom, #FBF5b7, #D4AF37)', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}
+                    className="flex-1 py-3 px-6 rounded-full border-none bg-gradient-to-b from-[#FBF5b7] to-[#D4AF37] text-black font-bold cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                     DOWNLOAD FRONT
                 </button>
                 <button
                     onClick={() => handleDownload('back')}
                     disabled={!localImageBase64 && gecko?.imageUrl}
-                    style={{ padding: '12px 30px', borderRadius: '30px', border: '1px solid #D4AF37', background: '#000', color: '#D4AF37', fontWeight: 'bold', cursor: 'pointer' }}
+                    className="flex-1 py-3 px-6 rounded-full border border-[#D4AF37] bg-black text-[#D4AF37] font-bold cursor-pointer hover:bg-[#D4AF37]/10 transition-colors disabled:opacity-50"
                 >
                     DOWNLOAD BACK
                 </button>

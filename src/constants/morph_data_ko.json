@@ -1,0 +1,449 @@
+{
+  "source": "MorphMarket Morphpedia (한국어 번역)",
+  "source_url": "https://www.morphmarket.com/morphpedia/crested-geckos/",
+  "translated_at": "2025-12-29T11:11:23.078577",
+  "translator": "Crestia Korean Patch",
+  "total_morphs": 55,
+  "morphs": [
+    {
+      "id": "axanthic-recessive-common-common-availability",
+      "name": "악산틱 (Axanthic)",
+      "nameEn": "Axanthic Recessive Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/axanthic/"
+    },
+    {
+      "id": "bi-color-polygenic-average-average-availability",
+      "name": "바이컬러 (Bi-color)",
+      "nameEn": "Bi-color Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/bi-color/"
+    },
+    {
+      "id": "black-base-dominant-higher-higher-availability",
+      "name": "블랙 베이스 (Black Base)",
+      "nameEn": "Black Base Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/black-base/"
+    },
+    {
+      "id": "blushing-other-average-average-availability",
+      "name": "블러싱 (Blushing)",
+      "nameEn": "Blushing Other Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/blushing/"
+    },
+    {
+      "id": "brindle-other-higher-higher-availability",
+      "name": "브린들 (Brindle)",
+      "nameEn": "Brindle Other Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/brindle/"
+    },
+    {
+      "id": "buckskin-other-lower-lower-availability",
+      "name": "벅스킨 (Buckskin)",
+      "nameEn": "Buckskin Other Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/buckskin/"
+    },
+    {
+      "id": "cappuccino-incomplete-dominant-2020-first-produced-in-2020-higher-higher-availability",
+      "name": "카푸치노 (Cappuccino)",
+      "nameEn": "Cappuccino Incomplete Dominant 2020 First produced in 2020 Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/cappuccino/"
+    },
+    {
+      "id": "chevron-polygenic-lower-lower-availability",
+      "name": "셰브론 (Chevron)",
+      "nameEn": "Chevron Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/chevron/"
+    },
+    {
+      "id": "cluster-spots-polygenic-lower-lower-availability",
+      "name": "클러스터 스팟 (Cluster Spots)",
+      "nameEn": "Cluster Spots Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/cluster-spots/"
+    },
+    {
+      "id": "cold-fusion-polygenic-rarest-rarest-availability",
+      "name": "콜드 퓨전 (Cold Fusion)",
+      "nameEn": "Cold Fusion Polygenic Rarest Rarest Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/cold-fusion/"
+    },
+    {
+      "id": "cream-polygenic-common-common-availability",
+      "name": "크림 (Cream)",
+      "nameEn": "Cream Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/cream/"
+    },
+    {
+      "id": "creamsicle-polygenic-lower-lower-availability",
+      "name": "크림시클 (Creamsicle)",
+      "nameEn": "Creamsicle Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/creamsicle/"
+    },
+    {
+      "id": "crowned-polygenic-average-average-availability",
+      "name": "크라운드 (Crowned)",
+      "nameEn": "Crowned Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/crowned/"
+    },
+    {
+      "id": "dalmatian-dominant-common-common-availability",
+      "name": "달마시안 (Dalmatian)",
+      "nameEn": "Dalmatian Dominant Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/dalmatian/"
+    },
+    {
+      "id": "drippy-polygenic-common-common-availability",
+      "name": "드리피 (Drippy)",
+      "nameEn": "Drippy Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/drippy/"
+    },
+    {
+      "id": "empty-back-incomplete-dominant-at-least-2008-first-produced-in-at-least-2008-common-common-availability",
+      "name": "엠티백 (Empty Back)",
+      "nameEn": "Empty Back Incomplete Dominant At least 2008 First produced in At least 2008 Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/empty-back/"
+    },
+    {
+      "id": "extreme-harlequin-polygenic-common-common-availability",
+      "name": "익스트림 할리퀸 (Extreme Harlequin)",
+      "nameEn": "Extreme Harlequin Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/extreme-harlequin/"
+    },
+    {
+      "id": "flame-polygenic-at-least-1995-first-produced-in-at-least-1995-higher-higher-availability",
+      "name": "플레임 (Flame)",
+      "nameEn": "Flame Polygenic At least 1995 First produced in At least 1995 Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/flame/"
+    },
+    {
+      "id": "fringing-other-average-average-availability",
+      "name": "프린징 (Fringing)",
+      "nameEn": "Fringing Other Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/fringing/"
+    },
+    {
+      "id": "furred-polygenic-lower-lower-availability",
+      "name": "펄드 (Furred)",
+      "nameEn": "Furred Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/furred/"
+    },
+    {
+      "id": "halloween-polygenic-average-average-availability",
+      "name": "할로윈 (Halloween)",
+      "nameEn": "Halloween Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/halloween/"
+    },
+    {
+      "id": "harlequin-polygenic-common-common-availability",
+      "name": "할리퀸 (Harlequin)",
+      "nameEn": "Harlequin Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/harlequin/"
+    },
+    {
+      "id": "hybrid-other-lower-lower-availability",
+      "name": "하이브리드 (Hybrid)",
+      "nameEn": "Hybrid Other Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/hybrid/"
+    },
+    {
+      "id": "hypo-dominant-average-average-availability",
+      "name": "하이포 (Hypo)",
+      "nameEn": "Hypo Dominant Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/hypo/"
+    },
+    {
+      "id": "ink-spot-polygenic-higher-higher-availability",
+      "name": "잉크 스팟 (Ink Spot)",
+      "nameEn": "Ink Spot Polygenic Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/ink-spot/"
+    },
+    {
+      "id": "kneecaps-polygenic-average-average-availability",
+      "name": "니캡 (Kneecaps)",
+      "nameEn": "Kneecaps Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/kneecaps/"
+    },
+    {
+      "id": "lavender-polygenic-higher-higher-availability",
+      "name": "라벤더 (Lavender)",
+      "nameEn": "Lavender Polygenic Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/lavender/"
+    },
+    {
+      "id": "lilly-white-incomplete-dominant-2010-first-produced-in-2010-common-common-availability",
+      "name": "릴리 화이트 (Lilly White)",
+      "nameEn": "Lilly White Incomplete Dominant 2010 First produced in 2010 Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/lilly-white/"
+    },
+    {
+      "id": "monochrome-incomplete-dominant-rarest-rarest-availability",
+      "name": "모노크롬 (Monochrome)",
+      "nameEn": "Monochrome Incomplete Dominant Rarest Rarest Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/monochrome/"
+    },
+    {
+      "id": "normal-other-1994-first-produced-in-1994-rarest-rarest-availability",
+      "name": "노말 (Normal)",
+      "nameEn": "Normal Other 1994 First produced in 1994 Rarest Rarest Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/normal/"
+    },
+    {
+      "id": "obscurial-axanthic-recessive-2018-first-produced-in-2018-rarest-rarest-availability",
+      "name": "Obscurial Axanthic",
+      "nameEn": "Obscurial Axanthic Recessive 2018 First produced in 2018 Rarest Rarest Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/obscurial-axanthic/"
+    },
+    {
+      "id": "oil-spot-polygenic-average-average-availability",
+      "name": "오일 스팟 (Oil Spot)",
+      "nameEn": "Oil Spot Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/oil-spot/"
+    },
+    {
+      "id": "olive-polygenic-lower-lower-availability",
+      "name": "올리브 (Olive)",
+      "nameEn": "Olive Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/olive/"
+    },
+    {
+      "id": "orange-polygenic-common-common-availability",
+      "name": "오렌지 (Orange)",
+      "nameEn": "Orange Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/orange/"
+    },
+    {
+      "id": "orange-patterning-dominant-higher-higher-availability",
+      "name": "오렌지 패터닝 (Orange Patterning)",
+      "nameEn": "Orange Patterning Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/orange-patterning/"
+    },
+    {
+      "id": "patternless-recessive-lower-lower-availability",
+      "name": "패턴리스 (Patternless)",
+      "nameEn": "Patternless Recessive Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/patternless/"
+    },
+    {
+      "id": "phantom-recessive-common-common-availability",
+      "name": "팬텀 (Phantom)",
+      "nameEn": "Phantom Recessive Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/phantom/"
+    },
+    {
+      "id": "pinstripe-dominant-common-common-availability",
+      "name": "핀스트라이프 (Pinstripe)",
+      "nameEn": "Pinstripe Dominant Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/pinstripe/"
+    },
+    {
+      "id": "portholes-polygenic-common-common-availability",
+      "name": "포트홀 (Portholes)",
+      "nameEn": "Portholes Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/portholes/"
+    },
+    {
+      "id": "quad-stripe-polygenic-higher-higher-availability",
+      "name": "쿼드 스트라이프 (Quad-stripe)",
+      "nameEn": "Quad-stripe Polygenic Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/quad-stripe/"
+    },
+    {
+      "id": "red-base-recessive-common-common-availability",
+      "name": "레드 베이스 (Red Base)",
+      "nameEn": "Red Base Recessive Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/red-base/"
+    },
+    {
+      "id": "sable-incomplete-dominant-2017-first-produced-in-2017-average-average-availability",
+      "name": "세이블 (Sable)",
+      "nameEn": "Sable Incomplete Dominant 2017 First produced in 2017 Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/sable/"
+    },
+    {
+      "id": "snowflake-incomplete-dominant-higher-higher-availability",
+      "name": "스노우플레이크 (Snowflake)",
+      "nameEn": "Snowflake Incomplete Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/snowflake/"
+    },
+    {
+      "id": "soft-scale-incomplete-dominant-2004-first-produced-in-2004-higher-higher-availability",
+      "name": "소프트 스케일 (Soft Scale)",
+      "nameEn": "Soft Scale Incomplete Dominant 2004 First produced in 2004 Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/soft-scale/"
+    },
+    {
+      "id": "solid-back-polygenic-lower-lower-availability",
+      "name": "솔리드 백 (Solid Back)",
+      "nameEn": "Solid Back Polygenic Lower Lower Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/solid-back/"
+    },
+    {
+      "id": "super-dalmatian-dominant-higher-higher-availability",
+      "name": "슈퍼 달마시안 (Super Dalmatian)",
+      "nameEn": "Super Dalmatian Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/super-dalmatian/"
+    },
+    {
+      "id": "super-stripe-recessive-average-average-availability",
+      "name": "슈퍼 스트라이프 (Super Stripe)",
+      "nameEn": "Super Stripe Recessive Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/super-stripe/"
+    },
+    {
+      "id": "tailless-physical-average-average-availability",
+      "name": "테일리스 (Tailless)",
+      "nameEn": "Tailless Physical Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/tailless/"
+    },
+    {
+      "id": "tangerine-incomplete-dominant-2005-first-produced-in-2005-higher-higher-availability",
+      "name": "탠저린 (Tangerine)",
+      "nameEn": "Tangerine Incomplete Dominant 2005 First produced in 2005 Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/tangerine/"
+    },
+    {
+      "id": "tiger-dominant-higher-higher-availability",
+      "name": "타이거 (Tiger)",
+      "nameEn": "Tiger Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/tiger/"
+    },
+    {
+      "id": "tri-color-polygenic-common-common-availability",
+      "name": "트라이컬러 (Tri-color)",
+      "nameEn": "Tri-color Polygenic Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/tri-color/"
+    },
+    {
+      "id": "white-patterning-dominant-higher-higher-availability",
+      "name": "화이트 패터닝 (White Patterning)",
+      "nameEn": "White Patterning Dominant Higher Higher Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/white-patterning/"
+    },
+    {
+      "id": "white-tip-polygenic-average-average-availability",
+      "name": "화이트 팁 (White Tip)",
+      "nameEn": "White Tip Polygenic Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/white-tip/"
+    },
+    {
+      "id": "white-wall-incomplete-dominant-common-common-availability",
+      "name": "화이트 월 (White Wall)",
+      "nameEn": "White Wall Incomplete Dominant Common Common Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/white-wall/"
+    },
+    {
+      "id": "yellow-base-dominant-average-average-availability",
+      "name": "옐로우 베이스 (Yellow Base)",
+      "nameEn": "Yellow Base Dominant Average Average Availability",
+      "type": "",
+      "description": "",
+      "originalUrl": "https://www.morphmarket.com/morphpedia/crested-geckos/yellow-base/"
+    }
+  ]
+}

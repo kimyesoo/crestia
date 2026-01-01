@@ -3,18 +3,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Image as ImageIcon, PenLine, Heart, MessageCircle } from "lucide-react";
+import { PenLine, Heart, MessageCircle, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface Post {
     id: string;
     user_id: string;
+    category: string;
     title: string;
     content: string;
     image_url: string | null;
+    view_count: number;
     created_at: string;
-    profiles?: { username: string | null };
     likes_count?: number;
     comments_count?: number;
 }
@@ -23,6 +24,15 @@ export default function GalleryPage() {
     const supabase = useMemo(() => createClient(), []);
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user?.id || null);
+        };
+        fetchUser();
+    }, [supabase]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -77,8 +87,8 @@ export default function GalleryPage() {
                         <ImageIcon className="w-3 h-3 mr-2" />
                         Geckostagram
                     </Badge>
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#FCF6BA]">
-                        게코스타그램
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#FCF6BA] mb-4">
+                        크레스타그램
                     </h1>
                     <p className="text-zinc-400 text-lg leading-relaxed">
                         자랑하고 싶은 게코 사진을 공유하고 다른 사육자들의 게코를 구경하세요!
@@ -96,7 +106,8 @@ export default function GalleryPage() {
                     <div className="text-center py-20 text-zinc-500">로딩 중...</div>
                 ) : posts.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-zinc-500 mb-4">아직 게시글이 없습니다.</p>
+                        <ImageIcon className="w-16 h-16 mx-auto text-zinc-700 mb-4" />
+                        <p className="text-zinc-500 mb-4">아직 사진이 없습니다.</p>
                         <Link href="/community/write">
                             <Button variant="outline">첫 번째 사진 올리기</Button>
                         </Link>
@@ -136,6 +147,14 @@ export default function GalleryPage() {
                         ))}
                     </div>
                 )}
+
+                {/* Back Link */}
+                <div className="mt-12 text-center">
+                    <Link href="/community" className="text-zinc-500 hover:text-white transition inline-flex items-center gap-2">
+                        <ArrowLeft className="w-4 h-4" />
+                        커뮤니티 메인
+                    </Link>
+                </div>
             </main>
         </div>
     );

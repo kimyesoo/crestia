@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { ArrowLeft, Heart, MessageCircle, Eye, Trash2, Send, User } from 'lucide-react';
+import { ArrowLeft, Eye, Trash2, Send, User, PenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { SocialActions } from '@/components/SocialActions';
+import { EmojiButton } from '@/components/EmojiButton';
+import ReactMarkdown from 'react-markdown';
 
 interface Post {
     id: string;
@@ -33,14 +36,17 @@ export default function PostDetailPage() {
     const params = useParams();
     const router = useRouter();
     const supabase = useMemo(() => createClient(), []);
+    const commentsRef = useRef<HTMLDivElement>(null);
 
     const [post, setPost] = useState<Post | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
     const [likesCount, setLikesCount] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
+    const [dislikesCount, setDislikesCount] = useState(0);
+    const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
     const [newComment, setNewComment] = useState('');
     const [currentUser, setCurrentUser] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
     const postId = params.id as string;
 
@@ -80,24 +86,47 @@ export default function PostDetailPage() {
 
             setComments(commentsData || []);
 
-            // Fetch likes count
-            const { count } = await supabase
-                .from('community_likes')
-                .select('*', { count: 'exact', head: true })
+            // Fetch reactions - try new table first, fallback to old likes table
+            const { data: reactionsData } = await supabase
+                .from('community_reactions')
+                .select('reaction_type')
                 .eq('post_id', postId);
 
-            setLikesCount(count || 0);
-
-            // Check if current user liked
-            if (user) {
-                const { data: likeData } = await supabase
+            if (reactionsData && reactionsData.length > 0) {
+                setLikesCount(reactionsData.filter(r => r.reaction_type === 'like').length);
+                setDislikesCount(reactionsData.filter(r => r.reaction_type === 'dislike').length);
+            } else {
+                // Fallback to old likes table
+                const { count } = await supabase
                     .from('community_likes')
-                    .select('id')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('post_id', postId);
+                setLikesCount(count || 0);
+            }
+
+            // Check user's reaction
+            if (user) {
+                const { data: userReactionData } = await supabase
+                    .from('community_reactions')
+                    .select('reaction_type')
                     .eq('post_id', postId)
                     .eq('user_id', user.id)
                     .single();
 
-                setIsLiked(!!likeData);
+                if (userReactionData) {
+                    setUserReaction(userReactionData.reaction_type as 'like' | 'dislike');
+                } else {
+                    // Fallback: check old likes table
+                    const { data: likeData } = await supabase
+                        .from('community_likes')
+                        .select('id')
+                        .eq('post_id', postId)
+                        .eq('user_id', user.id)
+                        .single();
+                    if (likeData) {
+                        setUserReaction('like');
+                    }
+                }
             }
 
             setLoading(false);
@@ -106,28 +135,55 @@ export default function PostDetailPage() {
         fetchData();
     }, [postId, supabase, router]);
 
-    const handleLike = async () => {
-        if (!currentUser) {
-            toast.error('로그인이 필요합니다.');
-            return;
-        }
+    const handleReaction = async (type: 'like' | 'dislike') => {
+        if (!currentUser) return;
 
-        if (isLiked) {
-            // Unlike
+        // Try using new reactions table
+        if (userReaction === type) {
+            // Remove reaction
             await supabase
-                .from('community_likes')
+                .from('community_reactions')
                 .delete()
                 .eq('post_id', postId)
                 .eq('user_id', currentUser);
-            setIsLiked(false);
-            setLikesCount(prev => prev - 1);
-        } else {
-            // Like
+
+            if (type === 'like') setLikesCount(prev => prev - 1);
+            else setDislikesCount(prev => prev - 1);
+            setUserReaction(null);
+        } else if (userReaction) {
+            // Change reaction
             await supabase
-                .from('community_likes')
-                .insert({ post_id: postId, user_id: currentUser });
-            setIsLiked(true);
-            setLikesCount(prev => prev + 1);
+                .from('community_reactions')
+                .update({ reaction_type: type })
+                .eq('post_id', postId)
+                .eq('user_id', currentUser);
+
+            if (type === 'like') {
+                setLikesCount(prev => prev + 1);
+                setDislikesCount(prev => prev - 1);
+            } else {
+                setLikesCount(prev => prev - 1);
+                setDislikesCount(prev => prev + 1);
+            }
+            setUserReaction(type);
+        } else {
+            // Add new reaction
+            const { error } = await supabase
+                .from('community_reactions')
+                .insert({ post_id: postId, user_id: currentUser, reaction_type: type });
+
+            if (error) {
+                // Fallback to old likes table for like
+                if (type === 'like') {
+                    await supabase
+                        .from('community_likes')
+                        .insert({ post_id: postId, user_id: currentUser });
+                }
+            }
+
+            if (type === 'like') setLikesCount(prev => prev + 1);
+            else setDislikesCount(prev => prev + 1);
+            setUserReaction(type);
         }
     };
 
@@ -139,6 +195,8 @@ export default function PostDetailPage() {
 
         if (!newComment.trim()) return;
 
+        setIsSubmittingComment(true);
+
         const { data, error } = await supabase
             .from('community_comments')
             .insert({ post_id: postId, user_id: currentUser, content: newComment })
@@ -147,15 +205,19 @@ export default function PostDetailPage() {
 
         if (error) {
             toast.error('댓글 작성 실패');
+            setIsSubmittingComment(false);
             return;
         }
 
         setComments(prev => [...prev, data]);
         setNewComment('');
         toast.success('댓글이 작성되었습니다.');
+        setIsSubmittingComment(false);
     };
 
     const handleDeleteComment = async (commentId: string) => {
+        if (!confirm('댓글을 삭제하시겠습니까?')) return;
+
         const { error } = await supabase
             .from('community_comments')
             .delete()
@@ -207,6 +269,10 @@ export default function PostDetailPage() {
         }
     };
 
+    const scrollToComments = () => {
+        commentsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center">
@@ -236,7 +302,7 @@ export default function PostDetailPage() {
 
                     <h1 className="text-2xl font-bold text-white mb-4">{post.title}</h1>
 
-                    <div className="flex items-center justify-between text-sm text-zinc-500">
+                    <div className="flex items-center justify-between text-sm text-zinc-500 pb-4 border-b border-zinc-800">
                         <div className="flex items-center gap-4">
                             <span className="flex items-center gap-1">
                                 <User className="w-4 h-4" />
@@ -244,20 +310,28 @@ export default function PostDetailPage() {
                             </span>
                             <span>{formatDate(post.created_at)}</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
                             <span className="flex items-center gap-1">
                                 <Eye className="w-4 h-4" />
                                 {post.view_count}
                             </span>
-                            <span className="flex items-center gap-1">
-                                <Heart className="w-4 h-4" />
-                                {likesCount}
-                            </span>
-                            <span className="flex items-center gap-1">
-                                <MessageCircle className="w-4 h-4" />
-                                {comments.length}
-                            </span>
                         </div>
+                    </div>
+
+                    {/* Social Actions */}
+                    <div className="mt-4">
+                        <SocialActions
+                            likesCount={likesCount}
+                            dislikesCount={dislikesCount}
+                            commentsCount={comments.length}
+                            userReaction={userReaction}
+                            isLoggedIn={!!currentUser}
+                            onLike={() => handleReaction('like')}
+                            onDislike={() => handleReaction('dislike')}
+                            onScrollToComments={scrollToComments}
+                            shareUrl={`/community/${post.id}`}
+                            shareTitle={post.title}
+                        />
                     </div>
                 </div>
 
@@ -273,65 +347,104 @@ export default function PostDetailPage() {
                             />
                         </div>
                     )}
-                    <div className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
-                        {post.content}
+                    <div className="prose prose-invert prose-zinc max-w-none prose-crestia">
+                        <ReactMarkdown
+                            components={{
+                                p: ({ children }) => (
+                                    <p className="text-zinc-300 leading-relaxed mb-4">{children}</p>
+                                ),
+                                a: ({ href, children }) => (
+                                    <a
+                                        href={href}
+                                        className="text-[#D4AF37] hover:text-[#FCF6BA] underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {children}
+                                    </a>
+                                ),
+                                strong: ({ children }) => (
+                                    <strong className="text-white font-bold">{children}</strong>
+                                ),
+                            }}
+                        >
+                            {post.content}
+                        </ReactMarkdown>
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center justify-between mb-8">
-                    <Button
-                        onClick={handleLike}
-                        variant={isLiked ? 'default' : 'outline'}
-                        className={`gap-2 ${isLiked ? 'bg-red-500 hover:bg-red-600' : ''}`}
-                    >
-                        <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-                        좋아요 {likesCount}
-                    </Button>
-
-                    {currentUser === post.user_id && (
+                {/* Owner Actions */}
+                {currentUser === post.user_id && (
+                    <div className="flex justify-end gap-2 mb-6">
+                        <Link href={`/community/${post.id}/edit`}>
+                            <Button variant="outline" className="gap-2">
+                                <PenLine className="w-4 h-4" />
+                                수정
+                            </Button>
+                        </Link>
                         <Button onClick={handleDeletePost} variant="destructive" className="gap-2">
                             <Trash2 className="w-4 h-4" />
                             삭제
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )}
 
                 {/* Comments Section */}
-                <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                        댓글 {comments.length}개
+                <div ref={commentsRef} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-white mb-6">
+                        💬 댓글 <span className="text-[#D4AF37]">{comments.length}</span>
                     </h3>
 
                     {/* Comment Input */}
-                    <div className="flex gap-2 mb-6">
-                        <Textarea
-                            placeholder={currentUser ? '댓글을 입력하세요...' : '로그인 후 댓글을 작성할 수 있습니다.'}
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            disabled={!currentUser}
-                            className="bg-zinc-800 border-zinc-700 min-h-[60px]"
-                        />
-                        <Button onClick={handleAddComment} disabled={!currentUser || !newComment.trim()}>
-                            <Send className="w-4 h-4" />
-                        </Button>
-                    </div>
+                    {currentUser ? (
+                        <div className="mb-6">
+                            <Textarea
+                                placeholder="댓글을 입력하세요..."
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                className="bg-zinc-800 border-zinc-700 min-h-[80px] mb-3"
+                            />
+                            <div className="flex justify-between items-center">
+                                <EmojiButton onEmojiSelect={(emoji) => setNewComment(prev => prev + emoji)} />
+                                <Button
+                                    onClick={handleAddComment}
+                                    disabled={isSubmittingComment || !newComment.trim()}
+                                    className="bg-[#D4AF37] hover:bg-[#C5A028] text-black gap-2"
+                                >
+                                    <Send className="w-4 h-4" />
+                                    {isSubmittingComment ? '작성 중...' : '댓글 작성'}
+                                </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="mb-6 text-center py-4 bg-zinc-800/50 rounded-lg">
+                            <p className="text-zinc-400 mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
+                            <Link href="/login">
+                                <Button variant="outline" size="sm">로그인</Button>
+                            </Link>
+                        </div>
+                    )}
 
                     {/* Comments List */}
                     <div className="space-y-4">
                         {comments.length === 0 ? (
-                            <p className="text-zinc-500 text-center py-4">아직 댓글이 없습니다.</p>
+                            <p className="text-zinc-500 text-center py-8">아직 댓글이 없습니다. 첫 번째 댓글을 작성해보세요!</p>
                         ) : (
                             comments.map((comment) => (
                                 <div key={comment.id} className="bg-zinc-800/50 rounded-lg p-4">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-white font-medium">
-                                                {comment.profiles?.username || '익명'}
-                                            </span>
-                                            <span className="text-zinc-500 text-sm">
-                                                {formatDate(comment.created_at)}
-                                            </span>
+                                            <div className="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center">
+                                                <User className="w-4 h-4 text-zinc-400" />
+                                            </div>
+                                            <div>
+                                                <span className="text-white font-medium text-sm">
+                                                    {comment.profiles?.username || '익명'}
+                                                </span>
+                                                <span className="text-zinc-500 text-xs ml-2">
+                                                    {formatDate(comment.created_at)}
+                                                </span>
+                                            </div>
                                         </div>
                                         {currentUser === comment.user_id && (
                                             <button
@@ -342,7 +455,7 @@ export default function PostDetailPage() {
                                             </button>
                                         )}
                                     </div>
-                                    <p className="text-zinc-300">{comment.content}</p>
+                                    <p className="text-zinc-300 whitespace-pre-wrap">{comment.content}</p>
                                 </div>
                             ))
                         )}

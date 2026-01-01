@@ -1,18 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, notFound } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import html2canvas from "html2canvas";
 import { GeckoCardFinal, CardFrontFinal, CardBackFinal, GeckoDetails } from "@/components/gecko/GeckoCardFinal";
-
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
 
 
 export default function GeckoDetailPage() {
@@ -26,6 +21,7 @@ export default function GeckoDetailPage() {
     useEffect(() => {
         const fetchGecko = async () => {
             if (!id) return;
+            const supabase = createClient();
             const { data, error } = await supabase
                 .from("geckos")
                 .select(`
@@ -155,7 +151,7 @@ export default function GeckoDetailPage() {
                         </div>
 
                         {/* Download Buttons */}
-                        <div className="flex gap-4 pt-4 mt-20">
+                        <div className="flex flex-wrap gap-4 pt-4 mt-20">
                             <button
                                 onClick={() => handleDownload('front')}
                                 className="px-4 py-2 bg-gradient-to-r from-gold-400 to-gold-600 text-black font-bold text-sm rounded-full shadow-lg hover:brightness-110"
@@ -168,6 +164,12 @@ export default function GeckoDetailPage() {
                             >
                                 Download Back
                             </button>
+                            <Link
+                                href={`/lineage?gecko=${gecko.id}`}
+                                className="px-4 py-2 border border-zinc-600 text-zinc-300 font-bold text-sm rounded-full hover:border-gold-500 hover:text-gold-500 transition-colors"
+                            >
+                                View Lineage
+                            </Link>
                         </div>
                     </div>
                 </div>

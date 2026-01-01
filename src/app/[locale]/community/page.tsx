@@ -25,6 +25,7 @@ const TABS = [
     { id: 'notice', label: '공지사항' },
     { id: 'gallery', label: '갤러리' },
     { id: 'board', label: '자유게시판' },
+    { id: 'qna', label: 'Q&A' },
 ];
 
 export default function CommunityPage() {
@@ -107,6 +108,7 @@ export default function CommunityPage() {
             case 'notice': return 'bg-red-500/20 text-red-400';
             case 'gallery': return 'bg-purple-500/20 text-purple-400';
             case 'board': return 'bg-blue-500/20 text-blue-400';
+            case 'qna': return 'bg-green-500/20 text-green-400';
             default: return 'bg-zinc-500/20 text-zinc-400';
         }
     };
@@ -116,6 +118,7 @@ export default function CommunityPage() {
             case 'notice': return '공지';
             case 'gallery': return '갤러리';
             case 'board': return '자유';
+            case 'qna': return 'Q&A';
             default: return category;
         }
     };
@@ -137,6 +140,94 @@ export default function CommunityPage() {
                             글쓰기
                         </Button>
                     </Link>
+                </div>
+
+                {/* Featured Sections Hub */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <Link
+                        href="/community/notice"
+                        className="group block bg-gradient-to-br from-red-500/20 to-red-500/5 border border-red-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-xl bg-zinc-900/50 text-red-400">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-[#D4AF37] transition-colors">
+                                    공지사항
+                                </h3>
+                                <p className="text-zinc-500 text-sm">Notice</p>
+                                <p className="text-zinc-400 text-sm mt-2 line-clamp-2">크레스티아의 새로운 소식과 업데이트를 확인하세요</p>
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/community/gallery"
+                        className="group block bg-gradient-to-br from-purple-500/20 to-purple-500/5 border border-purple-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-xl bg-zinc-900/50 text-purple-400">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-[#D4AF37] transition-colors">
+                                    갤러리
+                                </h3>
+                                <p className="text-zinc-500 text-sm">Gallery</p>
+                                <p className="text-zinc-400 text-sm mt-2 line-clamp-2">자랑스러운 게코 사진을 공유하세요</p>
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/community/board"
+                        className="group block bg-gradient-to-br from-blue-500/20 to-blue-500/5 border border-blue-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-xl bg-zinc-900/50 text-blue-400">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-[#D4AF37] transition-colors">
+                                    자유게시판
+                                </h3>
+                                <p className="text-zinc-500 text-sm">Free Board</p>
+                                <p className="text-zinc-400 text-sm mt-2 line-clamp-2">자유롭게 이야기를 나눠보세요</p>
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/community/qna"
+                        className="group block bg-gradient-to-br from-green-500/20 to-green-500/5 border border-green-500/30 rounded-xl p-5 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-xl bg-zinc-900/50 text-green-400">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-[#D4AF37] transition-colors">
+                                    Q&A
+                                </h3>
+                                <p className="text-zinc-500 text-sm">Questions & Answers</p>
+                                <p className="text-zinc-400 text-sm mt-2 line-clamp-2">사육 관련 질문과 답변을 나눠보세요</p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Section Divider */}
+                <div className="border-t border-zinc-800 pt-6 mb-6">
+                    <h2 className="text-lg font-bold text-white mb-4">최신 게시글</h2>
                 </div>
 
                 {/* Tabs */}

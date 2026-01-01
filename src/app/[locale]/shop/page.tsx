@@ -104,7 +104,7 @@ export default async function ShopPage() {
                                 {/* Quick Actions Bar - Floating below card or attached */}
                                 <div className="mt-2 grid grid-cols-3 gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                                     <ActionButton href={`/geckos/${gecko.id}/card`} icon={<CreditCard className="w-4 h-4" />} label="ID Card" />
-                                    <ActionButton href={`/lineage?id=${gecko.id}`} icon={<GitMerge className="w-4 h-4" />} label="Lineage" />
+                                    <ActionButton href={`/lineage?gecko=${gecko.id}`} icon={<GitMerge className="w-4 h-4" />} label="Lineage" />
                                     <ActionButton href={`/dashboard/edit/${gecko.id}`} icon={<Edit className="w-4 h-4" />} label="Edit" />
                                 </div>
                             </div>

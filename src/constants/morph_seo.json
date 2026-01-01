@@ -1,0 +1,70 @@
+{
+  "total": 5,
+  "morphs": [
+    {
+      "id": "lilly-white",
+      "name": "릴리 화이트 (Lilly White)",
+      "type": "Incomplete Dominant",
+      "description": "## 릴리 화이트란?\n\n**릴리 화이트(Lilly White)**는 크레스티드 게코계의 혁명과도 같은 모프입니다.\n\n### 특징\n- 등판을 덮는 **크림색~흰색 패턴**\n- 측면의 **대비되는 어두운 색상**\n- 불완전 우성으로 **헤테로도 발현**\n\n### 유전 정보\n| 조합 | 확률 |\n|------|------|\n| Lilly x Normal | 50% Lilly |\n| Lilly x Lilly | 25% Super(치사), 50% Lilly, 25% Normal |\n\n> ⚠️ **주의**: 슈퍼 릴리(Super Lilly)는 **치사 유전**입니다.\n\n### 가격대\n- 헤테로: 50-100만원\n- 하이퀄리티: 100-300만원+",
+      "seo_keywords": [
+        "릴리화이트",
+        "Lilly White",
+        "크레스티드 게코 모프",
+        "희귀 모프"
+      ],
+      "views": 702
+    },
+    {
+      "id": "cappuccino",
+      "name": "카푸치노 (Cappuccino)",
+      "type": "Incomplete Dominant",
+      "description": "## 카푸치노란?\n\n**카푸치노(Cappuccino)**는 2020년 처음 확립된 비교적 새로운 모프입니다.\n\n### 특징\n- **연한 갈색(커피색)** 베이스\n- 패턴이 희미하게 사라지는 경향\n- **슈퍼카푸(Super Cappuccino)**는 거의 패턴리스\n\n### 인기 조합\n1. **Lilly White x Cappuccino**: 여신급 비주얼\n2. **Axanthic x Cappuccino**: 시크한 그레이톤\n\n### 가격대\n- 헤테로: 80-150만원\n- 슈퍼: 300만원+",
+      "seo_keywords": [
+        "카푸치노",
+        "Cappuccino",
+        "슈퍼카푸",
+        "희귀모프"
+      ],
+      "views": 1686
+    },
+    {
+      "id": "axanthic",
+      "name": "악산틱 (Axanthic)",
+      "type": "Recessive",
+      "description": "## 악산틱이란?\n\n**악산틱(Axanthic)**은 황색소가 없어 **흑백 톤**으로 발현되는 열성 모프입니다.\n\n### 특징\n- **회색~검은색** 베이스\n- 노란색/주황색 색소 없음\n- 흑백 사진처럼 시크한 외모\n\n### 유전 정보\n- **열성 유전**: 양쪽 부모 모두 유전자 보유 필요\n- 헤테로는 겉으로 구분 불가\n\n### 가격대\n- 비주얼: 150-300만원\n- het. Axanthic: 30-50만원",
+      "seo_keywords": [
+        "악산틱",
+        "Axanthic",
+        "블랙앤화이트",
+        "열성모프"
+      ],
+      "views": 4263
+    },
+    {
+      "id": "harlequin",
+      "name": "할리퀸 (Harlequin)",
+      "type": "Polygenic",
+      "description": "## 할리퀸이란?\n\n**할리퀸(Harlequin)**은 크레스티드 게코의 가장 인기 있는 기본 모프입니다.\n\n### 특징\n- 측면에 **풍부한 크림색 패턴**\n- 다리까지 패턴이 확장\n- **다유전자성**으로 선택 교배 중요\n\n### 퀄리티 등급\n1. **Low Harlequin**: 패턴 50% 미만\n2. **Mid Harlequin**: 패턴 50-70%\n3. **High Harlequin**: 패턴 70% 이상\n4. **Extreme Harlequin**: 패턴 90% 이상\n\n### 가격대\n- Low: 10-20만원\n- Extreme: 50-100만원",
+      "seo_keywords": [
+        "할리퀸",
+        "Harlequin",
+        "크레스티드 게코",
+        "입문모프"
+      ],
+      "views": 3837
+    },
+    {
+      "id": "dalmatian",
+      "name": "달마시안 (Dalmatian)",
+      "type": "Dominant",
+      "description": "## 달마시안이란?\n\n**달마시안(Dalmatian)**은 몸 전체에 **검은 점(스팟)**이 있는 모프입니다.\n\n### 점 개수에 따른 분류\n- **Low Dalmatian**: 50개 미만\n- **High Dalmatian**: 50-100개\n- **Super Dalmatian**: 100개 이상\n\n### 특징\n- 우성 유전으로 쉽게 발현\n- 나이가 들수록 점이 **증가**\n- 어떤 모프와도 조합 가능\n\n### 가격대\n- Super Dal: 50-100만원\n- 일반: 15-30만원",
+      "seo_keywords": [
+        "달마시안",
+        "Dalmatian",
+        "스팟",
+        "슈퍼달"
+      ],
+      "views": 3349
+    }
+  ]
+}

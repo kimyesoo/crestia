@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { login, signup } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,15 @@ import { Loader2 } from "lucide-react";
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get('redirect') || '/';
 
     async function handleSubmit(formData: FormData) {
         setIsLoading(true);
         try {
+            // Add redirect parameter to form data
+            formData.append('redirectTo', redirectTo);
+
             const action = isLogin ? login : signup;
             const result = await action(formData);
 
@@ -61,6 +67,7 @@ export default function LoginPage() {
                                     name="full_name"
                                     placeholder="John Doe"
                                     required
+                                    autoComplete="name"
                                     className="bg-secondary/50 border-input/50 focus:border-gold-500/50 transition-colors"
                                 />
                             </div>
@@ -73,6 +80,7 @@ export default function LoginPage() {
                                 type="email"
                                 placeholder="name@example.com"
                                 required
+                                autoComplete="email"
                                 className="bg-secondary/50 border-input/50 focus:border-gold-500/50 transition-colors"
                             />
                         </div>
@@ -83,6 +91,7 @@ export default function LoginPage() {
                                 name="password"
                                 type="password"
                                 required
+                                autoComplete={isLogin ? "current-password" : "new-password"}
                                 className="bg-secondary/50 border-input/50 focus:border-gold-500/50 transition-colors"
                             />
                         </div>

@@ -14,7 +14,7 @@ export default function LandingPage() {
   const t = useTranslations();
 
   return (
-    <div className="relative min-h-screen bg-black text-white selection:bg-gold-500/30 font-sans">
+    <div className="relative min-h-screen bg-black text-white selection:bg-gold-500/30 font-sans overflow-x-hidden">
 
       {/* HERO SECTION CONTAINER */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
@@ -29,8 +29,8 @@ export default function LandingPage() {
             priority
             className="opacity-100"
           />
-          {/* [2] Overlay: 50% opacity, No Blur (Maintained) */}
-          <div className="absolute inset-0 bg-black/50 z-10" />
+          {/* [2] Overlay: Deep Navy tone for knowledge/trust feel */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a]/70 via-[#0a0a1a]/60 to-black/90 z-10" />
 
           {/* [3] Atmospheric Glow */}
           <div className="absolute inset-0 z-10 bg-gradient-radial from-transparent via-black/20 to-black/80 opacity-60" />
@@ -41,8 +41,20 @@ export default function LandingPage() {
           style={{ y: y1, opacity }}
           className="relative z-20 flex flex-col items-center text-center px-4 max-w-5xl mx-auto"
         >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6 px-4 py-2 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-full"
+          >
+            <span className="text-[#D4AF37] text-xs md:text-sm font-medium tracking-widest uppercase">
+              🦎 국내 최초 크레스티드 게코 전문 플랫폼
+            </span>
+          </motion.div>
+
           {/* Main Headings */}
-          <div className="relative mb-2">
+          <div className="relative mb-4">
             {/* Glowing orb behind text */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-64 md:h-64 bg-gold-500/10 rounded-full blur-[80px] pointer-events-none" />
 
@@ -51,32 +63,60 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative font-serif text-6xl md:text-9xl font-bold tracking-[0.2em] bg-gradient-to-r from-[#FBF5b7] via-[#D4AF37] to-[#aa771c] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] ml-4"
+              className="relative font-serif text-5xl sm:text-6xl md:text-9xl font-bold tracking-[0.1em] sm:tracking-[0.2em] bg-gradient-to-r from-[#FBF5b7] via-[#D4AF37] to-[#aa771c] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] ml-2 sm:ml-4"
             >
               {t('Hero.title')}
             </motion.h1>
           </div>
 
-          {/* Subtitle: The Mystic Lineage */}
+          {/* New Tagline */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="mt-6 text-sm md:text-xl text-[#D4AF37]/80 tracking-[0.3em] font-light uppercase mb-10"
+            className="mt-2 text-base md:text-2xl text-white/90 font-medium tracking-tight mb-2"
           >
-            {t('Hero.subtitle')}
+            <span className="text-zinc-400 line-through decoration-zinc-600">뇌피셜</span>은 멈추고, <span className="text-[#D4AF37] font-bold">데이터</span>로 키우세요.
           </motion.p>
 
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          {/* Subtitle: Data Library */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-xl leading-relaxed mb-8 px-4"
           >
-            <Button asChild className="h-auto px-8 py-4 bg-transparent border border-gold-500/50 text-gold-500 rounded-full text-sm md:text-base font-bold tracking-widest hover:bg-gold-500 hover:text-black transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)] hover:shadow-[0_0_40px_rgba(212,175,55,0.4)] group">
-              <Link href="/dashboard" className="flex items-center gap-2">
-                <span className="relative z-10">{t('Hero.button')}</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+            국내 유일의 크레스티드 게코 <span className="text-[#D4AF37] font-medium">유전학 DB</span> & <span className="text-[#D4AF37] font-medium">사육 정보 도서관</span>.
+            <br className="hidden sm:block" />
+            휘발되는 카페 정보 대신, 영원히 기록되는 전문 지식을 만나보세요.
+          </motion.p>
+
+          {/* CTA Buttons - Knowledge Platform Focus */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button asChild className="h-auto px-6 py-3 sm:px-8 sm:py-4 bg-[#D4AF37] text-black rounded-full text-sm md:text-base font-bold tracking-wide hover:bg-[#C5A028] transition-all duration-300 shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:shadow-[0_0_50px_rgba(212,175,55,0.5)]">
+                <Link href="/guide/morphs" className="flex items-center gap-2">
+                  <span className="text-lg">🧬</span>
+                  <span>유전 정보(Morphs) 탐구</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button asChild className="h-auto px-6 py-3 sm:px-8 sm:py-4 bg-transparent border-2 border-[#D4AF37]/70 text-[#D4AF37] rounded-full text-sm md:text-base font-bold tracking-wide hover:bg-[#D4AF37]/10 transition-all duration-300">
+                <Link href="/card" className="flex items-center gap-2">
+                  <span className="text-lg">💳</span>
+                  <span>내 개체 등록증 만들기</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </motion.div>
           </motion.div>
         </motion.div>
 
@@ -85,18 +125,30 @@ export default function LandingPage() {
         {/* Visibility Gradient Overlay */}
         <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
 
-        {/* Text Content */}
-        <div className="absolute bottom-[18%] left-0 w-full flex flex-col items-center text-center z-20 px-4">
+        {/* Text Content - Knowledge Platform Positioning*/}
+        <div className="absolute bottom-[12%] left-0 w-full flex flex-col items-center text-center z-20 px-4">
 
-          {/* Main Title */}
-          <h2 className="text-[#D4AF37] font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] drop-shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-1000 uppercase">
-            The Global Standard of Lineage
-          </h2>
+          {/* Trust Indicators */}
+          <div className="flex items-center gap-6 text-zinc-500 text-xs md:text-sm mb-6 animate-in fade-in duration-1000 delay-500">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              실시간 업데이트
+            </span>
+            <span className="hidden sm:inline">|</span>
+            <span className="hidden sm:flex items-center gap-1.5">
+              📚 체계적인 가이드
+            </span>
+            <span className="hidden sm:inline">|</span>
+            <span className="hidden sm:flex items-center gap-1.5">
+              🔬 과학적 유전 정보
+            </span>
+          </div>
 
-          {/* Sub Description */}
-          <p className="mt-4 text-zinc-300 font-sans text-sm md:text-base opacity-90 leading-relaxed max-w-2xl drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-            검증된 ID 카드 발급부터 투명한 이력 추적까지.<br className="hidden md:block" />
-            신뢰할 수 있는 거래와 관리는 크레스티아에서 시작됩니다.
+          {/* Sub Description - Differentiation from 파사모 */}
+          <p className="text-zinc-300 font-sans text-xs sm:text-sm md:text-base opacity-90 leading-relaxed max-w-2xl drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
+            휘발되는 카페 글 대신, <span className="text-[#D4AF37] font-medium">영원히 기록되는 유전학 정보</span>와 체계적인 사육 가이드
+            <br className="hidden md:block" />
+            입문자부터 브리더까지, 크레스티아가 <span className="text-white font-semibold">정답</span>을 제시합니다.
           </p>
         </div>
 
@@ -104,36 +156,23 @@ export default function LandingPage() {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-zinc-500 z-20"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-zinc-500 z-20"
         >
-          <div className="w-px h-16 bg-gradient-to-b from-transparent via-gold-500/50 to-transparent" />
+          <div className="w-px h-12 bg-gradient-to-b from-transparent via-gold-500/50 to-transparent" />
         </motion.div>
       </section>
 
       {/* 2. Service Shortcut Section */}
       <section className="py-20 bg-zinc-900 border-t border-white/5">
         <div className="container mx-auto px-4">
-          <h3 className="text-[#D4AF37] font-serif text-2xl mb-8 tracking-widest text-center">CRESTIA UTILITIES</h3>
+          <h3 className="text-[#D4AF37] font-serif text-xl sm:text-2xl mb-8 tracking-wide sm:tracking-widest text-center">CRESTIA UTILITIES</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1: Registration Helper */}
-            <Link href="/registration-helper" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-              <div className="relative z-10">
-                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📄</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">신고 서류 원클릭 완성</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
-                  복잡한 양도/양수/보관 신고, <br />
-                  엑셀만 넣으면 1초 만에 서식이 만들어집니다.
-                </p>
-              </div>
-            </Link>
-
-            {/* Card 2: ID Card Generator */}
+            {/* Card 1: ID Card Generator */}
             <Link href="/card" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               <div className="relative z-10">
                 <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💳</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">디지털 ID 카드 발급</h4>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">디지털 ID 카드</h4>
                 <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
                   내 개체의 가치를 증명하는 <br />
                   고품격 ID 카드와 혈통서를 발급받으세요.
@@ -141,15 +180,28 @@ export default function LandingPage() {
               </div>
             </Link>
 
-            {/* Card 3: Community */}
-            <Link href="/community" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+            {/* Card 2: Morph Calculator */}
+            <Link href="/tools/calculator" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               <div className="relative z-10">
-                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">💬</div>
-                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">브리더 라운지</h4>
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">🧬</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">모프 계산기</h4>
                 <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
-                  사육 노하우 공유부터 모프 질문까지, <br />
-                  브리더들과 자유롭게 소통하세요.
+                  부모 유전자를 입력하면 <br />
+                  자손의 모프 확률을 계산합니다.
+                </p>
+              </div>
+            </Link>
+
+            {/* Card 3: Contract Generator */}
+            <Link href="/tools/contract" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📋</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors mb-3">분양 계약서</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  안전한 거래를 위한 <br />
+                  전문 분양 계약서를 작성하세요.
                 </p>
               </div>
             </Link>

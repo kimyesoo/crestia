@@ -31,7 +31,11 @@ import {
     Gavel,
     ShoppingBag,
     FileText,
-    X
+    X,
+    Sparkles,
+    Calculator,
+    GitFork,
+    Dna
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { useTranslations, useLocale } from 'next-intl';
@@ -92,41 +96,52 @@ export function Navbar({ user }: NavbarProps) {
         {
             label: 'GUIDE',
             sub: '(가이드)',
+            href: `/${locale}/guide`,
             children: [
                 { label: '초보 가이드', sub: 'Beginner Guide', href: `/${locale}/guide/beginner`, icon: <BookOpen className="w-4 h-4" /> },
-                { label: '사육 꿀팁', sub: 'Care Tips', href: `/${locale}/guide/tips`, icon: <Lightbulb className="w-4 h-4" /> },
+                { label: '모프 도감', sub: 'Morphopedia', href: `/${locale}/guide/morphs`, icon: <Dna className="w-4 h-4" /> },
+                { label: '사육 지식', sub: 'Care Guide', href: `/${locale}/guide/care`, icon: <Lightbulb className="w-4 h-4" /> },
             ]
         },
         {
             label: 'COMMUNITY',
             sub: '(커뮤니티)',
+            href: `/${locale}/community`,
             children: [
                 { label: '공지사항', sub: 'Notice', href: `/${locale}/community/notice`, icon: <Bell className="w-4 h-4" /> },
-                { label: '게코스타그램', sub: 'Gallery', href: `/${locale}/community/gallery`, icon: <ImageIcon className="w-4 h-4" /> },
+                { label: '크레스타그램', sub: 'Gallery', href: `/${locale}/community/gallery`, icon: <ImageIcon className="w-4 h-4" /> },
                 { label: '자유게시판', sub: 'Board', href: `/${locale}/community/board`, icon: <MessageSquare className="w-4 h-4" /> },
+                { label: 'Q&A', sub: '질문답변', href: `/${locale}/community/qna`, icon: <Lightbulb className="w-4 h-4" /> },
             ]
         },
+        // ===== MARKET 메뉴 (경매/분양은 임시 숨김 - 용품 추천만 활성화) =====
         {
-            label: 'MARKET',
-            sub: '(마켓)',
-            children: [
-                { label: '경매/분양', sub: 'Auction', href: `/${locale}/market`, icon: <Gavel className="w-4 h-4" /> },
-                { label: '용품 추천', sub: 'Shop', href: `/${locale}/shop`, icon: <ShoppingBag className="w-4 h-4" /> },
-            ]
+            label: 'SHOP',
+            sub: '(추천템)',
+            href: `/${locale}/market/supplies`,
+            // 경매/분양 children은 런칭 후 활성화
+            // children: [
+            //     { label: '경매/분양', sub: 'Auction', href: `/${locale}/market/auction`, icon: <Gavel className="w-4 h-4" /> },
+            //     { label: '용품 추천', sub: 'Supplies', href: `/${locale}/market/supplies`, icon: <ShoppingBag className="w-4 h-4" /> },
+            // ]
         },
+        // ===== MARKET 메뉴 끝 =====
         {
             label: 'TOOLS',
             sub: '(도구)',
+            href: `/${locale}/tools`,
             children: [
-                { label: 'Tools', sub: '도구 모음', href: `/${locale}/tools`, icon: <FileText className="w-4 h-4" /> },
+                { label: '2세 작명소', sub: 'Naming', href: `/${locale}/tools/naming`, icon: <Sparkles className="w-4 h-4" /> },
+                { label: '모프 계산기', sub: 'Calculator', href: `/${locale}/tools/calculator`, icon: <Calculator className="w-4 h-4" /> },
                 { label: '분양 계약서', sub: 'Contract', href: `/${locale}/tools/contract`, icon: <FileText className="w-4 h-4" /> },
-                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <FileText className="w-4 h-4" /> },
+                { label: '혈통도', sub: 'Lineage', href: `/${locale}/lineage`, icon: <GitFork className="w-4 h-4" /> },
                 { label: 'ID 카드', sub: 'Card', href: `/${locale}/card`, icon: <ImageIcon className="w-4 h-4" /> },
             ]
         },
         ...(user ? [{
             label: 'MY PAGE',
             sub: '(마이페이지)',
+            href: `/${locale}/dashboard`,
             children: [
                 { label: '대시보드', sub: 'Dashboard', href: `/${locale}/dashboard`, icon: <LayoutDashboard className="w-4 h-4" /> },
                 { label: '프로필', sub: 'Profile', href: `/${locale}/dashboard/profile`, icon: <UserIcon className="w-4 h-4" /> },
@@ -152,6 +167,7 @@ export function Navbar({ user }: NavbarProps) {
                                 src="/logo.png"
                                 alt="Crestia Logo"
                                 fill
+                                sizes="40px"
                                 className="object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
                                 priority
                             />
@@ -373,7 +389,8 @@ function NavDropdown({
             onMouseEnter={() => onOpenChange(true)}
             onMouseLeave={() => onOpenChange(false)}
         >
-            <button
+            <Link
+                href={item.href || '#'}
                 className="group flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-[#D4AF37] transition-colors"
             >
                 <div className="flex flex-col items-center leading-tight">
@@ -388,7 +405,7 @@ function NavDropdown({
                     "w-3 h-3 transition-transform duration-200",
                     isOpen && "rotate-180"
                 )} />
-            </button>
+            </Link>
 
             {isOpen && (
                 <div className="absolute top-full left-0 pt-2">
@@ -420,13 +437,15 @@ function NavLink({ href, label, sub }: { href: string; label: string; sub: strin
             href={href}
             className="group flex flex-col items-center justify-center leading-tight px-3 py-2"
         >
-            <span className="text-sm font-bold text-zinc-400 group-hover:text-[#D4AF37] transition-colors duration-300 uppercase tracking-widest relative">
-                {label}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full" />
-            </span>
-            <span className="text-[10px] text-zinc-600 group-hover:text-[#D4AF37]/70 transition-colors font-medium mt-[2px]">
-                {sub}
-            </span>
+            <div className="relative">
+                <span className="text-sm font-bold text-zinc-400 group-hover:text-[#D4AF37] transition-colors duration-300 uppercase tracking-widest relative">
+                    {label}
+                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full" />
+                </span>
+                <span className="block text-[10px] text-zinc-600 group-hover:text-[#D4AF37]/70 transition-colors font-medium mt-[2px] text-center">
+                    {sub}
+                </span>
+            </div>
         </Link>
     );
 }

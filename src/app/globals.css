@@ -1,5 +1,92 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+/* Custom Prose Styles for Dark Mode */
+.prose-crestia {
+  --tw-prose-body: #d4d4d8;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-lead: #a1a1aa;
+  --tw-prose-links: #D4AF37;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #a1a1aa;
+  --tw-prose-bullets: #D4AF37;
+  --tw-prose-hr: #3f3f46;
+  --tw-prose-quotes: #d4d4d8;
+  --tw-prose-quote-borders: #D4AF37;
+  --tw-prose-captions: #a1a1aa;
+  --tw-prose-code: #fafafa;
+  --tw-prose-pre-code: #d4d4d8;
+  --tw-prose-pre-bg: #18181b;
+  --tw-prose-th-borders: #3f3f46;
+  --tw-prose-td-borders: #27272a;
+}
+
+.prose-crestia a {
+  color: #D4AF37 !important;
+  text-decoration: underline;
+}
+
+.prose-crestia a:hover {
+  color: #FCF6BA !important;
+}
+
+.prose-crestia strong {
+  color: #ffffff !important;
+}
+
+.prose-crestia h1,
+.prose-crestia h2,
+.prose-crestia h3,
+.prose-crestia h4 {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.prose-crestia h2 {
+  border-bottom: 1px solid #27272a;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+.prose-crestia ul>li::marker {
+  color: #D4AF37;
+}
+
+.prose-crestia ol>li::marker {
+  color: #D4AF37;
+}
+
+.prose-crestia blockquote {
+  border-left-color: #D4AF37;
+  background-color: #18181b;
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose-crestia code {
+  background-color: #27272a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose-crestia pre {
+  background-color: #18181b !important;
+  border: 1px solid #27272a;
+}
+
+.prose-crestia table {
+  border-collapse: collapse;
+}
+
+.prose-crestia th {
+  background-color: #27272a;
+}
+
+.prose-crestia tr {
+  border-bottom: 1px solid #27272a;
+}
 
 /* Tippy Tooltips */
 .tippy-box[data-animation='fade'][data-state='hidden'] {
@@ -237,4 +324,49 @@
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
+}
+
+/* Mobile Optimization */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Prevent horizontal scroll on all containers */
+.no-scroll-x {
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling for touch devices */
+@media (hover: none) {
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 768px) {
+
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Card responsive scaling helper */
+.card-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
