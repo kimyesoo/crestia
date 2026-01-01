@@ -122,6 +122,14 @@ export default function CardPage() {
                 pixelRatio: 2,
                 backgroundColor: '#000000',
                 cacheBust: true,
+                skipFonts: true,
+                filter: (node: HTMLElement) => {
+                    // Filter out problematic elements like external stylesheets
+                    if (node.tagName === 'LINK' && node.getAttribute('rel') === 'stylesheet') {
+                        return false;
+                    }
+                    return true;
+                },
             });
             console.log('toPng success, dataUrl length:', dataUrl.length);
 

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { ArrowLeft, Send, ImagePlus, X } from 'lucide-react';
+import { ArrowLeft, Send, ImagePlus, X, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,8 +16,11 @@ export default function WritePostPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const supabase = useMemo(() => createClient(), []);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [category, setCategory] = useState('board');
+    const [isDragging, setIsDragging] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     // Set category from URL query parameter
     useEffect(() => {
@@ -31,9 +34,96 @@ export default function WritePostPage() {
     const [imageUrl, setImageUrl] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Handle file upload to Supabase Storage
+    const handleFileUpload = async (file: File) => {
+        if (!file.type.startsWith('image/')) {
+            toast.error('이미지 파일만 업로드할 수 있습니다.');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('파일 크기는 5MB 이하여야 합니다.');
+            return;
+        }
+
+        setIsUploading(true);
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                toast.error('로그인이 필요합니다.');
+                router.push('/login');
+                return;
+            }
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('community-images')
+                .upload(fileName, file);
+
+            if (uploadError) {
+                console.error('Upload error:', uploadError);
+                toast.error('이미지 업로드에 실패했습니다.');
+                return;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('community-images')
+                .getPublicUrl(fileName);
+
+            setImageUrl(publicUrl);
+            toast.success('이미지가 업로드되었습니다!');
+        } catch (error) {
+            console.error('Upload error:', error);
+            toast.error('이미지 업로드 중 오류가 발생했습니다.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    // Handle drag events
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFileUpload(file);
+        }
+    };
+
+    // Handle file input change
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            handleFileUpload(file);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!title.trim() || !content.trim()) {
             toast.error('제목과 내용을 입력해주세요.');
+            return;
+        }
+
+        // Gallery requires an image
+        if (category === 'gallery' && !imageUrl) {
+            toast.error('갤러리 게시글에는 이미지가 필요합니다.');
             return;
         }
 
@@ -60,8 +150,8 @@ export default function WritePostPage() {
             .single();
 
         if (error) {
-            console.error(error);
-            toast.error('게시글 작성에 실패했습니다.');
+            console.error('Supabase error:', error.message, error.details, error.hint);
+            toast.error(`게시글 작성 실패: ${error.message || '알 수 없는 오류'}`);
             setIsSubmitting(false);
             return;
         }
@@ -123,39 +213,84 @@ export default function WritePostPage() {
                         />
                     </div>
 
-                    {/* Image URL (for gallery) */}
+                    {/* Image Upload (for gallery) */}
                     {category === 'gallery' && (
                         <div className="mb-6">
                             <Label className="text-zinc-300 mb-2 block">
                                 <ImagePlus className="w-4 h-4 inline mr-2" />
-                                이미지 URL (선택)
+                                이미지 업로드 <span className="text-red-400">*</span>
                             </Label>
-                            <div className="flex gap-2">
-                                <Input
-                                    placeholder="https://example.com/image.jpg"
-                                    value={imageUrl}
-                                    onChange={(e) => setImageUrl(e.target.value)}
-                                    className="bg-zinc-800 border-zinc-700"
-                                />
-                                {imageUrl && (
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setImageUrl('')}
-                                    >
-                                        <X className="w-4 h-4" />
-                                    </Button>
-                                )}
-                            </div>
+
+                            {/* Drag and Drop Zone */}
+                            {!imageUrl && (
+                                <div
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer
+                                        ${isDragging
+                                            ? 'border-[#D4AF37] bg-[#D4AF37]/10'
+                                            : 'border-zinc-700 hover:border-zinc-600 bg-zinc-800/50'
+                                        }
+                                        ${isUploading ? 'pointer-events-none opacity-70' : ''}
+                                    `}
+                                >
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileInputChange}
+                                        className="hidden"
+                                    />
+
+                                    {isUploading ? (
+                                        <div className="py-4">
+                                            <Loader2 className="w-10 h-10 text-[#D4AF37] mx-auto mb-3 animate-spin" />
+                                            <p className="text-zinc-400">업로드 중...</p>
+                                        </div>
+                                    ) : (
+                                        <div className="py-4">
+                                            <Upload className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
+                                            <p className="text-zinc-400 mb-1">
+                                                사진을 여기에 드래그하거나
+                                            </p>
+                                            <p className="text-[#D4AF37] font-medium">
+                                                클릭하여 업로드
+                                            </p>
+                                            <p className="text-zinc-600 text-sm mt-3">
+                                                JPG, PNG, WebP (최대 5MB)
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Image Preview */}
                             {imageUrl && (
-                                <div className="mt-4 border border-zinc-700 rounded-lg overflow-hidden">
+                                <div className="relative border border-zinc-700 rounded-xl overflow-hidden bg-zinc-800">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={imageUrl}
                                         alt="Preview"
-                                        className="max-w-full h-auto max-h-64 object-contain mx-auto"
-                                        onError={() => toast.error('이미지를 불러올 수 없습니다.')}
+                                        className="w-full max-h-80 object-contain"
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setImageUrl('')}
+                                        className="absolute top-3 right-3 p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition shadow-lg"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                    <div className="p-3 bg-zinc-800/80 text-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="text-[#D4AF37] text-sm hover:underline"
+                                        >
+                                            다른 사진으로 변경
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -168,7 +303,7 @@ export default function WritePostPage() {
                         </Button>
                         <Button
                             onClick={handleSubmit}
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isUploading}
                             className="bg-[#D4AF37] hover:bg-[#C5A028] text-black gap-2"
                         >
                             <Send className="w-4 h-4" />
