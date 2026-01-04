@@ -12,6 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import { SocialActions } from '@/components/SocialActions';
 import { EmojiButton } from '@/components/EmojiButton';
 import { AdSenseBanner } from '@/components/ads/AdSenseBanner';
+import { SocialProofToast, FactCheckBadge, SaveToCollection } from '@/components/nudge';
 
 interface GuidePost {
     id: string;
@@ -291,6 +292,8 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
 
     return (
         <div className="min-h-screen bg-background pt-28 pb-8 px-4">
+            {/* Social Proof Toast (Nudge) */}
+            <SocialProofToast />
             {/* JSON-LD Structured Data for SEO */}
             <script
                 type="application/ld+json"
@@ -399,6 +402,9 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
                             shareTitle={post.title}
                         />
                     </div>
+
+                    {/* Fact Check Badge (Nudge - Trust Signal) */}
+                    <FactCheckBadge className="mb-6" />
 
                     {/* Content - Markdown Rendering */}
                     <div className="prose prose-lg prose-invert max-w-none prose-crestia">
@@ -585,6 +591,9 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
                     </div>
                 </div>
             </div>
+
+            {/* Save to Collection CTA (Nudge - Loss Aversion) */}
+            <SaveToCollection isLoggedIn={!!currentUserId} variant="bar" />
         </div>
     );
 }

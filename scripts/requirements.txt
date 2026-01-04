@@ -3,3 +3,5 @@ beautifulsoup4
 cloudscraper
 selenium
 webdriver-manager
+gspread
+oauth2client

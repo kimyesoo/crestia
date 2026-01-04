@@ -1,0 +1,45 @@
+{
+  "source": "Naver Kin via Groq Llama 3.3 Processing",
+  "processed_at": "2026-01-05T06:20:30.968675",
+  "total_raw": 5,
+  "total_processed": 3,
+  "total_skipped": 2,
+  "items": [
+    {
+      "id": "kin-2",
+      "source": "naver_kin",
+      "original_title": "크레 먹이로 젤리만 줘도 되나요",
+      "processed": {
+        "title": "[급합니다] 젤리만 괜찮을까요?",
+        "content": "젤리만 줘도 되나요??",
+        "best_answer": "젤리만 급여하는 건 안 좋아요 🙅‍♂️! 영양 불균형을 유발할 수 있으니, **슈퍼푸드(팬게아, 레파시)와 곤충**을 함께 급여하세요 🐛🌿!"
+      },
+      "fact_checked": true,
+      "processed_at": "2026-01-05T06:20:22.337351"
+    },
+    {
+      "id": "kin-3",
+      "source": "naver_kin",
+      "original_title": "카푸치노 모프 알려주세요",
+      "processed": {
+        "title": "[궁금] 카푸치노모프? ??",
+        "content": "카푸치노랑 세이블이랑 뭐가 다른지 모르겠어요?? 교배하면 어떻게 되나요?",
+        "best_answer": "카푸치노와 세이블은 대립 유전자 관계에 있습니다 🐢. 카푸치노와 세이블을 교배하면 루왁 모프이 됩니다! 🌟 그러나 슈퍼 카푸치노의 경우에는 멜라니스틱으로 인해 콧구멍 축소나 안구 질환이 발생할 수 있으니 주의가 필요합니다 🚨"
+      },
+      "fact_checked": false,
+      "processed_at": "2026-01-05T06:20:25.470133"
+    },
+    {
+      "id": "kin-4",
+      "source": "naver_kin",
+      "original_title": "여름에 온도 30도 넘어도 괜찮나요?",
+      "processed": {
+        "title": "[급질] 30도 넘어도 괜찮아?",
+        "content": "에어컨 없는데 방이 32도까지 올라가는데 크레가 버틸 수 있을까??",
+        "best_answer": "에어컨 없으면 크레스티드 게코를 키우기 힘들어ㅠㅠ 28도 이상이면 위험하고 30도 이상이면 치명적이야! 🚨 온도를 조절해야 해, 적정 온도는 22~26도 사이야! 💡"
+      },
+      "fact_checked": true,
+      "processed_at": "2026-01-05T06:20:28.498480"
+    }
+  ]
+}

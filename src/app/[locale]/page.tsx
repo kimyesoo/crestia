@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from 'next-intl';
+import HeroSearch from "@/components/nudge/HeroSearch";
 
 export default function LandingPage() {
   const { scrollY } = useScroll();
@@ -161,6 +162,9 @@ export default function LandingPage() {
           <div className="w-px h-12 bg-gradient-to-b from-transparent via-gold-500/50 to-transparent" />
         </motion.div>
       </section>
+
+      {/* Interactive Search Section (Nudge) */}
+      <HeroSearch />
 
       {/* 2. Service Shortcut Section */}
       <section className="py-20 bg-zinc-900 border-t border-white/5">

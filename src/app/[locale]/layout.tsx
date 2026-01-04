@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import Script from "next/script";
 import Footer from "@/components/Footer";
+import InstallBanner from "@/components/pwa/InstallBanner";
 
 export const metadata: Metadata = {
   title: {
@@ -24,6 +25,15 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   metadataBase: new URL("https://crestia.vercel.app"),
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Crestia",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default async function RootLayout({
@@ -47,6 +57,8 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
+        {/* PWA - Apple Touch Icon */}
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         {/* Google AdSense - TODO: ca-pub-XXXXXXXXXXXXXXXX를 실제 Client ID로 교체 */}
         <Script
           async
@@ -62,9 +74,11 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer />
+          <InstallBanner />
           <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>
   );
 }
+
