@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from 'next/link';
-import { FileText, Sparkles, Calculator, ArrowRight, GitFork, CreditCard } from 'lucide-react';
+import { FileText, Sparkles, Calculator, ArrowRight, GitFork, CreditCard, Utensils } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: "Tools - 브리더 유틸리티",
@@ -12,6 +12,17 @@ export const metadata: Metadata = {
 };
 
 const tools = [
+    {
+        id: 'feeding',
+        title: '급식/케어 일지',
+        titleEn: 'Feeding & Care Log',
+        description: '밥 줄 시간! 급식과 체중을 간편하게 기록하고, 성장 그래프로 확인하세요.',
+        icon: Utensils,
+        href: '/manager/dashboard',
+        available: true,
+        isNew: true,
+        accentColor: 'emerald',
+    },
     {
         id: 'contract',
         title: '분양 계약서 생성기',
@@ -77,17 +88,27 @@ export default function ToolsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {tools.map((tool) => {
                         const IconComponent = tool.icon;
+                        const isEmerald = tool.accentColor === 'emerald';
                         return (
                             <div
                                 key={tool.id}
                                 className={`
                                     relative group bg-zinc-900/50 rounded-xl p-8 
-                                    border border-zinc-800 
-                                    transition-all duration-300 ease-out
-                                    hover:border-[#D4AF37]/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]
+                                    border transition-all duration-300 ease-out
+                                    ${isEmerald
+                                        ? 'border-emerald-700/50 hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]'
+                                        : 'border-zinc-800 hover:border-[#D4AF37]/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]'
+                                    }
                                     ${!tool.available ? 'opacity-60' : ''}
                                 `}
                             >
+                                {/* NEW Badge */}
+                                {tool.isNew && (
+                                    <div className="absolute top-4 right-4 bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full">
+                                        NEW
+                                    </div>
+                                )}
+
                                 {/* Coming Soon Badge */}
                                 {!tool.available && (
                                     <div className="absolute top-4 right-4 bg-zinc-800 text-zinc-400 text-xs px-3 py-1 rounded-full">
@@ -96,12 +117,15 @@ export default function ToolsPage() {
                                 )}
 
                                 {/* Icon */}
-                                <div className="w-14 h-14 bg-[#D4AF37]/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-[#D4AF37]/20 transition-colors">
-                                    <IconComponent className="w-7 h-7 text-[#D4AF37]" />
+                                <div className={`w-14 h-14 rounded-lg flex items-center justify-center mb-6 transition-colors ${isEmerald
+                                        ? 'bg-emerald-500/10 group-hover:bg-emerald-500/20'
+                                        : 'bg-[#D4AF37]/10 group-hover:bg-[#D4AF37]/20'
+                                    }`}>
+                                    <IconComponent className={`w-7 h-7 ${isEmerald ? 'text-emerald-400' : 'text-[#D4AF37]'}`} />
                                 </div>
 
                                 {/* Title */}
-                                <h2 className="text-xl font-bold text-white mb-2">
+                                <h2 className={`text-xl font-bold mb-2 ${isEmerald ? 'text-white group-hover:text-emerald-400' : 'text-white'}`}>
                                     {tool.title}
                                 </h2>
                                 <p className="text-sm text-zinc-500 mb-4">
@@ -117,7 +141,8 @@ export default function ToolsPage() {
                                 {tool.available ? (
                                     <Link
                                         href={tool.href}
-                                        className="inline-flex items-center gap-2 text-[#D4AF37] font-medium text-sm group-hover:gap-3 transition-all"
+                                        className={`inline-flex items-center gap-2 font-medium text-sm group-hover:gap-3 transition-all ${isEmerald ? 'text-emerald-400' : 'text-[#D4AF37]'
+                                            }`}
                                     >
                                         바로가기
                                         <ArrowRight className="w-4 h-4" />
