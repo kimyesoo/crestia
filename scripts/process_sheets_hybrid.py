@@ -33,35 +33,65 @@ SHEET_NAME = "Sheet2"  # 지식인 데이터가 있는 시트
 # 출력 경로
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'src', 'constants')
 
+# Knowledge JSON 경로
+KNOWLEDGE_JSON_PATH = os.path.join(os.path.dirname(__file__), 'knowledge.json')
+
 # ============================================
-# Knowledge Base (절대 팩트)
+# Knowledge Base 로더
 # ============================================
-KNOWLEDGE_BASE = """
-[절대 팩트 - 크레스티드 게코 사육 기준]
+def load_knowledge_base() -> Dict[str, Any]:
+    """knowledge.json에서 지식베이스 로드"""
+    try:
+        with open(KNOWLEDGE_JSON_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"[WARN] knowledge.json not found at {KNOWLEDGE_JSON_PATH}, using fallback")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"[ERROR] Failed to parse knowledge.json: {e}")
+        return {}
 
-1. 릴리 화이트 (Lilly White):
-   - 슈퍼폼(릴리 x 릴리)은 치사 유전 → 교배 절대 금지
-   - 반드시 노멀 또는 다른 모프와 교배해야 함
 
-2. 먹이:
-   - 슈퍼푸드(팬게아, 레파시) + 곤충 병행 권장
-   - 젤리만 급여는 영양 불균형 → 잘못된 정보
-   - 과일은 간식 수준으로만 (메인 아님)
+def generate_knowledge_prompt(kb: Dict[str, Any]) -> str:
+    """지식베이스에서 System Prompt용 문자열 생성"""
+    if not kb:
+        return "[지식베이스 로드 실패 - 기본 판단으로 진행]"
+    
+    lines = ["[절대 팩트 - 크레스티드 게코 사육 기준]", ""]
+    
+    # 모프 위험 정보
+    lines.append("## 모프별 위험:")
+    for risk in kb.get("morph_risks", []):
+        lines.append(f"- {risk.get('name_ko', risk.get('name'))}: {risk.get('risk_ko', risk.get('risk'))}")
+        lines.append(f"  → {risk.get('advice_ko', risk.get('advice'))}")
+    lines.append("")
+    
+    # 잘못된 정보 교정
+    lines.append("## 잘못된 정보 (주의):")
+    for m in kb.get("misconceptions", []):
+        lines.append(f"- {m.get('term_ko', m.get('term'))}: {m.get('correction_ko', m.get('correction'))}")
+    lines.append("")
+    
+    # 식단
+    diet = kb.get("diet", {})
+    lines.append("## 먹이:")
+    lines.append(f"- 권장: {diet.get('recommendation_ko', diet.get('recommendation', ''))}")
+    lines.append(f"- 주의: {diet.get('warning_ko', diet.get('warning', ''))}")
+    lines.append("")
+    
+    # 온도
+    temp = kb.get("temperature", {})
+    lines.append("## 온도/환경:")
+    lines.append(f"- 적정 온도: {temp.get('optimal_range', '22-26°C')}")
+    lines.append(f"- {temp.get('warning_high_ko', temp.get('warning_high', ''))}")
+    lines.append(f"- {temp.get('summer_caution_ko', temp.get('summer_caution', ''))}")
+    
+    return "\n".join(lines)
 
-3. 카푸치노 (Cappuccino):
-   - 세이블(Sable)과 대립 유전자(Allelic) 관계
-   - 카푸치노 x 세이블 = 루왁(Luwak) 콤보
-   - 슈퍼 카푸치노(멜라니스틱)는 콧구멍 축소/안구 질환 위험
 
-4. 문스톤/파이볼드:
-   - 크레스티드 게코 공식 모프 아님
-   - 상술 또는 다른 종 용어 차용 → 주의 필요
-
-5. 온도/환경:
-   - 적정 온도: 22~26°C
-   - 28°C 이상: 위험, 30°C 이상: 치명적
-   - 습도 사이클: 낮 50-60%, 밤 70-80%
-"""
+# 지식베이스 초기화 (스크립트 로드 시 한 번만)
+_KNOWLEDGE_BASE_DATA = load_knowledge_base()
+KNOWLEDGE_BASE = generate_knowledge_prompt(_KNOWLEDGE_BASE_DATA)
 
 # ============================================
 # Groq API 클라이언트
