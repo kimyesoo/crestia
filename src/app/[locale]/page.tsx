@@ -170,7 +170,7 @@ export default function LandingPage() {
       <section className="py-20 bg-zinc-900 border-t border-white/5">
         <div className="container mx-auto px-4">
           <h3 className="text-[#D4AF37] font-serif text-xl sm:text-2xl mb-8 tracking-wide sm:tracking-widest text-center">CRESTIA UTILITIES</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1: ID Card Generator */}
             <Link href="/card" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
@@ -197,7 +197,21 @@ export default function LandingPage() {
               </div>
             </Link>
 
-            {/* Card 3: Contract Generator */}
+            {/* Card 3: Feeding Log - NEW! */}
+            <Link href="/manager/dashboard" className="group p-8 border border-emerald-700/50 bg-black hover:border-emerald-500 transition-all duration-300 rounded-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-emerald-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              <div className="absolute top-4 right-4 px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded">NEW</div>
+              <div className="relative z-10">
+                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">🦗</div>
+                <h4 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-3">급식/케어 일지</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-300">
+                  밥 줄 시간! 급식과 체중을 <br />
+                  간편하게 기록하세요.
+                </p>
+              </div>
+            </Link>
+
+            {/* Card 4: Contract Generator */}
             <Link href="/tools/contract" className="group p-8 border border-zinc-700 bg-black hover:border-[#D4AF37] transition-all duration-300 rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               <div className="relative z-10">

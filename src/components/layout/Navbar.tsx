@@ -35,7 +35,8 @@ import {
     Sparkles,
     Calculator,
     GitFork,
-    Dna
+    Dna,
+    Utensils
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { useTranslations, useLocale } from 'next-intl';
@@ -131,6 +132,7 @@ export function Navbar({ user }: NavbarProps) {
             sub: '(도구)',
             href: `/${locale}/tools`,
             children: [
+                { label: '급식 일지', sub: 'Feeding Log', href: `/${locale}/manager/dashboard`, icon: <Utensils className="w-4 h-4" /> },
                 { label: '2세 작명소', sub: 'Naming', href: `/${locale}/tools/naming`, icon: <Sparkles className="w-4 h-4" /> },
                 { label: '모프 계산기', sub: 'Calculator', href: `/${locale}/tools/calculator`, icon: <Calculator className="w-4 h-4" /> },
                 { label: '분양 계약서', sub: 'Contract', href: `/${locale}/tools/contract`, icon: <FileText className="w-4 h-4" /> },
