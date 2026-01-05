@@ -21,14 +21,59 @@ import {
     ChevronDown,
     Loader2,
     Plus,
-    History
+    History,
+    Scale,
+    Utensils
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Gecko {
     id: string;
     name: string;
     morph: string;
     image_url?: string;
+}
+
+/**
+ * Empty State Action Bar - 게코가 없을 때도 급식/체중 버튼 표시
+ * 클릭 시 게코 등록 페이지로 안내
+ */
+function EmptyStateActionBar({ locale }: { locale: string }) {
+    const router = useRouter();
+
+    const handleClick = () => {
+        toast.info('먼저 게코를 등록해주세요! 🦎', {
+            description: '급식/체중 기록을 위해 게코 정보가 필요합니다.',
+            action: {
+                label: '등록하기',
+                onClick: () => router.push(`/${locale}/dashboard/add`)
+            }
+        });
+    };
+
+    return (
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-t from-black via-black/95 to-transparent pb-safe">
+            <div className="max-w-lg mx-auto flex gap-3">
+                {/* 체중 버튼 */}
+                <Button
+                    onClick={handleClick}
+                    className="flex-1 h-14 bg-gradient-to-r from-[#D4AF37] to-[#b08d22] text-black font-bold text-base hover:from-[#b08d22] hover:to-[#8a6e1a] shadow-lg shadow-[#D4AF37]/20"
+                >
+                    <Scale className="w-5 h-5 mr-2" />
+                    ⚖️ 체중 잴 시간
+                </Button>
+
+                {/* 급식 버튼 */}
+                <Button
+                    onClick={handleClick}
+                    className="flex-1 h-14 bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-500/20"
+                >
+                    <Utensils className="w-5 h-5 mr-2" />
+                    🦗 밥 줄 시간
+                </Button>
+            </div>
+        </div>
+    );
 }
 
 export default function ManagerDashboardPage() {
@@ -121,10 +166,10 @@ export default function ManagerDashboardPage() {
         );
     }
 
-    // 등록된 게코가 없는 경우
+    // 등록된 게코가 없는 경우 - 급식 버튼 포함
     if (geckos.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black py-12">
+            <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black py-12 pb-28">
                 <div className="max-w-lg mx-auto px-4 text-center">
                     <div className="text-6xl mb-6">🦎</div>
                     <h1 className="text-2xl font-bold text-white mb-4">
@@ -140,6 +185,9 @@ export default function ManagerDashboardPage() {
                         </Link>
                     </Button>
                 </div>
+
+                {/* Empty State Action Bar - 게코 등록 유도 */}
+                <EmptyStateActionBar locale={locale} />
             </div>
         );
     }
