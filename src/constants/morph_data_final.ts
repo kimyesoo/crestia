@@ -31,7 +31,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 슈퍼 카푸치노(멜라니스틱)와 달리, 블리자드는 현재까지 보고된 건강 문제가 없어 차세대 화이트 계열 모프로 주목받고 있습니다.
     `,
         tags: ["신규", "불완전우성", "슈퍼폼"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/genetic-hypo.png"
     },
 
     // ============================================
@@ -58,7 +58,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 슈퍼 카푸치노(멜라니스틱)는 **콧구멍 축소(Reduced Nostrils)** 및 안구 질환 발생 빈도가 높습니다. 입양 및 브리딩 시 호흡기 상태를 반드시 확인해야 합니다.
     `,
         tags: ["인기", "불완전우성", "슈퍼폼"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/cappuccino.png"
     },
     {
         id: "sable",
@@ -77,7 +77,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 릴리 화이트와 결합 시 형광빛을 억제하고 차분하고 묵직한 색감을 만들어냅니다.
     `,
         tags: ["신규", "대립유전자", "다크"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/sable.png"
     },
     {
         id: "super-cappuccino",
@@ -95,7 +95,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 콧구멍 기형, 꼬리 기형, 안구 질환 발생 가능성이 높습니다.
     `,
         tags: ["슈퍼폼", "레어", "고가"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/super-cappuccino.png"
     },
     {
         id: "frappuccino",
@@ -115,7 +115,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 릴리와 카푸치노를 교배하면 나오지만, 확률 게임입니다. (이론상 25%)
     `,
         tags: ["콤보", "고가", "화려함"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/frappuccino.png"
     },
 
     // ============================================
@@ -143,7 +143,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 '만능 치트키'입니다. 아잔틱, 카푸치노, 트라이컬러 등 어떤 모프와 붙여도 2세의 퀄리티를 보장합니다.
     `,
         tags: ["필수", "불완전우성", "치사유전"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/lilly-white.png"
     },
     {
         id: "axanthic",
@@ -168,7 +168,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 **아잔틱 릴리 (Axanthic Lilly):** 릴리 화이트의 순백색 패턴과 아잔틱의 그레이 베이스가 만나 환상적인 조화를 이룹니다.
     `,
         tags: ["열성", "흑백", "고가"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/axanthic.png"
     },
     {
         id: "phantom",
@@ -187,7 +187,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 릴리 화이트와 결합하면 **'팬텀 릴리'**가 되어, 흰색이 억제된 보랏빛/회색빛의 독특한 릴리가 탄생합니다.
     `,
         tags: ["열성", "파스텔", "억제"],
-        imageUrl: undefined
+        imageUrl: "/images/morphs/phantom.png"
     },
 
     // ============================================
@@ -214,7 +214,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 모든 콤보의 뼈대입니다. 할리퀸 퀄리티가 좋아야 릴리, 아잔틱, 트라이컬러 등 파생 모프의 퀄리티도 보장됩니다.
     `,
         tags: ["기본", "다인자", "패턴"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/extreme-harlequin.png"
     },
     {
         id: "extreme-harlequin",
@@ -231,7 +231,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 - 트라이컬러와 결합되면 최고의 관상 가치를 지닙니다.
     `,
         tags: ["패턴", "고퀄리티", "다인자"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/extreme-harlequin.png"
     },
     {
         id: "tricolor",
@@ -250,7 +250,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 릴리 화이트와 교배 시, 트라이컬러의 3색이 릴리의 하얀색과 섞이며 몽환적이고 화려한 색감을 냅니다.
     `,
         tags: ["색상", "인기", "다인자"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/tricolor.png"
     },
     {
         id: "tiger",
@@ -295,7 +295,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 할리퀸의 전 단계라고 보시면 됩니다. 다리나 옆구리에 무늬가 거의 없고, 오직 등판의 무늬에 집중된 형태입니다. 대비가 강할수록 예쁩니다.
     `,
         tags: ["패턴", "기본"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/flame.png"
     },
 
     // ============================================
@@ -316,7 +316,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 우성 형질이 강해 유전이 잘 됩니다. 쿼드 스트라이프(4줄 무늬)를 만들기 위한 필수 조건입니다.
     `,
         tags: ["구조", "패턴", "기본"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/pinstripe.png"
     },
     {
         id: "quadstripe",
@@ -334,7 +334,7 @@ export const MORPH_DICTIONARY: MorphDef[] = [
 풀 핀스트라이프 개체 중 옆구리 선이 보이는 개체들을 선별 교배하여 만듭니다.
     `,
         tags: ["패턴", "레어", "고퀄리티"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/quadstripe.png"
     },
     {
         id: "soft-scale",
@@ -392,7 +392,7 @@ AC Reptiles는 불완전 우성으로 분류하나, 아직 검증이 진행 중�
 - **풀 커버 릴리**나 **아잔틱**과 결합되었을 때, 깔끔함을 극대화해 줍니다.
     `,
         tags: ["패턴", "깔끔"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/empty-back.png"
     },
     {
         id: "crowned",
@@ -429,7 +429,7 @@ AC Reptiles는 불완전 우성으로 분류하나, 아직 검증이 진행 중�
 점 유전자는 한 번 섞이면 후대에서 제거하기가 매우 어렵습니다. 깔끔한 패턴리스나 릴리를 원한다면 달마시안 혈통은 피해야 합니다.
     `,
         tags: ["점", "우성", "호불호"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/dalmatian.png"
     },
     {
         id: "super-dalmatian",
@@ -442,7 +442,7 @@ AC Reptiles는 불완전 우성으로 분류하나, 아직 검증이 진행 중�
 - **잉크 스팟 (Ink Spot):** 점의 크기가 크고 번진 듯한 형태일수록 좋습니다.
     `,
         tags: ["점", "고퀄리티"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/super-dalmatian.png"
     },
 
     // ============================================
@@ -499,7 +499,7 @@ AC Reptiles는 불완전 우성으로 분류하나, 아직 검증이 진행 중�
 마치 오렌지 크림 아이스크림 같다고 하여 붙여진 이름입니다. 보통 핀스트라이프나 플레임 형태에서 많이 보입니다.
     `,
         tags: ["색상", "예쁨"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/creamsicle.png"
     },
     {
         id: "halloween",
@@ -512,7 +512,7 @@ AC Reptiles는 불완전 우성으로 분류하나, 아직 검증이 진행 중�
 - **엄격한 기준:** 베이스는 확실히 어두워야 하고, 패턴은 노란색이 아닌 '진한 주황색'이어야 진정한 할로윈으로 인정받습니다.
     `,
         tags: ["색상", "시즌", "인기"],
-        imageUrl: undefined
+        imageUrl: "/images/patterns/halloween.png"
     },
     {
         id: "lavender",

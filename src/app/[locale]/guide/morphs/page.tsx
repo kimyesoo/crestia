@@ -83,34 +83,47 @@ function MorphCard({ morph }: { morph: MorphDef }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 whileHover={{ y: -4 }}
-                className="group bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 cursor-pointer hover:border-gold-500/50 hover:shadow-lg hover:shadow-gold-500/10 transition-all duration-300 h-full"
+                className="group bg-zinc-900/80 border border-zinc-800 rounded-xl overflow-hidden cursor-pointer hover:border-gold-500/50 hover:shadow-lg hover:shadow-gold-500/10 transition-all duration-300 h-full"
             >
-                {/* 아이콘 */}
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500/20 to-gold-600/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Dna className="w-6 h-6 text-gold-500" />
-                </div>
+                {/* 이미지 영역 */}
+                {morph.imageUrl ? (
+                    <div className="relative w-full h-40 overflow-hidden bg-zinc-800">
+                        <img
+                            src={morph.imageUrl}
+                            alt={morph.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
+                    </div>
+                ) : (
+                    <div className="w-full h-32 bg-gradient-to-br from-gold-500/10 to-zinc-800 flex items-center justify-center">
+                        <Dna className="w-12 h-12 text-gold-500/50" />
+                    </div>
+                )}
 
-                {/* 모프 이름 */}
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-gold-500 transition-colors">
-                    {morph.name}
-                </h3>
+                <div className="p-5">
+                    {/* 모프 이름 */}
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-gold-500 transition-colors">
+                        {morph.name}
+                    </h3>
 
-                {/* 유전 타입 뱃지 */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${typeInfo.color}`}>
-                        {typeInfo.label}
-                    </span>
-                    {morph.tags.slice(0, 2).map((tag, idx) => (
-                        <span key={idx} className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-zinc-800 text-zinc-400">
-                            {tag}
+                    {/* 유전 타입 뱃지 */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${typeInfo.color}`}>
+                            {typeInfo.label}
                         </span>
-                    ))}
-                </div>
+                        {morph.tags.slice(0, 2).map((tag, idx) => (
+                            <span key={idx} className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-zinc-800 text-zinc-400">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
 
-                {/* 요약 */}
-                <p className="text-sm text-zinc-500 line-clamp-2">
-                    {morph.summary || `${morph.name} 모프에 대한 상세 정보를 확인하세요.`}
-                </p>
+                    {/* 요약 */}
+                    <p className="text-sm text-zinc-500 line-clamp-2">
+                        {morph.summary || `${morph.name} 모프에 대한 상세 정보를 확인하세요.`}
+                    </p>
+                </div>
             </motion.div>
         </Link>
     );
